@@ -22,26 +22,25 @@ import pyomo.environ as pe
 from cihmm import HMMBase, state_similarity, print_differences
 
 
-class Model(HMMBase):
+class ProcessConstrained(HMMBase):
 
     #
     # Load process description
     #
-    def load_process(self, process_yaml):
+    def load_process(self, *, data=None, filename=None):
+        if filename is not None:
+            with open(filename, 'r') as INPUT:
+                data = yaml.safe_load(INPUT)
+        assert data is not None
+
         alldata = self.data
-        with open(process_yaml, 'r') as INPUT:
-            data = yaml.safe_load(INPUT)
         alldata.J = list(range(data['J']))
         alldata.L = data['L']
         alldata.E = data['E']
         alldata.A = data['A']
         alldata.N = len(alldata.A)
         alldata.sim = data['sim']
-        if process_yaml.endswith(".yaml"):
-            name = process_yaml[:-4]
-        else:
-            name = process_yaml[:-3]
-        self.name = process_yaml.split('.')[0]
+        self.name = data['name']
 
     def create_ip(self, *, observation_index, emission_probs, data):
         M = self.create_lp(observation_index=observation_index, emission_probs=emission_probs, data=data, y_binary=True, cache_indices=True)
@@ -94,11 +93,6 @@ class Model(HMMBase):
                 return m.z[j, t] == m.z[j, Tmax - 1]
             return pe.Constraint.Skip
         M.activity_feasibility = pe.Constraint(J, T, rule=activity_feasibility_)
-
-        #
-        # Force the first job to be in the window
-        #
-        #M.z[0,-1].fix(0)
 
         return M
 
@@ -197,47 +191,79 @@ class Model(HMMBase):
                     print("INFEASIBLE", t,a,b)
 
 
+class ProcessConstrained_StartAfterTimeZero(ProcessConstrained):
+
+    def create_ip(self, *, observation_index, emission_probs, data):
+        M = ProcessConstrained.create_ip(self, observation_index=observation_index, emission_probs=emission_probs, data=data)
+
+        #
+        # Force the first job to be in the window
+        #
+        M.z[0,-1].fix(0)
+
+        return M
+
+
+def run(model, debug=False, seed=3487098, n=100):
+
+    model.run_training_simulations(n=n, debug=debug)
+    model.train_HMM(debug=debug)
+
+    obs, ground_truth = model.generate_observations_and_states(seed=seed, debug=debug)
+    print("Observations:")
+    for i,o in enumerate(obs):
+        print(i,model.omap.get(o,None),o)
+    print("")
+    print("Ground Truth:", ground_truth)
+    print("")
+
+    print("\n\n Viterbei\n")
+    ll0, states0 = model.inference_hmmlearn(observations=obs, debug=debug)
+    print("states", states0)
+    print("logprob", ll0)
+    print("")
+    print("Similarity:", state_similarity(states0, ground_truth))
+    print_differences(states0, ground_truth)
+    print("")
+
+    print("\n\n LP\n")
+    ll1, states1 = model.inference_lp(observations=obs, debug=debug)
+    print("states", states1)
+    print("logprob", ll1)
+    print("")
+    print("Similarity:", state_similarity(states1, ground_truth))
+    print_differences(states1, ground_truth)
+    print("")
+
+    print("\n\n IP\n")
+    ll2, states2 = model.inference_ip(observations=obs, debug=debug)
+    print("states", states2)
+    print("logprob", ll2)
+    print("Similarity:", state_similarity(states2, ground_truth))
+    print_differences(states2, ground_truth)
+    print("")
+
 
 #
 # MAIN
 #
-model = Model()
-model.load_process('process1.yaml')
-debug=False
-seed=3487098
-#seed=1238709723
+model = ProcessConstrained()
+print("-"*70)
+print("-"*70)
+print("ProcessConstrained - Default")
+print("-"*70)
+print("-"*70)
+model.load_process(filename='process1.yaml')
+run(model)
 
-model.run_training_simulations(n=100, debug=debug)
-model.train_HMM(debug=debug)
 
-obs, ground_truth = model.generate_observations_and_states(seed=seed, debug=debug)
-print("Observations:")
-for i,o in enumerate(obs):
-    print(i,model.omap.get(o,None),o)
-print("")
-print("Ground Truth:", ground_truth)
-print("")
+model = ProcessConstrained_StartAfterTimeZero()
+print("-"*70)
+print("-"*70)
+print("ProcessConstrained - StartAfterTimeZero")
+print("-"*70)
+print("-"*70)
+model.load_process(filename='process1.yaml')
+run(model)
 
-ll0, states0 = model.inference_hmmlearn(observations=obs, debug=debug)
-print("states", states0)
-print("logprob", ll0)
-print("")
-print("Similarity:", state_similarity(states0, ground_truth))
-print_differences(states0, ground_truth)
-print("")
-
-ll1, states1 = model.inference_lp(observations=obs, debug=debug)
-print("states", states1)
-print("logprob", ll1)
-print("")
-print("Similarity:", state_similarity(states1, ground_truth))
-print_differences(states1, ground_truth)
-print("")
-
-ll2, states2 = model.inference_ip(observations=obs, debug=debug)
-print("states", states2)
-print("logprob", ll2)
-print("Similarity:", state_similarity(states2, ground_truth))
-print_differences(states2, ground_truth)
-print("")
 

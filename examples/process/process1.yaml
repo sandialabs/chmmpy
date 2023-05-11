@@ -2,6 +2,8 @@
 ## PROCESS INFORMATION
 ##
 
+name: process1
+
 # Number of jobs in the process
 J: 5
 # Job lengths
@@ -33,7 +35,7 @@ sim:
     # Random number seed
     seed: 1238709723
     # Number of simulations to run
-    nruns: 10
+    nruns: 100
     # Number of time steps in the simulation
     Tmax: 200
     # Probability that a job is observed when it is executed
