@@ -1,0 +1,51 @@
+##
+## PROCESS INFORMATION
+##
+
+# Number of jobs in the process
+J: 5
+# Job lengths
+L:
+    0: 3
+    1: 5
+    2: 7
+    3: 11
+    4: 13
+# Process precedence
+E:
+    - [0,1]
+    - [0,2]
+    - [1,3]
+    - [2,3]
+    - [3,4]
+# Possible process states
+A:
+    0: []
+    1: [0]
+    2: [1]
+    3: [2]
+    4: [1,2]
+    5: [3]
+    6: [4]
+
+# Used to parameterize simulations
+sim:
+    # Random number seed
+    seed: 1238709723
+    # Number of simulations to run
+    nruns: 10
+    # Number of time steps in the simulation
+    Tmax: 200
+    # Probability that a job is observed when it is executed
+    p: 0.5
+    #p: 1.0
+    # Probability that a job is observed when it is not executed
+    q: 0.05
+    #q: 0.0
+    # Max delay before each job is executed.
+    delays:
+        0: 20
+        1: 20
+        2: 20
+        3: 20
+        4: 20

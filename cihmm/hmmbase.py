@@ -10,7 +10,7 @@ import pyomo.environ as pe
 import numpy as np
 import hmmlearn.hmm
 from munch import Munch
-from create_hmm_lp import create_hmm_lp
+from .create_hmm_lp import create_hmm_lp
 
 logger = logging.getLogger("hmmlearn")
 logger.setLevel(logging.ERROR)
@@ -149,8 +149,8 @@ class HMMBase(object):
 
         self.data.Tmax = Tmax
         self.omap = omap
-        self.data.emission_probs = emission_probs
-        self.data.total_obs = total_obs
+        self.data._emission_probs = emission_probs
+        self.data._total_obs = total_obs
 
     def _encode_observations(self, observations, omap):
         encoded_observations = []
@@ -166,29 +166,31 @@ class HMMBase(object):
         # Identify if unexpected observations have been encountered.  If so,
         # augment the emission probabilities and revise the observations.
         #
-        unexpected_observations=False
-        tmp = []
+        num_unexpected_observations=0
+        _observations = []
         for obs in observations:
             if obs in self.omap:
-                tmp.append(obs)
+                _observations.append(obs)
             else:
-                unexpected_observations=True
-                tmp.append(None)
+                num_unexpected_observations += 1
+                _observations.append(None)
 
-        if unexpected_observations:
+        if num_unexpected_observations > 0:
             print("WARNING: Correcting emissions probabilities to account for patterns that did not occur in the training data")
             omap = copy.copy(self.omap)
             omap[None] = len(omap)
 
-            emission_probs = copy.copy(self.data.emission_probs)
+            emission_probs = copy.copy(self.data._emission_probs)
             for i in range(len(emission_probs)):
-                for j in range(len(emission_probs[i])):
-                    emission_probs[i][j] = emission_probs[i][j]*self.data.total_obs[i]/(self.data.total_obs[i]+1.0)
-                emission_probs[i].append( 1.0/self.data.total_obs[i] )
+                foo = [emission_probs[i][j]*self.data._total_obs[i] for j in range(len(emission_probs[i]))]
+                total = sum(foo)+num_unexpected_observations
+                foo.append(num_unexpected_observations)
+                emission_probs[i] = [v/total for v in foo]
+                #print("HERE", i,sum(emission_probs[i]))
 
-            return tmp, omap, emission_probs
+            return _observations, omap, emission_probs
         else:
-            return tmp, self.omap, self.data.emission_probs
+            return _observations, self.omap, self.data._emission_probs
         
 
     def inference_hmmlearn(self, *, seed=None, observations=None, debug=False):
