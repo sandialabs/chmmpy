@@ -98,7 +98,7 @@ class Model(HMMBase):
         #
         # Force the first job to be in the window
         #
-        M.z[0,-1].fix(0)
+        #M.z[0,-1].fix(0)
 
         return M
 
@@ -203,7 +203,7 @@ class Model(HMMBase):
 #
 model = Model()
 model.load_process('process1.yaml')
-debug=True
+debug=False
 seed=3487098
 #seed=1238709723
 
