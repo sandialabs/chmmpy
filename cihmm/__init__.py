@@ -1,3 +1,4 @@
 # __init__.py
 
-from .hmmbase import HMMBase, state_similarity, print_differences
+from .hmmbase import HMMBase
+from . import util
