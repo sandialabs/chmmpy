@@ -240,6 +240,7 @@ class HMMBase(object):
         observation_index = [omap[obs] for obs in observations]
 
         M = self.create_lp(observation_index=observation_index, emission_probs=emission_probs, data=self.data)
+        assert M is not None, "No model returned from the create_lp() method"
         opt = pe.SolverFactory('glpk')
         res = opt.solve(M)
 
@@ -272,6 +273,7 @@ class HMMBase(object):
         observation_index = [omap[obs] for obs in observations]
 
         M = self.create_ip(observation_index=observation_index, emission_probs=emission_probs, data=self.data)
+        assert M is not None, "No model returned from the create_ip() method"
         opt = pe.SolverFactory('glpk')
         res = opt.solve(M)
 
