@@ -1,165 +1,174 @@
-#
-# https://stackoverflow.com/questions/9729968/python-implementation-of-viterbi-algorithm
-# https://www.audiolabs-erlangen.de/resources/MIR/FMP/C5/C5S3_Viterbi.html
-#
-# A simple process detection application using an HMM
-#
-# We assume the execution of a process with a jobs with fixed lengths.  Jobs may have
-# precedence constraints that limit their execution until after a preceding job has completed.
-# Additionally, there may be random delays at the beginning of each job.
-#
-# A simulation is used to generate data from possible executions of the process, and an HMM is
-# trained using the simulation data.  Each hidden state in the HMM is associated with a possible 
-# state of the process, which corresponds to the set of simultaneous executing jobs.
-# 
 
+import sys
 import yaml
 import random
 import pprint
 from munch import Munch
 import pyomo.environ as pe
 
-from cihmm import HMMBase, state_similarity, print_differences
+from cihmm import HMMBase
+from cihmm.util import state_similarity, print_differences, run_all
 
 
-class ProcessConstrained(HMMBase):
+class TravelHMM_Default(HMMBase):
+    """
+    The traveler starts and stops at the same city.
+    """
 
-    #
-    # Load process description
-    #
-    def load_process(self, *, data=None, filename=None):
+    def load_data(self, *, data=None, filename=None):
         if filename is not None:
             with open(filename, 'r') as INPUT:
                 data = yaml.safe_load(INPUT)
         assert data is not None
 
         alldata = self.data
-        alldata.J = list(range(data['J']))
-        alldata.L = data['L']
-        alldata.E = data['E']
-        alldata.A = data['A']
-        alldata.N = len(alldata.A)
+        alldata.N = data['N']+1
+        alldata.Costs = {(from_,to_):cost_ for from_,to_,cost_ in data['Costs']}
+        alldata.CityNames = data['CityNames']
         alldata.sim = data['sim']
         self.name = data['name']
 
     def create_ip(self, *, observation_index, emission_probs, data):
         M = self.create_lp(observation_index=observation_index, emission_probs=emission_probs, data=data, y_binary=True, cache_indices=True)
 
-        #
-        # J: list of job ids
-        # L: L[j] is the length of job J
-        # E: if (i,j) in E, then job i needs to completed before job j can start
-        # A: a mapping from process state to active jobs
-        # Tmax: number of timesteps
-        #
-        J=data.J
-        L=data.L
-        E=data.E
+        J=list(range(data.N-1))
         Tmax=data.Tmax
-        A=data.A
-
         T = list(range(Tmax))
 
         #
-        # M.z[j,t] is one if job j begins at or before time t
-        #   Time step -1 is used to indicate when a job starts before the time window T
+        # M.start[j] is one iff the tour starts at city j
         #
-        M.z = pe.Var(J, [-1] + T, within=pe.Binary)
+        M.start = pe.Var(J, within=pe.Binary)
+        #
+        # M.stop[j] is one iff the tour stops at city j
+        #
+        M.stop = pe.Var(J, within=pe.Binary)
+        #
+        # M.z[t] is one if we have seen a city at or before time t
+        #
+        M.z = pe.Var([-1] + T, within=pe.Binary)
+        M.z[-1].fix(0)
+
+        #
+        # M.Z[t] is one if we have not seen a city at or after time t
+        #
+        M.Z = pe.Var(T + [Tmax], within=pe.Binary)
+        M.Z[Tmax].fix(0)
+
+        def node_(m, t, j):
+            return sum(M.y[t,a,b] for tt,a,b in M.E if tt == t and a == j)
+        M.node = pe.Expression(T, list(range(data.N)), rule=node_)
+
+        #
+        # CONSTRAINTS
+        #
 
         # Y-Z interactions
 
-        M.yz = pe.ConstraintList()
-        for t in range(Tmax-1):
+        M.yz_start = pe.ConstraintList()
+        for t in T:
             for j in J:
-                tau = max(t+1 - L[j], -1)
-                # TODO: improve the efficiency of this constraint generation using sparse index sets
-                M.yz.add(
-                    sum( M.y[t,a,b] for tt,a,b in M.E if t == tt and j in A[b] )  == M.z[j,t+1] - M.z[j,tau]
-                    )
+                M.yz_start.add( M.node[t,j] <= M.start[j] + 1 - (M.z[t] - M.z[t-1]) )
 
-        # Z constraints
+        M.yz_stop = pe.ConstraintList()
+        for t in range(Tmax):
+            for j in J:
+                M.yz_stop.add( M.node[t,j] <= M.stop[j] + 1 - (M.Z[t] - M.Z[t+1]) )
 
-        def zstep_(m, j, t):
-            return m.z[j, t] - m.z[j, t - 1] >= 0
-        M.zstep = pe.Constraint(J, T, rule=zstep_)
+        M.z_stop = pe.ConstraintList()
+        for t in T:
+            M.z_stop.add( sum(M.node[t,j] for j in J) == M.z[t] + M.Z[t] - 1)
 
-        def precedence_lb_(m, i, j, t):
-            tau = max(t- L[i], -1)
-            return m.z[i, tau] - m.z[j, t] >= 0
-        M.precedence_lb = pe.Constraint(E, T, rule=precedence_lb_)
+        # z,Z constraints
 
-        def activity_feasibility_(m, j, t):
-            if t + L[j] - 1 >= Tmax:
-                return m.z[j, t] == m.z[j, Tmax - 1]
-            return pe.Constraint.Skip
-        M.activity_feasibility = pe.Constraint(J, T, rule=activity_feasibility_)
+        def zstep_(m, t):
+            return m.z[t-1] <= m.z[t]
+        M.zstep = pe.Constraint(T, rule=zstep_)
+
+        def Zstep_(m, t):
+            return m.Z[t] >= m.Z[t+1]
+        M.Zstep = pe.Constraint(T, rule=Zstep_)
+
+        def zZ_(m, t):
+            return m.z[t] + m.Z[t] >= 1
+        M.zZ = pe.Constraint(T, rule=zZ_)
+
+        # start,stop contraints
+
+        M.starting = pe.Constraint(expr=sum(M.start[j] for j in J) == 1)
+        M.stopping = pe.Constraint(expr=sum(M.stop[j] for j in J) == 1)
+
+        def same_city_(m, j):
+            return m.start[j] == m.stop[j]
+        M.same_city = pe.Constraint(J, rule=same_city_)
 
         return M
 
     def run_training_simulations(self, seed=None, n=None, debug=False, return_observations=False):
         #
-        # prec[j] -> list of predecessors of job j
-        #
-        prec = {i:[] for i in self.data.J}
-        for i,j in self.data.E:
-            prec[j].append(i)
-        #
-        # state[ tuple ] -> state_id
-        #
-        state = {tuple(val):i for i,val in self.data.A.items()}
-        #
-        # Generate nruns simulations
+        # Get simulation parameters
         #
         sim = self.data['sim']
-        p = sim['p']
-        q = sim['q']
+        p = sim['p'] # Probability that a city is recognized when observed
+        q = sim['q'] # Probability that a picture is sent from a city
         Tmax = sim['Tmax']
         if seed is not None:
             random.seed(seed)
         else:
             random.seed(sim['seed'])
-
-        if debug:
-            print("PREC")
-            pprint.pprint(prec, compact=True)
-
+        #
+        # Run 'n' simulations
+        #
         O = []
+        all_cities = list(range(self.data.N-1))
         nruns = sim['nruns'] if n is None else n
         for n in range(nruns):
-            curr = {}
-            start_ = {}
-            end = {}
-            jobs = {t:[] for t in range(Tmax)}
-            #
-            # Set background noise
-            #
-            for j in self.data.J:
-                curr[j] = random.choices([0,1], [1-q, q], k=Tmax)
-            #
-            # Randomly select when next job is executed.  Note that this
-            # assumes a topological ordering of jobs.
-            #
-            for j in self.data.J:
-                start=0
-                for i in prec[j]:
-                    start = max(start, end.get(i,0))
-                if sim['delays'][j] > 0:
-                    start += random.randint(0,sim['delays'][j])
-                start_[j] = start
-                end[j] = start+self.data.L[j]
-                for t in range(start,end[j]):
-                    curr[j][t] = 1 if random.uniform(0,1) <= p else 0
-                    jobs[t].append(j)
-            
-            O.append(Munch(observations=curr, states=[state[tuple(jobs[t])] for t in range(Tmax)]))
+            #if debug:
+            #    sys.stdout.write(".")
+            #    sys.stdout.flush()
 
-            if debug:
-                print("")
-                print("START")
-                pprint.pprint(start_, compact=True)
-                print("END")
-                pprint.pprint(end, compact=True)
-    
+            budget = random.randint(sim['budget_min'], sim['budget_max'])
+            costs = 0
+            cities = [self.data.N-1]*Tmax                                 # Unknown city
+            observations = [None]*Tmax
+            i = random.randint(0,4)
+            start = curr = random.randint(0,self.data.N-2)                      # Initial city
+            while i<Tmax:
+                cities[i] = curr
+                if random.uniform(0,1) <= q:
+                    if random.uniform(0,1) <= p:
+                        observations[i] = curr                              # City is recognized
+                    else:
+                        observations[i] = random.randint(0,self.data.N-2)   # Guessing the city
+
+                i += 1
+                if i == Tmax:
+                    break
+                if curr != self.data.N:
+                    next_city = None
+                    random.shuffle(all_cities)
+                    for city in all_cities:
+                        if city == start:
+                            if (curr, city) in self.data.Costs and costs + self.data.Costs[curr,city] <= budget:
+                                next_city = city
+                                costs += self.data.Costs[curr,city]
+                                break
+                        else:
+                            if (curr, city) in self.data.Costs and costs + self.data.Costs[curr,city] + self.data.Costs[city,start] <= budget:
+                                next_city = city
+                                costs += self.data.Costs[curr,city]
+                                break
+                    if next_city is None:
+                        assert curr == start, "Expecting to return home!"
+                        break
+                curr = next_city
+            
+            print("HERE", cities)
+            print("HERE", observations)
+            print("HERE", costs)
+            print("HERE", budget)
+            O.append(Munch(observations=observations, states=cities, costs=costs, budget=budget))
+
         if return_observations:
             return O
         self.O = O
@@ -167,23 +176,62 @@ class ProcessConstrained(HMMBase):
     def print_lp_results(self, M):
             print("Y: activities")
             for t,a,b in M.y:
-                if pe.value(M.y[t,a,b]) > 0 and b >= 0 and len(self.data.A[b]) > 0:
-                    print(t,a,b, self.data.A[b] if b >= 0 else None)
+                if pe.value(M.y[t,a,b]) > 0:
+                    print(t,a,b, pe.value(M.y[t,a,b]))
 
     def print_ip_results(self, M):
             self.print_lp_results(M)
             print("")
 
-            print("Z: job start times")
-            tmp = {}
-            for i,t in M.z:
-                tau = max(t-self.data.L[i],-1)
-                if pe.value(M.z[i,t]) - pe.value(M.z[i,tau]) > 0:
-                    if t not in tmp:
-                        tmp[t] = set()
-                    tmp[t].add(i)
-            for t in tmp:
-                print(t, tmp[t])
+            print("City")
+            for t in range(self.data.Tmax):
+                for j in range(self.data.N):
+                    if pe.value(M.node[t,j]) > 0:
+                        print("",t,j, pe.value(M.node[t,j]))
+                        break
+            print("")
+
+            print("Start city")
+            city = None
+            for j in M.start:
+                print("start",j,pe.value(M.start[j]))
+                if pe.value(M.start[j]) > 0:
+                    city = j
+            print("",city)
+            print("")
+
+            print("Stop city")
+            city = None
+            for j in M.start:
+                print("stop",j,pe.value(M.stop[j]))
+                if pe.value(M.stop[j]) > 0:
+                    city = j
+            print("",city)
+            print("")
+
+            print("Z: tour start")
+            flag=False
+            print("z",-1,pe.value(M.z[-1]))
+            for t in range(self.data.Tmax):
+                print("z",t,pe.value(M.z[t]))
+                if pe.value(M.z[t]) - pe.value(M.z[t-1]) > 0:
+                    print("",t)
+                    flag=True
+                    break
+            if not flag:
+                print("",None)
+            print("")
+
+            print("Z: tour stop")
+            flag=False
+            for t in range(self.data.Tmax):
+                print("Z",t,pe.value(M.Z[t]))
+                if pe.value(M.Z[t]) - pe.value(M.Z[t+1]) > 0:
+                    print("",t)
+                    flag=True
+                    break
+            if not flag:
+                print("",None)
             print("")
 
             for t,a,b in M.FF:
@@ -191,79 +239,15 @@ class ProcessConstrained(HMMBase):
                     print("INFEASIBLE", t,a,b)
 
 
-class ProcessConstrained_StartAfterTimeZero(ProcessConstrained):
-
-    def create_ip(self, *, observation_index, emission_probs, data):
-        M = ProcessConstrained.create_ip(self, observation_index=observation_index, emission_probs=emission_probs, data=data)
-
-        #
-        # Force the first job to be in the window
-        #
-        M.z[0,-1].fix(0)
-
-        return M
-
-
-def run(model, debug=False, seed=3487098, n=100):
-
-    model.run_training_simulations(n=n, debug=debug)
-    model.train_HMM(debug=debug)
-
-    obs, ground_truth = model.generate_observations_and_states(seed=seed, debug=debug)
-    print("Observations:")
-    for i,o in enumerate(obs):
-        print(i,model.omap.get(o,None),o)
-    print("")
-    print("Ground Truth:", ground_truth)
-    print("")
-
-    print("\n\n Viterbei\n")
-    ll0, states0 = model.inference_hmmlearn(observations=obs, debug=debug)
-    print("states", states0)
-    print("logprob", ll0)
-    print("")
-    print("Similarity:", state_similarity(states0, ground_truth))
-    print_differences(states0, ground_truth)
-    print("")
-
-    print("\n\n LP\n")
-    ll1, states1 = model.inference_lp(observations=obs, debug=debug)
-    print("states", states1)
-    print("logprob", ll1)
-    print("")
-    print("Similarity:", state_similarity(states1, ground_truth))
-    print_differences(states1, ground_truth)
-    print("")
-
-    print("\n\n IP\n")
-    ll2, states2 = model.inference_ip(observations=obs, debug=debug)
-    print("states", states2)
-    print("logprob", ll2)
-    print("Similarity:", state_similarity(states2, ground_truth))
-    print_differences(states2, ground_truth)
-    print("")
-
-
 #
 # MAIN
 #
-model = ProcessConstrained()
+model = TravelHMM_Default()
 print("-"*70)
 print("-"*70)
-print("ProcessConstrained - Default")
+print("TravelHMM - Default")
 print("-"*70)
 print("-"*70)
-model.load_process(filename='process1.yaml')
-run(model)
-
-
-model = ProcessConstrained_StartAfterTimeZero()
-print("-"*70)
-print("-"*70)
-print("ProcessConstrained - StartAfterTimeZero")
-print("-"*70)
-print("-"*70)
-model.load_process(filename='process1.yaml')
-run(model)
-
+model.load_data(filename='travel1.yaml')
+run_all(model, seed=9870983, debug=True)
 

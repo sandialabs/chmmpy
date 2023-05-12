@@ -40,7 +40,7 @@ Costs:
     - [4,4,  49]
 
 # City Names
-city_name:
+CityNames:
     0: city0
     1: city1
     2: city2
@@ -54,10 +54,14 @@ sim:
     # Number of simulations to run
     nruns: 1
     # Number of time steps in the simulation
-    Tmax: 20
+    Tmax: 30
     # Probability that a city is recognized when observed
     #p: 0.5
     p: 1.0
     # Probability that a picture is sent from a city
     #q: 0.05
-    q: 1.0
+    q: 0.5
+    # Max budget
+    budget_max: 2500
+    budget_min: 200
+
