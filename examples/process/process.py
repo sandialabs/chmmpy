@@ -19,7 +19,8 @@ import pprint
 from munch import Munch
 import pyomo.environ as pe
 
-from cihmm import HMMBase, state_similarity, print_differences
+from cihmm import HMMBase
+from cihmm.util import state_similarity, print_differences, run_all
 
 
 class ProcessConstrained(HMMBase):
@@ -204,46 +205,6 @@ class ProcessConstrained_StartAfterTimeZero(ProcessConstrained):
         return M
 
 
-def run(model, debug=False, seed=3487098, n=100):
-
-    model.run_training_simulations(n=n, debug=debug)
-    model.train_HMM(debug=debug)
-
-    obs, ground_truth = model.generate_observations_and_states(seed=seed, debug=debug)
-    print("Observations:")
-    for i,o in enumerate(obs):
-        print(i,model.omap.get(o,None),o)
-    print("")
-    print("Ground Truth:", ground_truth)
-    print("")
-
-    print("\n\n Viterbei\n")
-    ll0, states0 = model.inference_hmmlearn(observations=obs, debug=debug)
-    print("states", states0)
-    print("logprob", ll0)
-    print("")
-    print("Similarity:", state_similarity(states0, ground_truth))
-    print_differences(states0, ground_truth)
-    print("")
-
-    print("\n\n LP\n")
-    ll1, states1 = model.inference_lp(observations=obs, debug=debug)
-    print("states", states1)
-    print("logprob", ll1)
-    print("")
-    print("Similarity:", state_similarity(states1, ground_truth))
-    print_differences(states1, ground_truth)
-    print("")
-
-    print("\n\n IP\n")
-    ll2, states2 = model.inference_ip(observations=obs, debug=debug)
-    print("states", states2)
-    print("logprob", ll2)
-    print("Similarity:", state_similarity(states2, ground_truth))
-    print_differences(states2, ground_truth)
-    print("")
-
-
 #
 # MAIN
 #
@@ -254,7 +215,7 @@ print("ProcessConstrained - Default")
 print("-"*70)
 print("-"*70)
 model.load_process(filename='process1.yaml')
-run(model)
+run_all(model)
 
 
 model = ProcessConstrained_StartAfterTimeZero()
@@ -264,6 +225,6 @@ print("ProcessConstrained - StartAfterTimeZero")
 print("-"*70)
 print("-"*70)
 model.load_process(filename='process1.yaml')
-run(model)
+run_all(model)
 
 
