@@ -163,10 +163,10 @@ class TravelHMM_Default(HMMBase):
                         break
                 curr = next_city
             
-            print("HERE", cities)
-            print("HERE", observations)
-            print("HERE", costs)
-            print("HERE", budget)
+            #print("HERE", cities)
+            #print("HERE", observations)
+            #print("HERE", costs)
+            #print("HERE", budget)
             O.append(Munch(observations=observations, states=cities, costs=costs, budget=budget))
 
         if return_observations:
@@ -251,6 +251,9 @@ class TravelHMM_City4(TravelHMM_Default):
 #
 # MAIN
 #
+debug=False
+seed=9870983
+
 model = TravelHMM_Default()
 print("-"*70)
 print("-"*70)
@@ -258,7 +261,7 @@ print("TravelHMM - Default")
 print("-"*70)
 print("-"*70)
 model.load_data(filename='travel1.yaml')
-run_all(model, seed=9870983, debug=True)
+run_all(model, seed=seed, debug=debug)
 
 model = TravelHMM_City4()
 print("-"*70)
@@ -267,5 +270,5 @@ print("TravelHMM - Start in City 4")
 print("-"*70)
 print("-"*70)
 model.load_data(filename='travel1.yaml')
-run_all(model, seed=9870983, debug=True)
+run_all(model, seed=seed, debug=debug)
 
