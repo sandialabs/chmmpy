@@ -238,6 +238,15 @@ class TravelHMM_Default(HMMBase):
                 if pe.value(M.y[t,a,b]) > 0:
                     print("INFEASIBLE", t,a,b)
 
+class TravelHMM_City4(TravelHMM_Default):
+
+    def create_ip(self, *, observation_index, emission_probs, data):
+        M = TravelHMM_Default.create_ip(self, observation_index=observation_index, emission_probs=emission_probs, data=data)
+
+        # Start in city 4
+        M.start[4].fix(1)
+
+        return M
 
 #
 # MAIN
@@ -246,6 +255,15 @@ model = TravelHMM_Default()
 print("-"*70)
 print("-"*70)
 print("TravelHMM - Default")
+print("-"*70)
+print("-"*70)
+model.load_data(filename='travel1.yaml')
+run_all(model, seed=9870983, debug=True)
+
+model = TravelHMM_City4()
+print("-"*70)
+print("-"*70)
+print("TravelHMM - Start in City 4")
 print("-"*70)
 print("-"*70)
 model.load_data(filename='travel1.yaml')
