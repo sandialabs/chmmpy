@@ -185,7 +185,7 @@ class HMMBase(object):
         else:
             return _observations, self.omap, self.data._emission_probs
 
-    def inference_hmmlearn(self, *, seed=None, observations=None, debug=False):
+    def inference_hmmlearn(self, *, observations=None, debug=False):
         if debug:
             print("")
             print("HMMLEARN")
@@ -237,7 +237,7 @@ class HMMBase(object):
             cache_indices=cache_indices,
         )
 
-    def inference_lp(self, *, seed=None, observations=None, debug=False):
+    def inference_lp(self, *, observations=None, debug=False):
         if debug:
             print("")
             print("LP")
@@ -274,7 +274,7 @@ class HMMBase(object):
 
         return log_likelihood, states
 
-    def inference_ip(self, *, seed=None, observations=None, debug=False):
+    def inference_ip(self, *, observations=None, debug=False):
         if debug:
             print("")
             print("IP")

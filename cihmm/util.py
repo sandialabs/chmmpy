@@ -21,7 +21,7 @@ def print_differences(s1, s2):
         print("", "None")
 
 
-def run_all(model, debug=False, seed=3487098, n=100):
+def run_all(model, debug=False, seed=None, n=None):
     model.run_training_simulations(n=n, debug=debug)
     model.train_HMM(debug=debug)
 
