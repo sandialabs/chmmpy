@@ -22,7 +22,11 @@ def print_differences(s1, s2):
 
 
 def run_all(model, debug=False, seed=None, n=None):
-    model.run_training_simulations(n=n, debug=debug)
+    if seed is None:
+        seed = model.data.seed
+    print("Running with seed:",seed)
+
+    model.run_training_simulations(n=n, debug=debug, seed=seed)
     model.train_HMM(debug=debug)
 
     obs, ground_truth = model.generate_observations_and_states(seed=seed, debug=debug)

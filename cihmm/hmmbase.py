@@ -20,11 +20,12 @@ class HMMBase(object):
     def __init__(self):
         self.data = Munch()
         self.data.O = []
+        self.data.seed = None
 
     def create_ip(self, *, observation_index, emission_probs, data):
         pass
 
-    def run_training_simulations(self, n=None, debug=False, return_observations=False):
+    def run_training_simulations(self, n=None, debug=False, return_observations=False, seed=None):
         pass
 
     def _tuplize_observations(self, observations):
@@ -37,12 +38,16 @@ class HMMBase(object):
             return observations
 
     def generate_observations(self, *, seed=None, debug=False):
+        if seed is None:
+            seed = self.data.seed
         obs = self.run_training_simulations(seed=seed, n=1, return_observations=True)[
             0
         ]["observations"]
         return self._tuplize_observations(results["observations"])
 
     def generate_observations_and_states(self, *, seed=None, debug=False):
+        if seed is None:
+            seed = self.data.seed
         results = self.run_training_simulations(
             seed=seed, n=1, return_observations=True
         )[0]
@@ -237,7 +242,7 @@ class HMMBase(object):
             cache_indices=cache_indices,
         )
 
-    def inference_lp(self, *, observations=None, debug=False):
+    def inference_lp(self, *, observations=None, debug=False, solver="glpk"):
         if debug:
             print("")
             print("LP")
@@ -251,7 +256,7 @@ class HMMBase(object):
             data=self.data,
         )
         assert M is not None, "No model returned from the create_lp() method"
-        opt = pe.SolverFactory("glpk")
+        opt = pe.SolverFactory(solver)
         res = opt.solve(M)
 
         log_likelihood = pe.value(M.o)
@@ -274,7 +279,7 @@ class HMMBase(object):
 
         return log_likelihood, states
 
-    def inference_ip(self, *, observations=None, debug=False):
+    def inference_ip(self, *, observations=None, debug=False, solver="glpk"):
         if debug:
             print("")
             print("IP")
@@ -288,7 +293,7 @@ class HMMBase(object):
             data=self.data,
         )
         assert M is not None, "No model returned from the create_ip() method"
-        opt = pe.SolverFactory("glpk")
+        opt = pe.SolverFactory(solver)
         res = opt.solve(M)
 
         if False and debug:
