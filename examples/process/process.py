@@ -41,6 +41,7 @@ class ProcessConstrained(HMMBase):
         alldata.A = data['A']
         alldata.N = len(alldata.A)
         alldata.sim = data['sim']
+        alldata.seed = data['sim'].get('seed',None)
         self.name = data['name']
 
     def create_ip(self, *, observation_index, emission_probs, data):
@@ -115,10 +116,7 @@ class ProcessConstrained(HMMBase):
         p = sim['p']
         q = sim['q']
         Tmax = sim['Tmax']
-        if seed is not None:
-            random.seed(seed)
-        else:
-            random.seed(sim['seed'])
+        random.seed(seed)
 
         if debug:
             print("PREC")

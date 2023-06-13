@@ -38,6 +38,7 @@ class TourHMM_Default(HMMBase):
             if to_ == alldata.home_city:
                 alldata.Costs[from_,alldata.homeagain_city] = alldata.Costs[from_,to_]
         alldata.sim = data['sim']
+        alldata.seed = data['sim'].get('seed',None)
         self.name = data['name']
 
     def create_ip(self, *, observation_index, emission_probs, data):
@@ -113,10 +114,7 @@ class TourHMM_Default(HMMBase):
         p = sim['p'] # Probability that a city is recognized when observed
         q = sim['q'] # Probability that a picture is sent from a city
         Tmax = sim['Tmax']
-        if seed is not None:
-            random.seed(seed)
-        else:
-            random.seed(sim['seed'])
+        random.seed(seed)
         #
         # Run 'n' simulations
         #
@@ -279,7 +277,7 @@ class TourHMM_City3(TourHMM_Default):
 # MAIN
 #
 debug=False
-seed=98709831
+seed=98709812
 
 model = TourHMM_Default()
 print("-"*70)

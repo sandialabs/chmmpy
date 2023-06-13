@@ -26,6 +26,7 @@ class TravelHMM_Default(HMMBase):
         alldata.Costs = {(from_,to_):cost_ for from_,to_,cost_ in data['Costs']}
         alldata.CityNames = data['CityNames']
         alldata.sim = data['sim']
+        alldata.seed = data['sim'].get('seed',None)
         self.name = data['name']
 
     def create_ip(self, *, observation_index, emission_probs, data):
@@ -112,10 +113,7 @@ class TravelHMM_Default(HMMBase):
         p = sim['p'] # Probability that a city is recognized when observed
         q = sim['q'] # Probability that a picture is sent from a city
         Tmax = sim['Tmax']
-        if seed is not None:
-            random.seed(seed)
-        else:
-            random.seed(sim['seed'])
+        random.seed(seed)
         #
         # Run 'n' simulations
         #
@@ -123,9 +121,9 @@ class TravelHMM_Default(HMMBase):
         all_cities = list(range(self.data.N-1))
         nruns = sim['nruns'] if n is None else n
         for n in range(nruns):
-            #if debug:
-            #    sys.stdout.write(".")
-            #    sys.stdout.flush()
+            if debug:
+                sys.stdout.write(".")
+                sys.stdout.flush()
 
             budget = random.randint(sim['budget_min'], sim['budget_max'])
             costs = 0
@@ -252,7 +250,7 @@ class TravelHMM_City4(TravelHMM_Default):
 # MAIN
 #
 debug=False
-seed=9870983
+seed=987222345614
 
 model = TravelHMM_Default()
 print("-"*70)
