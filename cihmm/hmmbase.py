@@ -3,6 +3,7 @@
 # https://www.audiolabs-erlangen.de/resources/MIR/FMP/C5/C5S3_Viterbi.html
 #
 
+import json
 import copy
 import logging
 import pprint
@@ -196,7 +197,7 @@ class HMMBase(object):
             print("HMMLEARN")
             print("")
         observations, omap, emission_probs = self._presolve(observations)
-        if debug:
+        if False and debug:
             print("observations:", observations)
             print("emission_probs:")
             for i in range(len(emission_probs)):
@@ -217,11 +218,12 @@ class HMMBase(object):
         if debug:
             print("sequence:        ", encoded_observations)
         logprob, received = self.model.decode(np.array(encoded_observations))
+
+        self.results = Munch(M=self.model, log_likelihood=logprob, states=received)
         if debug:
+            self.print_hmm_results()
             print("predicted states:", received)
             print("logprob", logprob)
-
-        return logprob, received
 
     def create_lp(
         self,
@@ -273,11 +275,10 @@ class HMMBase(object):
                 if t + 1 < len(observation_index):
                     states[t + 1] = b
 
+        self.results = Munch(M=M, log_likelihood=log_likelihood, states=states)
         if debug:
-            self.print_lp_results(M)
+            self.print_lp_results()
             print("predicted states:", states)
-
-        return log_likelihood, states
 
     def inference_ip(self, *, observations=None, debug=False, solver="glpk"):
         if debug:
@@ -313,14 +314,44 @@ class HMMBase(object):
             if pe.value(M.y[t, a, b]) > 0:
                 if t + 1 < len(observation_index):
                     states[t + 1] = b
+
+        self.results = Munch(M=M, log_likelihood=log_likelihood, states=states)
         if debug:
-            self.print_ip_results(M)
+            self.print_ip_results()
             print("predicted states:", states)
 
-        return log_likelihood, states
+    def get_hmm_results(self, results):
+        ans = {}
+        ans['n_features'] = results.M.n_features
+        ans['start_probs'] = results.M.startprob_.tolist()
+        ans['emission_probs'] = results.M.emissionprob_.tolist()
+        ans['trans_mat'] = results.M.transmat_.tolist()
+        return ans
 
-    def print_lp_results(self, M):
-        pass
+    def get_lp_results(self, M):
+        return {"y: activities": [ [t,a,b, pe.value(M.y[t,a,b])] for t,a,b in M.y if pe.value(M.y[t,a,b]) > 0]}
 
-    def print_ip_results(self, M):
-        pass
+    def get_ip_results(self, M):
+        return {}
+
+    def print_hmm_results(self):
+        pprint.pprint( self.get_hmm_results(self.results) )
+
+    def print_lp_results(self):
+        pprint.pprint( self.get_lp_results(self.results.M) )
+
+    def print_ip_results(self):
+        pprint.pprint( self.get_ip_results(self.results.M) )
+
+    def write_hmm_results(self, filename):
+        with open(filename, 'w') as OUTPUT:
+            json.dump(self.get_hmm_results(self.results), OUTPUT, sort_keys=True, indent=4, ensure_ascii=False)
+
+    def write_lp_results(self, filename):
+        with open(filename, 'w') as OUTPUT:
+            json.dump(self.get_lp_results(self.results.M), OUTPUT, sort_keys=True, indent=4, ensure_ascii=False)
+
+    def write_ip_results(self, filename):
+        with open(filename, 'w') as OUTPUT:
+            json.dump(self.get_ip_results(self.results.M), OUTPUT, sort_keys=True, indent=4, ensure_ascii=False)
+

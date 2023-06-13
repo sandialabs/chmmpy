@@ -171,70 +171,63 @@ class TravelHMM_Default(HMMBase):
             return O
         self.O = O
 
-    def print_lp_results(self, M):
-            print("Y: activities")
-            for t,a,b in M.y:
-                if pe.value(M.y[t,a,b]) > 0:
-                    print(t,a,b, pe.value(M.y[t,a,b]))
+    def get_ip_results(self, M):
+        ans = self.get_lp_results(M)
+        J=list(range(self.data.N-1))
 
-    def print_ip_results(self, M):
-            self.print_lp_results(M)
-            print("")
-
-            print("City")
-            for t in range(self.data.Tmax):
-                for j in range(self.data.N):
-                    if pe.value(M.node[t,j]) > 0:
-                        print("",t,j, pe.value(M.node[t,j]))
-                        break
-            print("")
-
-            print("Start city")
-            city = None
-            for j in M.start:
-                print("start",j,pe.value(M.start[j]))
-                if pe.value(M.start[j]) > 0:
-                    city = j
-            print("",city)
-            print("")
-
-            print("Stop city")
-            city = None
-            for j in M.start:
-                print("stop",j,pe.value(M.stop[j]))
-                if pe.value(M.stop[j]) > 0:
-                    city = j
-            print("",city)
-            print("")
-
-            print("Z: tour start")
-            flag=False
-            print("z",-1,pe.value(M.z[-1]))
-            for t in range(self.data.Tmax):
-                print("z",t,pe.value(M.z[t]))
-                if pe.value(M.z[t]) - pe.value(M.z[t-1]) > 0:
-                    print("",t)
-                    flag=True
+        city = []
+        for t in range(self.data.Tmax):
+            for j in range(self.data.N):
+                if pe.value(M.node[t,j]) > 0:
+                    city.append( [t,j, pe.value(M.node[t,j])] )
                     break
-            if not flag:
-                print("",None)
-            print("")
+        ans["city"] = city
 
-            print("Z: tour stop")
-            flag=False
-            for t in range(self.data.Tmax):
-                print("Z",t,pe.value(M.Z[t]))
-                if pe.value(M.Z[t]) - pe.value(M.Z[t+1]) > 0:
-                    print("",t)
-                    flag=True
-                    break
-            if not flag:
-                print("",None)
-            print("")
+        city = None
+        for j in M.start:
+            #print("start",j,pe.value(M.start[j]))
+            if pe.value(M.start[j]) > 0:
+                city = j
+        ans["start city"] = city
 
-            for t,a,b in M.FF:
-                if pe.value(M.y[t,a,b]) > 0:
-                    print("INFEASIBLE", t,a,b)
+        city = None
+        for j in M.start:
+            #print("stop",j,pe.value(M.stop[j]))
+            if pe.value(M.stop[j]) > 0:
+                city = j
+        ans["stop city"] = city
+
+        values = []
+        flag=False
+        values.append( [-1,pe.value(M.z[-1])] )
+        for t in range(self.data.Tmax):
+            values.append( [t,pe.value(M.z[t])] )
+            if pe.value(M.z[t]) - pe.value(M.z[t-1]) > 0:
+                start = t
+                flag=True
+                break
+        if not flag:
+            start = None
+        ans["z: values"] = values
+        ans["z: start"] = start
+
+        values = []
+        flag=False
+        for t in range(self.data.Tmax):
+            values.append( [t,pe.value(M.Z[t])] )
+            if pe.value(M.Z[t]) - pe.value(M.Z[t+1]) > 0:
+                stop = t
+                flag=True
+                break
+        if not flag:
+            stop = None
+        ans["Z: values"] = values
+        ans["Z: stop"] = stop
+
+        ans["INFEASIBLE"] = [[t,a,b] for t,a,b in M.FF if pe.value(M.y[t,a,b]) > 0]
+
+        return ans
+
 
 class TravelHMM_City4(TravelHMM_Default):
 
@@ -259,7 +252,7 @@ print("TravelHMM - Default")
 print("-"*70)
 print("-"*70)
 model.load_data(filename='travel1.yaml')
-run_all(model, seed=seed, debug=debug)
+run_all(model, seed=seed, debug=debug, output="results1")
 
 model = TravelHMM_City4()
 print("-"*70)
@@ -268,5 +261,5 @@ print("TravelHMM - Start in City 4")
 print("-"*70)
 print("-"*70)
 model.load_data(filename='travel1.yaml')
-run_all(model, seed=seed, debug=debug)
+run_all(model, seed=seed, debug=debug, output="results2")
 

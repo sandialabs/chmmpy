@@ -21,7 +21,7 @@ def print_differences(s1, s2):
         print("", "None")
 
 
-def run_all(model, debug=False, seed=None, n=None):
+def run_all(model, debug=False, seed=None, n=None, output=None):
     if seed is None:
         seed = model.data.seed
     print("Running with seed:",seed)
@@ -38,27 +38,34 @@ def run_all(model, debug=False, seed=None, n=None):
     print("")
 
     print("\n\n Viterbei\n")
-    ll0, states0 = model.inference_hmmlearn(observations=obs, debug=debug)
-    print("predicted states", states0)
-    print("logprob", ll0)
+    model.inference_hmmlearn(observations=obs, debug=debug)
+    print("predicted states", model.results.states)
+    print("logprob", model.results.log_likelihood)
     print("")
-    print("Similarity:", state_similarity(states0, ground_truth))
-    print_differences(states0, ground_truth)
+    print("Similarity:", state_similarity(model.results.states, ground_truth))
+    print_differences(model.results.states, ground_truth)
+    if output is not None:
+        model.write_hmm_results(output+"_hmm.json")
     print("")
 
     print("\n\n LP\n")
-    ll1, states1 = model.inference_lp(observations=obs, debug=debug)
-    print("predicted states", states1)
-    print("logprob", ll1)
+    model.inference_lp(observations=obs, debug=debug)
+    print("predicted states", model.results.states)
+    print("logprob", model.results.log_likelihood)
     print("")
-    print("Similarity:", state_similarity(states1, ground_truth))
-    print_differences(states1, ground_truth)
+    print("Similarity:", state_similarity(model.results.states, ground_truth))
+    print_differences(model.results.states, ground_truth)
+    if output is not None:
+        model.write_lp_results(output+"_lp.json")
     print("")
 
     print("\n\n IP\n")
-    ll2, states2 = model.inference_ip(observations=obs, debug=debug)
-    print("predicted states", states2)
-    print("logprob", ll2)
-    print("Similarity:", state_similarity(states2, ground_truth))
-    print_differences(states2, ground_truth)
+    model.inference_ip(observations=obs, debug=debug)
+    print("predicted states", model.results.states)
+    print("logprob", model.results.log_likelihood)
+    print("Similarity:", state_similarity(model.results.states, ground_truth))
+    print_differences(model.results.states, ground_truth)
+    if output is not None:
+        model.write_ip_results(output+"_ip.json")
     print("")
+
