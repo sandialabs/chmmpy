@@ -171,9 +171,10 @@ class TravelHMM_Default(HMMBase):
             return O
         self.O = O
 
-    def get_ip_results(self, M):
-        ans = self.get_lp_results(M)
+    def get_ip_results(self, results):
+        ans = self.get_lp_results(results)
         J=list(range(self.data.N-1))
+        M = results.M
 
         city = []
         for t in range(self.data.Tmax):
@@ -181,21 +182,21 @@ class TravelHMM_Default(HMMBase):
                 if pe.value(M.node[t,j]) > 0:
                     city.append( [t,j, pe.value(M.node[t,j])] )
                     break
-        ans["city"] = city
+        ans["results"]["city"] = city
 
         city = None
         for j in M.start:
             #print("start",j,pe.value(M.start[j]))
             if pe.value(M.start[j]) > 0:
                 city = j
-        ans["start city"] = city
+        ans["results"]["start city"] = city
 
         city = None
         for j in M.start:
             #print("stop",j,pe.value(M.stop[j]))
             if pe.value(M.stop[j]) > 0:
                 city = j
-        ans["stop city"] = city
+        ans["results"]["stop city"] = city
 
         values = []
         flag=False
@@ -208,8 +209,8 @@ class TravelHMM_Default(HMMBase):
                 break
         if not flag:
             start = None
-        ans["z: values"] = values
-        ans["z: start"] = start
+        ans["results"]["z: values"] = values
+        ans["results"]["z: start"] = start
 
         values = []
         flag=False
@@ -221,10 +222,10 @@ class TravelHMM_Default(HMMBase):
                 break
         if not flag:
             stop = None
-        ans["Z: values"] = values
-        ans["Z: stop"] = stop
+        ans["results"]["Z: values"] = values
+        ans["results"]["Z: stop"] = stop
 
-        ans["INFEASIBLE"] = [[t,a,b] for t,a,b in M.FF if pe.value(M.y[t,a,b]) > 0]
+        ans["results"]["INFEASIBLE"] = [[t,a,b] for t,a,b in M.FF if pe.value(M.y[t,a,b]) > 0]
 
         return ans
 

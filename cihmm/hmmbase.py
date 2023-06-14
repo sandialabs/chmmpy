@@ -275,7 +275,7 @@ class HMMBase(object):
                 if t + 1 < len(observation_index):
                     states[t + 1] = b
 
-        self.results = Munch(M=M, log_likelihood=log_likelihood, states=states)
+        self.results = Munch(start_probs=self.data.start_probs, emission_probs=emission_probs, trans_mat=self.data.trans_mat, M=M, log_likelihood=log_likelihood, states=states)
         if debug:
             self.print_lp_results()
             print("predicted states:", states)
@@ -315,33 +315,47 @@ class HMMBase(object):
                 if t + 1 < len(observation_index):
                     states[t + 1] = b
 
-        self.results = Munch(M=M, log_likelihood=log_likelihood, states=states)
+        self.results = Munch(start_probs=self.data.start_probs, emission_probs=emission_probs, trans_mat=self.data.trans_mat, M=M, log_likelihood=log_likelihood, states=states)
         if debug:
             self.print_ip_results()
             print("predicted states:", states)
 
     def get_hmm_results(self, results):
-        ans = {}
-        ans['n_features'] = results.M.n_features
-        ans['start_probs'] = results.M.startprob_.tolist()
-        ans['emission_probs'] = results.M.emissionprob_.tolist()
-        ans['trans_mat'] = results.M.transmat_.tolist()
+        ans = {"results":{}, "model":{} }
+
+        ans['model']['n_features'] = results.M.n_features
+        ans['model']['start_probs'] = results.M.startprob_.tolist()
+        ans['model']['emission_probs'] = results.M.emissionprob_.tolist()
+        ans['model']['trans_mat'] = results.M.transmat_.tolist()
+
+        ans['results']['log_likelihood'] = results.log_likelihood
+        ans['results']['states'] = results.states.tolist()
         return ans
 
-    def get_lp_results(self, M):
-        return {"y: activities": [ [t,a,b, pe.value(M.y[t,a,b])] for t,a,b in M.y if pe.value(M.y[t,a,b]) > 0]}
+    def get_lp_results(self, results):
+        ans = {"results":{}, "model":{} }
 
-    def get_ip_results(self, M):
+        ans['model']['start_probs'] = results.start_probs.tolist()
+        ans['model']['emission_probs'] = results.emission_probs #.tolist()
+        ans['model']['trans_mat'] = results.trans_mat.tolist()
+
+        ans['results']["y: activities"] = [ [t,a,b, pe.value(results.M.y[t,a,b])] for t,a,b in results.M.y if pe.value(results.M.y[t,a,b]) > 0]
+        ans['results']['log_likelihood'] = results.log_likelihood
+        ans['results']['states'] = results.states
+
+        return ans
+
+    def get_ip_results(self, results):
         return {}
 
     def print_hmm_results(self):
         pprint.pprint( self.get_hmm_results(self.results) )
 
     def print_lp_results(self):
-        pprint.pprint( self.get_lp_results(self.results.M) )
+        pprint.pprint( self.get_lp_results(self.results) )
 
     def print_ip_results(self):
-        pprint.pprint( self.get_ip_results(self.results.M) )
+        pprint.pprint( self.get_ip_results(self.results) )
 
     def write_hmm_results(self, filename):
         with open(filename, 'w') as OUTPUT:
@@ -349,9 +363,9 @@ class HMMBase(object):
 
     def write_lp_results(self, filename):
         with open(filename, 'w') as OUTPUT:
-            json.dump(self.get_lp_results(self.results.M), OUTPUT, sort_keys=True, indent=4, ensure_ascii=False)
+            json.dump(self.get_lp_results(self.results), OUTPUT, sort_keys=True, indent=4, ensure_ascii=False)
 
     def write_ip_results(self, filename):
         with open(filename, 'w') as OUTPUT:
-            json.dump(self.get_ip_results(self.results.M), OUTPUT, sort_keys=True, indent=4, ensure_ascii=False)
+            json.dump(self.get_ip_results(self.results), OUTPUT, sort_keys=True, indent=4, ensure_ascii=False)
 
