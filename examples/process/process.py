@@ -41,6 +41,14 @@ class ProcessConstrained(HMMBase):
         alldata.N = len(alldata.A)
         alldata.sim = data["sim"]
         alldata.seed = data["sim"].get("seed", None)
+        #
+        # prec[j] -> list of predecessors of job j
+        #
+        prec = {i: [] for i in self.data.J}
+        for i, j in self.data.E:
+            prec[j].append(i)
+        alldata.prec = prec
+        #
         self.name = data["name"]
 
     def create_ip(self, *, observation_index, emission_probs, data):
@@ -111,12 +119,6 @@ class ProcessConstrained(HMMBase):
         self, seed=None, n=None, debug=False, return_observations=False
     ):
         #
-        # prec[j] -> list of predecessors of job j
-        #
-        prec = {i: [] for i in self.data.J}
-        for i, j in self.data.E:
-            prec[j].append(i)
-        #
         # state[ tuple ] -> state_id
         #
         state = {tuple(val): i for i, val in self.data.A.items()}
@@ -131,7 +133,7 @@ class ProcessConstrained(HMMBase):
 
         if debug:
             print("PREC")
-            pprint.pprint(prec, compact=True)
+            pprint.pprint(self.data.prec, compact=True)
 
         O = []
         nruns = sim["nruns"] if n is None else n
@@ -151,7 +153,7 @@ class ProcessConstrained(HMMBase):
             #
             for j in self.data.J:
                 start = 0
-                for i in prec[j]:
+                for i in self.data.prec[j]:
                     start = max(start, end.get(i, 0))
                 if sim["delays"][j] > 0:
                     start += random.randint(0, sim["delays"][j])
