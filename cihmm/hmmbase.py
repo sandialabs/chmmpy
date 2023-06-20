@@ -3,6 +3,7 @@
 # https://www.audiolabs-erlangen.de/resources/MIR/FMP/C5/C5S3_Viterbi.html
 #
 
+import pprint
 import json
 import copy
 import logging
@@ -359,13 +360,16 @@ class HMMBase(object):
 
     def write_hmm_results(self, filename):
         with open(filename, 'w') as OUTPUT:
-            json.dump(self.get_hmm_results(self.results), OUTPUT, sort_keys=True, indent=4, ensure_ascii=False)
+            pprint.pprint( self.get_hmm_results(self.results), stream=OUTPUT, sort_dicts=True, indent=4, compact=True)
+            #json.dump(self.get_hmm_results(self.results), OUTPUT, sort_keys=True, indent=4, ensure_ascii=False)
 
     def write_lp_results(self, filename):
         with open(filename, 'w') as OUTPUT:
-            json.dump(self.get_lp_results(self.results), OUTPUT, sort_keys=True, indent=4, ensure_ascii=False)
+            pprint.pprint( self.get_lp_results(self.results), stream=OUTPUT, sort_dicts=True, indent=4, compact=True)
+            #json.dump(self.get_lp_results(self.results), OUTPUT, sort_keys=True, indent=4, ensure_ascii=False)
 
     def write_ip_results(self, filename):
         with open(filename, 'w') as OUTPUT:
-            json.dump(self.get_ip_results(self.results), OUTPUT, sort_keys=True, indent=4, ensure_ascii=False)
+            pprint.pprint( self.get_ip_results(self.results), stream=OUTPUT, sort_dicts=True, indent=4, compact=True)
+            #json.dump(self.get_ip_results(self.results), OUTPUT, sort_keys=True, indent=4, ensure_ascii=False)
 
