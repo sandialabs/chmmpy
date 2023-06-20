@@ -9,9 +9,9 @@
 # Additionally, there may be random delays at the beginning of each job.
 #
 # A simulation is used to generate data from possible executions of the process, and an HMM is
-# trained using the simulation data.  Each hidden state in the HMM is associated with a possible 
+# trained using the simulation data.  Each hidden state in the HMM is associated with a possible
 # state of the process, which corresponds to the set of simultaneous executing jobs.
-# 
+#
 
 import yaml
 import random
@@ -24,28 +24,33 @@ from cihmm.util import state_similarity, print_differences, run_all
 
 
 class ProcessConstrained(HMMBase):
-
     #
     # Load process description
     #
     def load_process(self, *, data=None, filename=None):
         if filename is not None:
-            with open(filename, 'r') as INPUT:
+            with open(filename, "r") as INPUT:
                 data = yaml.safe_load(INPUT)
         assert data is not None
 
         alldata = self.data
-        alldata.J = list(range(data['J']))
-        alldata.L = data['L']
-        alldata.E = data['E']
-        alldata.A = data['A']
+        alldata.J = list(range(data["J"]))
+        alldata.L = data["L"]
+        alldata.E = data["E"]
+        alldata.A = data["A"]
         alldata.N = len(alldata.A)
-        alldata.sim = data['sim']
-        alldata.seed = data['sim'].get('seed',None)
-        self.name = data['name']
+        alldata.sim = data["sim"]
+        alldata.seed = data["sim"].get("seed", None)
+        self.name = data["name"]
 
     def create_ip(self, *, observation_index, emission_probs, data):
-        M = self.create_lp(observation_index=observation_index, emission_probs=emission_probs, data=data, y_binary=True, cache_indices=True)
+        M = self.create_lp(
+            observation_index=observation_index,
+            emission_probs=emission_probs,
+            data=data,
+            y_binary=True,
+            cache_indices=True,
+        )
 
         #
         # J: list of job ids
@@ -54,11 +59,11 @@ class ProcessConstrained(HMMBase):
         # A: a mapping from process state to active jobs
         # Tmax: number of timesteps
         #
-        J=data.J
-        L=data.L
-        E=data.E
-        Tmax=data.Tmax
-        A=data.A
+        J = data.J
+        L = data.L
+        E = data.E
+        Tmax = data.Tmax
+        A = data.A
 
         T = list(range(Tmax))
 
@@ -71,51 +76,57 @@ class ProcessConstrained(HMMBase):
         # Y-Z interactions
 
         M.yz = pe.ConstraintList()
-        for t in range(Tmax-1):
+        for t in range(Tmax - 1):
             for j in J:
-                tau = max(t+1 - L[j], -1)
+                tau = max(t + 1 - L[j], -1)
                 # TODO: improve the efficiency of this constraint generation using sparse index sets
                 M.yz.add(
-                    sum( M.y[t,a,b] for tt,a,b in M.E if t == tt and j in A[b] )  == M.z[j,t+1] - M.z[j,tau]
-                    )
+                    sum(M.y[t, a, b] for tt, a, b in M.E if t == tt and j in A[b])
+                    == M.z[j, t + 1] - M.z[j, tau]
+                )
 
         # Z constraints
 
         def zstep_(m, j, t):
             return m.z[j, t] - m.z[j, t - 1] >= 0
+
         M.zstep = pe.Constraint(J, T, rule=zstep_)
 
         def precedence_lb_(m, i, j, t):
-            tau = max(t- L[i], -1)
+            tau = max(t - L[i], -1)
             return m.z[i, tau] - m.z[j, t] >= 0
+
         M.precedence_lb = pe.Constraint(E, T, rule=precedence_lb_)
 
         def activity_feasibility_(m, j, t):
             if t + L[j] - 1 >= Tmax:
                 return m.z[j, t] == m.z[j, Tmax - 1]
             return pe.Constraint.Skip
+
         M.activity_feasibility = pe.Constraint(J, T, rule=activity_feasibility_)
 
         return M
 
-    def run_training_simulations(self, seed=None, n=None, debug=False, return_observations=False):
+    def run_training_simulations(
+        self, seed=None, n=None, debug=False, return_observations=False
+    ):
         #
         # prec[j] -> list of predecessors of job j
         #
-        prec = {i:[] for i in self.data.J}
-        for i,j in self.data.E:
+        prec = {i: [] for i in self.data.J}
+        for i, j in self.data.E:
             prec[j].append(i)
         #
         # state[ tuple ] -> state_id
         #
-        state = {tuple(val):i for i,val in self.data.A.items()}
+        state = {tuple(val): i for i, val in self.data.A.items()}
         #
         # Generate nruns simulations
         #
-        sim = self.data['sim']
-        p = sim['p']
-        q = sim['q']
-        Tmax = sim['Tmax']
+        sim = self.data["sim"]
+        p = sim["p"]
+        q = sim["q"]
+        Tmax = sim["Tmax"]
         random.seed(seed)
 
         if debug:
@@ -123,34 +134,39 @@ class ProcessConstrained(HMMBase):
             pprint.pprint(prec, compact=True)
 
         O = []
-        nruns = sim['nruns'] if n is None else n
+        nruns = sim["nruns"] if n is None else n
         for n in range(nruns):
             curr = {}
             start_ = {}
             end = {}
-            jobs = {t:[] for t in range(Tmax)}
+            jobs = {t: [] for t in range(Tmax)}
             #
             # Set background noise
             #
             for j in self.data.J:
-                curr[j] = random.choices([0,1], [1-q, q], k=Tmax)
+                curr[j] = random.choices([0, 1], [1 - q, q], k=Tmax)
             #
             # Randomly select when next job is executed.  Note that this
             # assumes a topological ordering of jobs.
             #
             for j in self.data.J:
-                start=0
+                start = 0
                 for i in prec[j]:
-                    start = max(start, end.get(i,0))
-                if sim['delays'][j] > 0:
-                    start += random.randint(0,sim['delays'][j])
+                    start = max(start, end.get(i, 0))
+                if sim["delays"][j] > 0:
+                    start += random.randint(0, sim["delays"][j])
                 start_[j] = start
-                end[j] = start+self.data.L[j]
-                for t in range(start,end[j]):
-                    curr[j][t] = 1 if random.uniform(0,1) <= p else 0
+                end[j] = start + self.data.L[j]
+                for t in range(start, end[j]):
+                    curr[j][t] = 1 if random.uniform(0, 1) <= p else 0
                     jobs[t].append(j)
-            
-            O.append(Munch(observations=curr, states=[state[tuple(jobs[t])] for t in range(Tmax)]))
+
+            O.append(
+                Munch(
+                    observations=curr,
+                    states=[state[tuple(jobs[t])] for t in range(Tmax)],
+                )
+            )
 
             if debug:
                 print("")
@@ -158,47 +174,46 @@ class ProcessConstrained(HMMBase):
                 pprint.pprint(start_, compact=True)
                 print("END")
                 pprint.pprint(end, compact=True)
-    
+
         if return_observations:
             return O
         self.O = O
 
-    def print_lp_results(self, M):
-            print("Y: activities")
-            for t,a,b in M.y:
-                if pe.value(M.y[t,a,b]) > 0 and b >= 0 and len(self.data.A[b]) > 0:
-                    print(t,a,b, self.data.A[b] if b >= 0 else None)
+    def get_ip_results(self, results):
+        ans = self.get_lp_results(results)
+        M = results.M
 
-    def print_ip_results(self, M):
-            self.print_lp_results(M)
-            print("")
+        start = {}
+        for i, t in M.z:
+            tau = max(t - self.data.L[i], -1)
+            if pe.value(M.z[i, t]) - pe.value(M.z[i, tau]) > 0:
+                if t not in start:
+                    start[t] = set()
+                start[t].add(i)
+        for t in start:
+            start[t] = list(sorted(start[t]))
+        ans["results"]["z: job start times"] = start
 
-            print("Z: job start times")
-            tmp = {}
-            for i,t in M.z:
-                tau = max(t-self.data.L[i],-1)
-                if pe.value(M.z[i,t]) - pe.value(M.z[i,tau]) > 0:
-                    if t not in tmp:
-                        tmp[t] = set()
-                    tmp[t].add(i)
-            for t in tmp:
-                print(t, tmp[t])
-            print("")
+        ans["results"]["INFEASIBLE"] = [
+            [t, a, b] for t, a, b in M.FF if pe.value(M.y[t, a, b]) > 0
+        ]
 
-            for t,a,b in M.FF:
-                if pe.value(M.y[t,a,b]) > 0:
-                    print("INFEASIBLE", t,a,b)
+        return ans
 
 
 class ProcessConstrained_StartAfterTimeZero(ProcessConstrained):
-
     def create_ip(self, *, observation_index, emission_probs, data):
-        M = ProcessConstrained.create_ip(self, observation_index=observation_index, emission_probs=emission_probs, data=data)
+        M = ProcessConstrained.create_ip(
+            self,
+            observation_index=observation_index,
+            emission_probs=emission_probs,
+            data=data,
+        )
 
         #
         # Force the first job to be in the window
         #
-        M.z[0,-1].fix(0)
+        M.z[0, -1].fix(0)
 
         return M
 
@@ -206,23 +221,24 @@ class ProcessConstrained_StartAfterTimeZero(ProcessConstrained):
 #
 # MAIN
 #
+debug = False
+seed = None
+
 model = ProcessConstrained()
-print("-"*70)
-print("-"*70)
+print("-" * 70)
+print("-" * 70)
 print("ProcessConstrained - Default")
-print("-"*70)
-print("-"*70)
-model.load_process(filename='process1.yaml')
-run_all(model)
+print("-" * 70)
+print("-" * 70)
+model.load_process(filename="process1.yaml")
+run_all(model, debug=debug, seed=seed, output="results1")
 
 
 model = ProcessConstrained_StartAfterTimeZero()
-print("-"*70)
-print("-"*70)
+print("-" * 70)
+print("-" * 70)
 print("ProcessConstrained - StartAfterTimeZero")
-print("-"*70)
-print("-"*70)
-model.load_process(filename='process1.yaml')
-run_all(model)
-
-
+print("-" * 70)
+print("-" * 70)
+model.load_process(filename="process1.yaml")
+run_all(model, debug=debug, seed=seed, output="results2")
