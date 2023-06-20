@@ -199,13 +199,13 @@ class HMMBase(object):
             print("")
             print("HMMLEARN")
             print("")
-        observations, omap, emission_probs = self._presolve(observations)
+        _observations, omap, emission_probs = self._presolve(observations)
         if False and debug:
-            print("observations:", observations)
+            print("observations:", _observations)
             print("emission_probs:")
             for i in range(len(emission_probs)):
                 print(i, sum(emission_probs[i]), emission_probs[i])
-        encoded_observations = self._encode_observations(observations, omap)
+        encoded_observations = self._encode_observations(_observations, omap)
 
         #
         # Setup HMM
@@ -222,7 +222,7 @@ class HMMBase(object):
             print("sequence:        ", encoded_observations)
         logprob, received = self.model.decode(np.array(encoded_observations))
 
-        self.results = Munch(M=self.model, log_likelihood=logprob, states=received)
+        self.results = Munch(M=self.model, log_likelihood=logprob, states=received, observations=observations)
         if debug:
             self.print_hmm_results()
             print("predicted states:", received)
@@ -252,8 +252,8 @@ class HMMBase(object):
             print("")
             print("LP")
             print("")
-        observations, omap, emission_probs = self._presolve(observations)
-        observation_index = [omap[obs] for obs in observations]
+        _observations, omap, emission_probs = self._presolve(observations)
+        observation_index = [omap[obs] for obs in _observations]
 
         M = self.create_lp(
             observation_index=observation_index,
@@ -279,6 +279,7 @@ class HMMBase(object):
                     states[t + 1] = b
 
         self.results = Munch(
+            observations=observations,
             start_probs=self.data.start_probs,
             emission_probs=emission_probs,
             trans_mat=self.data.trans_mat,
@@ -295,8 +296,8 @@ class HMMBase(object):
             print("")
             print("IP")
             print("")
-        observations, omap, emission_probs = self._presolve(observations)
-        observation_index = [omap[obs] for obs in observations]
+        _observations, omap, emission_probs = self._presolve(observations)
+        observation_index = [omap[obs] for obs in _observations]
 
         M = self.create_ip(
             observation_index=observation_index,
@@ -326,6 +327,7 @@ class HMMBase(object):
                     states[t + 1] = b
 
         self.results = Munch(
+            observations=observations,
             start_probs=self.data.start_probs,
             emission_probs=emission_probs,
             trans_mat=self.data.trans_mat,
@@ -340,11 +342,13 @@ class HMMBase(object):
     def get_hmm_results(self, results):
         ans = {"results": {}, "model": {}}
 
+
         ans["model"]["n_features"] = results.M.n_features
         ans["model"]["start_probs"] = results.M.startprob_.tolist()
         ans["model"]["emission_probs"] = results.M.emissionprob_.tolist()
         ans["model"]["trans_mat"] = results.M.transmat_.tolist()
 
+        ans["results"]["observations"] = results.observations
         ans["results"]["log_likelihood"] = results.log_likelihood
         ans["results"]["states"] = results.states.tolist()
         return ans
@@ -356,6 +360,7 @@ class HMMBase(object):
         ans["model"]["emission_probs"] = results.emission_probs  # .tolist()
         ans["model"]["trans_mat"] = results.trans_mat.tolist()
 
+        ans["results"]["observations"] = results.observations
         ans["results"]["y: activities"] = [
             [t, a, b, pe.value(results.M.y[t, a, b])]
             for t, a, b in results.M.y
