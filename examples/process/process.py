@@ -69,11 +69,10 @@ class ProcessConstrained(HMMBase):
         #
         J = data.J
         L = data.L
-        E = data.E
         Tmax = data.Tmax
         A = data.A
-
         T = list(range(Tmax))
+        E = data.E
 
         #
         # M.z[j,t] is one if job j begins at or before time t
@@ -86,11 +85,11 @@ class ProcessConstrained(HMMBase):
         M.yz = pe.ConstraintList()
         for t in range(Tmax - 1):
             for j in J:
-                tau = max(t + 1 - L[j], -1)
+                tau = max(t - L[j], -1)
                 # TODO: improve the efficiency of this constraint generation using sparse index sets
                 M.yz.add(
                     sum(M.y[t, a, b] for tt, a, b in M.E if t == tt and j in A[b])
-                    == M.z[j, t + 1] - M.z[j, tau]
+                    == M.z[j, t] - M.z[j, tau]
                 )
 
         # Z constraints
@@ -100,18 +99,18 @@ class ProcessConstrained(HMMBase):
 
         M.zstep = pe.Constraint(J, T, rule=zstep_)
 
+        def activity_feasibility_(m, j, t):
+            if t > Tmax - L[j]:
+                return m.z[j, t] == m.z[j, Tmax - 1]
+            return pe.Constraint.Skip
+
+        M.activity_feasibility = pe.Constraint(J, T, rule=activity_feasibility_)
+
         def precedence_lb_(m, i, j, t):
             tau = max(t - L[i], -1)
             return m.z[i, tau] - m.z[j, t] >= 0
 
         M.precedence_lb = pe.Constraint(E, T, rule=precedence_lb_)
-
-        def activity_feasibility_(m, j, t):
-            if t + L[j] - 1 >= Tmax:
-                return m.z[j, t] == m.z[j, Tmax - 1]
-            return pe.Constraint.Skip
-
-        M.activity_feasibility = pe.Constraint(J, T, rule=activity_feasibility_)
 
         return M
 

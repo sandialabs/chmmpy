@@ -36,7 +36,7 @@ def create_hmm_lp(
     G = {}  # (t,a,b) such that transition probability > 0
     for t in T:
         if t == 0:
-            for i in range(N):
+            for i in A:
                 tmp = start_probs[i] * emission_probs[i][observations[t]]
                 if tmp > 0:
                     # print("HERE",(-1,-1,i), tmp, math.log(tmp))
@@ -59,18 +59,16 @@ def create_hmm_lp(
                     FF.add(tuple([t - 1] + list(it.multi_index)))
 
     E = []  # (t,a,b) where
-    #           (t-1, -1,  i) when t==0
-    #           (t-1,  i, -2) when t==Tmax
-    #           (t-1,  a,  b)  when t>0 and t<Tmax
+    #           (t, -1,  i) when t==-1
+    #           (t,  a,  b) when t>=0 and t<Tmax
+    #           (t,  i, -2) when t==Tmax
+    for i in A:
+        E.append((-1, -1, i))
     for t in T:
-        if t == 0:
-            for i in range(N):
-                E.append((-1, -1, i))
-        else:
-            for g in F:
-                E.append(tuple([t - 1] + list(g)))
-    for i in range(N):
-        E.append((Tmax - 1, i, -2))
+        for g in F:
+            E.append(tuple([t] + list(g)))
+    for i in A:
+        E.append((Tmax, i, -2))
 
     M = pe.ConcreteModel()
     if y_binary:
@@ -83,14 +81,14 @@ def create_hmm_lp(
     def flow_(m, t, b):
         if t == 0:
             return m.y[t - 1, -1, b] == sum(m.y[t, b, aa] for aa in A if (b, aa) in F)
-        elif t == Tmax - 1:
+        elif t == Tmax:
             return sum(m.y[t - 1, a, b] for a in A if (a, b) in F) == m.y[t, b, -2]
         else:
             return sum(m.y[t - 1, a, b] for a in A if (a, b) in F) == sum(
                 m.y[t, b, aa] for aa in A if (b, aa) in F
             )
 
-    M.flow = pe.Constraint(T, A, rule=flow_)
+    M.flow = pe.Constraint(T+[Tmax], A, rule=flow_)
 
     def flow_start_(m):
         return sum(m.y[-1, -1, b] for b in A) == 1
@@ -98,7 +96,7 @@ def create_hmm_lp(
     M.flow_start = pe.Constraint(rule=flow_start_)
 
     def flow_end_(m):
-        return sum(m.y[Tmax - 1, a, -2] for a in A) == 1
+        return sum(m.y[Tmax, a, -2] for a in A) == 1
 
     M.flow_end = pe.Constraint(rule=flow_end_)
 
@@ -108,7 +106,6 @@ def create_hmm_lp(
         expr=sum(G[t, a, b] * M.y[t, a, b] for t, a, b in G) + -(10**6) * M.O,
         sense=pe.maximize,
     )
-    # sum(M.y[t,a,b] for t,a,b in FF),
 
     if cache_indices:
         # Cache for use in create_ip()
