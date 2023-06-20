@@ -24,7 +24,7 @@ def print_differences(s1, s2):
 def run_all(model, debug=False, seed=None, n=None, output=None):
     if seed is None:
         seed = model.data.seed
-    print("Running with seed:",seed)
+    print("Running with seed:", seed)
 
     model.run_training_simulations(n=n, debug=debug, seed=seed)
     model.train_HMM(debug=debug)
@@ -45,7 +45,7 @@ def run_all(model, debug=False, seed=None, n=None, output=None):
     print("Similarity:", state_similarity(model.results.states, ground_truth))
     print_differences(model.results.states, ground_truth)
     if output is not None:
-        model.write_hmm_results(output+"_hmm.json")
+        model.write_hmm_results(output + "_hmm.json")
     print("")
 
     print("\n\n LP\n")
@@ -56,7 +56,7 @@ def run_all(model, debug=False, seed=None, n=None, output=None):
     print("Similarity:", state_similarity(model.results.states, ground_truth))
     print_differences(model.results.states, ground_truth)
     if output is not None:
-        model.write_lp_results(output+"_lp.json")
+        model.write_lp_results(output + "_lp.json")
     print("")
 
     print("\n\n IP\n")
@@ -66,6 +66,5 @@ def run_all(model, debug=False, seed=None, n=None, output=None):
     print("Similarity:", state_similarity(model.results.states, ground_truth))
     print_differences(model.results.states, ground_truth)
     if output is not None:
-        model.write_ip_results(output+"_ip.json")
+        model.write_ip_results(output + "_ip.json")
     print("")
-
