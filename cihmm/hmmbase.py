@@ -60,7 +60,9 @@ class HMMBase(object):
 
     def train_HMM(self, debug=False):
         assert len(self.O) > 0, "Expecting simulations in the self.O object"
-        Tmax = len(self.O[0]["observations"])
+        Tmax = len(self.O[0]["observations"][0])
+        #Tmax = self.data['sim']['Tmax']
+        #print("HERE",Tmax,len(self.O[0]["observations"][0]))
         self._estimate_start_probs(debug=debug)
         self._estimate_transition_matrix(Tmax=Tmax, debug=debug)
         self._estimate_emissions_matrix(Tmax=Tmax, debug=debug)
@@ -263,7 +265,7 @@ class HMMBase(object):
         )
         assert M is not None, "No model returned from the create_lp() method"
         opt = pe.SolverFactory(solver)
-        res = opt.solve(M)
+        res = opt.solve(M, tee=debug)
 
         log_likelihood = pe.value(M.o)
 
@@ -307,7 +309,7 @@ class HMMBase(object):
         )
         assert M is not None, "No model returned from the create_ip() method"
         opt = pe.SolverFactory(solver)
-        res = opt.solve(M)
+        res = opt.solve(M, tee=debug)
 
         if False and debug:
             M.pprint()
