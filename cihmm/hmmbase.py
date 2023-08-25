@@ -28,6 +28,7 @@ class HMMBase(object):
         pass
 
     def run_training_simulations(
+        # Always returns a list
         self, n=None, debug=False, return_observations=False, seed=None
     ):
         pass
@@ -58,9 +59,11 @@ class HMMBase(object):
         return self._tuplize_observations(results["observations"]), results["states"]
 
     def train_HMM(self, debug=False):
+        assert len(self.O) > 0, "Expecting simulations in the self.O object"
+        Tmax = len(self.O[0]["observations"])
         self._estimate_start_probs(debug=debug)
-        self._estimate_transition_matrix(debug=debug)
-        self._estimate_emissions_matrix(debug=debug)
+        self._estimate_transition_matrix(Tmax=Tmax, debug=debug)
+        self._estimate_emissions_matrix(Tmax=Tmax, debug=debug)
 
     def _estimate_start_probs(self, debug=False):
         #
@@ -79,7 +82,7 @@ class HMMBase(object):
             print("start_probs")
             pprint.pprint(start_probs)
 
-    def _estimate_transition_matrix(self, debug=False):
+    def _estimate_transition_matrix(self, Tmax=None, debug=False):
         #
         # Estimate hidden state transition probabilities from data
         #
@@ -92,7 +95,6 @@ class HMMBase(object):
             trans_mat.append([1e-4] * self.data.N)
 
         count = 0
-        Tmax = self.data["sim"]["Tmax"]
         for o in self.O:
             states = o["states"]
             for t in range(1, Tmax):
@@ -110,7 +112,7 @@ class HMMBase(object):
             print("trans_mat")
             pprint.pprint(trans_mat)
 
-    def _estimate_emissions_matrix(self, debug=False):
+    def _estimate_emissions_matrix(self, Tmax=None, debug=False):
         #
         # Collect the different patterns of observations, and build a custom emissions matrix
         #
@@ -119,7 +121,6 @@ class HMMBase(object):
             emission_probs.append([])
         omap = {}
 
-        Tmax = self.data["sim"]["Tmax"]
         for o in self.O:
             states = o["states"]
             observations = self._tuplize_observations(o["observations"])
