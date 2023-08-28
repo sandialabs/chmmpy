@@ -21,7 +21,7 @@ def print_differences(s1, s2):
         print("", "None")
 
 
-def run_all(model, debug=False, seed=None, n=None, output=None):
+def run_all(model, debug=False, seed=None, n=None, output=None, hmmlearn=True, lp=True, ip=True):
     if seed is None:
         seed = model.data.seed
     print("Running with seed:", seed)
@@ -37,34 +37,38 @@ def run_all(model, debug=False, seed=None, n=None, output=None):
     print("Ground Truth:", ground_truth)
     print("")
 
-    print("\n\n Viterbei\n")
-    model.inference_hmmlearn(observations=obs, debug=debug)
-    print("predicted states", model.results.states)
-    print("logprob", model.results.log_likelihood)
-    print("")
-    print("Similarity:", state_similarity(model.results.states, ground_truth))
-    print_differences(model.results.states, ground_truth)
-    if output is not None:
-        model.write_hmm_results(output + "_hmm.json")
-    print("")
+    if hmmlearn:
+        print("\n\n Viterbei\n")
+        model.inference_hmmlearn(observations=obs, debug=debug)
+        print("predicted states", model.results.states)
+        print("logprob", model.results.log_likelihood)
+        print("")
+        print("Similarity:", state_similarity(model.results.states, ground_truth))
+        print_differences(model.results.states, ground_truth)
+        if output is not None:
+            model.write_hmm_results(output + "_hmm.json")
+        print("")
 
-    print("\n\n LP\n")
-    model.inference_lp(observations=obs, debug=debug)
-    print("predicted states", model.results.states)
-    print("logprob", model.results.log_likelihood)
-    print("")
-    print("Similarity:", state_similarity(model.results.states, ground_truth))
-    print_differences(model.results.states, ground_truth)
-    if output is not None:
-        model.write_lp_results(output + "_lp.json")
-    print("")
+    if lp:
+        print("\n\n LP\n")
+        model.inference_lp(observations=obs, debug=debug)
+        print("predicted states", model.results.states)
+        print("logprob", model.results.log_likelihood)
+        print("")
+        print("Similarity:", state_similarity(model.results.states, ground_truth))
+        print_differences(model.results.states, ground_truth)
+        if output is not None:
+            model.write_lp_results(output + "_lp.json")
+        print("")
 
-    print("\n\n IP\n")
-    model.inference_ip(observations=obs, debug=debug)
-    print("predicted states", model.results.states)
-    print("logprob", model.results.log_likelihood)
-    print("Similarity:", state_similarity(model.results.states, ground_truth))
-    print_differences(model.results.states, ground_truth)
-    if output is not None:
-        model.write_ip_results(output + "_ip.json")
-    print("")
+    if ip:
+        print("\n\n IP\n")
+        model.inference_ip(observations=obs, debug=debug)
+        print("predicted states", model.results.states)
+        print("logprob", model.results.log_likelihood)
+        print("Similarity:", state_similarity(model.results.states, ground_truth))
+        print_differences(model.results.states, ground_truth)
+        if output is not None:
+            model.write_ip_results(output + "_ip.json")
+        print("")
+
