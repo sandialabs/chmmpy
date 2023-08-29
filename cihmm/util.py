@@ -21,7 +21,7 @@ def print_differences(s1, s2):
         print("", "None")
 
 
-def run_all(model, debug=False, seed=None, n=None, output=None, hmmlearn=True, lp=True, ip=True):
+def run_all(model, debug=False, seed=None, n=None, output=None, hmmlearn=True, lp=True, ip=True, solver="glpk"):
     if seed is None:
         seed = model.data.seed
     print("Running with seed:", seed)
@@ -51,7 +51,7 @@ def run_all(model, debug=False, seed=None, n=None, output=None, hmmlearn=True, l
 
     if lp:
         print("\n\n LP\n")
-        model.inference_lp(observations=obs, debug=debug)
+        model.inference_lp(observations=obs, debug=debug, solver=solver)
         print("predicted states", model.results.states)
         print("logprob", model.results.log_likelihood)
         print("")
@@ -63,7 +63,7 @@ def run_all(model, debug=False, seed=None, n=None, output=None, hmmlearn=True, l
 
     if ip:
         print("\n\n IP\n")
-        model.inference_ip(observations=obs, debug=debug)
+        model.inference_ip(observations=obs, debug=debug, solver=solver)
         print("predicted states", model.results.states)
         print("logprob", model.results.log_likelihood)
         print("Similarity:", state_similarity(model.results.states, ground_truth))
