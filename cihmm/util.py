@@ -38,7 +38,7 @@ def run_all(model, debug=False, training=True, seed=None, n=None, output=None, h
         print("Ground Truth:", ground_truth)
         print("")
     else:
-        obs = model.O[0]
+        obs = model.O[0]['observations']
         ground_truth = None
 
     if hmmlearn:

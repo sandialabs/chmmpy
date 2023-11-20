@@ -40,11 +40,14 @@ class HMMBase(object):
         for o in observations:
             assert o in self.omap, "Unexpected observation {}".format(o)
 
-    def load_model(self, *, start_probs, emission_probs, trans_mat):
+    def load_model(self, *, start_probs, emission_probs, trans_mat, tolerance=0.0):
         # start_probs
-        start_probs_ = [0] * self.data.N
+        start_probs_ = [0.0] * self.data.N
         for s,v in start_probs.items():
             start_probs_[self.smap[s]] = v
+        if tolerance:
+            for i in range(self.data.N):
+                start_probs_[i] = (start_probs_[i]+tolerance)/(1+self.data.N*tolerance)
         assert math.fabs(sum(start_probs_) - 1) < 1e-7, "Total start probability is {} but expected 1.0".format(sum(start_probs_))
         self.data.start_probs = np.array(start_probs_)
 
@@ -55,19 +58,26 @@ class HMMBase(object):
         for s,v in emission_probs.items():
             for o,p in v.items():
                 emission_probs_[self.smap[s]][self.omap[o]] = p
+            if tolerance:
+                for i in range(len(self.omap)):
+                    emission_probs_[self.smap[s]][i] = (emission_probs_[self.smap[s]][i]+tolerance)/(1+len(self.omap)*tolerance)
             assert math.fabs(sum(emission_probs_[self.smap[s]]) - 1) < 1e-7
         self.data._emission_probs = emission_probs_
 
         self.data._total_obs = {i:1.0 for i in range(self.data.N)}
 
         # transition matrix
-        pprint.pprint(trans_mat)
         trans_mat_ = []
         for i in range(self.data.N):
             trans_mat_.append([0.0]*self.data.N)
         for k,v in trans_mat.items():
             s,s_ = k
             trans_mat_[self.smap[s]][self.smap[s_]] = v
+        if tolerance:
+            for s in self.smap:
+                for s_ in self.smap:
+                    trans_mat_[self.smap[s]][self.smap[s_]] = (trans_mat_[self.smap[s]][self.smap[s_]]+tolerance)/(1+len(self.smap)*tolerance)
+        assert math.fabs(sum(trans_mat_[self.smap[s]]) - 1) < 1e-7
         self.data.trans_mat = np.array(trans_mat_)
 
     def run_training_simulations(
@@ -268,7 +278,11 @@ class HMMBase(object):
             print("sequence:        ", encoded_observations)
         logprob, received = self.model.decode(np.array(encoded_observations))
 
-        self.results = Munch(M=self.model, log_likelihood=logprob, states=received, observations=observations)
+        self.results = Munch(
+            M=self.model, log_likelihood=logprob, states=received, observations=observations,
+            hidden={i:self.data.hidden_states[s] for i,s in enumerate(received)},
+            )
+
         if debug:
             self.print_hmm_results()
             print("predicted states:", received)
@@ -332,6 +346,7 @@ class HMMBase(object):
             M=M,
             log_likelihood=log_likelihood,
             states=states,
+            hidden={i:self.data.hidden_states[s] for i,s in enumerate(states)},
         )
         if debug:
             self.print_lp_results()
@@ -380,6 +395,7 @@ class HMMBase(object):
             M=M,
             log_likelihood=log_likelihood,
             states=states,
+            hidden={i:self.data.hidden_states[s] for i,s in enumerate(states)},
         )
         if debug:
             self.print_ip_results()
@@ -390,21 +406,45 @@ class HMMBase(object):
 
 
         ans["model"]["n_features"] = results.M.n_features
-        ans["model"]["start_probs"] = results.M.startprob_.tolist()
-        ans["model"]["emission_probs"] = results.M.emissionprob_.tolist()
-        ans["model"]["trans_mat"] = results.M.transmat_.tolist()
+
+        tmp = results.M.startprob_.tolist()
+        ans["model"]["start_probs"] = {s:tmp[i] for s,i in self.smap.items() if tmp[i] > 0.0}
+
+        tmp = results.M.emissionprob_.tolist()
+        emission_probs = {}
+        for s in self.smap:
+            emission_probs[s] = [{"key":o, "prob":tmp[self.smap[s]][self.omap[o]]} for o in self.omap if tmp[self.smap[s]][self.omap[o]] > 0.0]
+        ans["model"]["emission_probs"] = emission_probs
+
+        tmp = results.M.transmat_.tolist()
+        trans_mat = {}
+        for s in self.smap:
+            trans_mat[s] = {s_:tmp[self.smap[s]][self.smap[s_]] for s_ in self.smap if tmp[self.smap[s]][self.smap[s_]] > 0.0}
+        ans["model"]["trans_mat"] = trans_mat
 
         ans["results"]["observations"] = results.observations
         ans["results"]["log_likelihood"] = results.log_likelihood
         ans["results"]["states"] = results.states.tolist()
+        ans["results"]["hidden"] = results.hidden
         return ans
 
     def get_lp_results(self, results):
         ans = {"results": {}, "model": {}}
 
-        ans["model"]["start_probs"] = results.start_probs.tolist()
-        ans["model"]["emission_probs"] = results.emission_probs  # .tolist()
-        ans["model"]["trans_mat"] = results.trans_mat.tolist()
+        tmp = results.start_probs.tolist()
+        ans["model"]["start_probs"] = {s:tmp[i] for s,i in self.smap.items() if tmp[i] > 0.0}
+
+        tmp = results.emission_probs
+        emission_probs = {}
+        for s in self.smap:
+            emission_probs[s] = [{"key":o, "prob":tmp[self.smap[s]][self.omap[o]]} for o in self.omap if tmp[self.smap[s]][self.omap[o]] > 0.0]
+        ans["model"]["emission_probs"] = emission_probs
+
+        tmp = results.trans_mat.tolist()
+        trans_mat = {}
+        for s in self.smap:
+            trans_mat[s] = {s_:tmp[self.smap[s]][self.smap[s_]] for s_ in self.smap if tmp[self.smap[s]][self.smap[s_]] > 0.0}
+        ans["model"]["trans_mat"] = trans_mat
 
         ans["results"]["observations"] = results.observations
         ans["results"]["y: activities"] = [
@@ -414,6 +454,7 @@ class HMMBase(object):
         ]
         ans["results"]["log_likelihood"] = results.log_likelihood
         ans["results"]["states"] = results.states
+        ans["results"]["hidden"] = results.hidden
 
         return ans
 
