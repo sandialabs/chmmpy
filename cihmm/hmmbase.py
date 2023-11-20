@@ -3,6 +3,7 @@
 # https://www.audiolabs-erlangen.de/resources/MIR/FMP/C5/C5S3_Viterbi.html
 #
 
+import math
 import pprint
 import json
 import copy
@@ -26,6 +27,48 @@ class HMMBase(object):
 
     def create_ip(self, *, observation_index, emission_probs, data):
         pass
+
+    def load_observations(self, observations, time=None):
+        #
+        # WEH - How will this be used?
+        #       Should this be defined in the HMMBase class?
+        #
+        if time is None:
+            time = list(range(len(observations)))
+        self.O = [ dict(time=time, observations=observations) ]
+
+        for o in observations:
+            assert o in self.omap, "Unexpected observation {}".format(o)
+
+    def load_model(self, *, start_probs, emission_probs, trans_mat):
+        # start_probs
+        start_probs_ = [0] * self.data.N
+        for s,v in start_probs.items():
+            start_probs_[self.smap[s]] = v
+        assert math.fabs(sum(start_probs_) - 1) < 1e-7, "Total start probability is {} but expected 1.0".format(sum(start_probs_))
+        self.data.start_probs = np.array(start_probs_)
+
+        # emission probs
+        emission_probs_ = []
+        for i in range(self.data.N):
+            emission_probs_.append([0.0]*len(self.omap))
+        for s,v in emission_probs.items():
+            for o,p in v.items():
+                emission_probs_[self.smap[s]][self.omap[o]] = p
+            assert math.fabs(sum(emission_probs_[self.smap[s]]) - 1) < 1e-7
+        self.data._emission_probs = emission_probs_
+
+        self.data._total_obs = {i:1.0 for i in range(self.data.N)}
+
+        # transition matrix
+        pprint.pprint(trans_mat)
+        trans_mat_ = []
+        for i in range(self.data.N):
+            trans_mat_.append([0.0]*self.data.N)
+        for k,v in trans_mat.items():
+            s,s_ = k
+            trans_mat_[self.smap[s]][self.smap[s_]] = v
+        self.data.trans_mat = np.array(trans_mat_)
 
     def run_training_simulations(
         # Always returns a list
