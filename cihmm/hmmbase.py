@@ -361,7 +361,7 @@ class HMMBase(object):
         observation_index = [omap[obs] for obs in _observations]
 
         M = self.create_ip(
-            observation_index=observation_index,
+            observations=observation_index,
             emission_probs=emission_probs,
             data=self.data,
         )
@@ -446,7 +446,7 @@ class HMMBase(object):
             trans_mat[s] = {s_:tmp[self.smap[s]][self.smap[s_]] for s_ in self.smap if tmp[self.smap[s]][self.smap[s_]] > 0.0}
         ans["model"]["trans_mat"] = trans_mat
 
-        ans["results"]["observations"] = results.observations
+        ans["results"]["observations"] = {i:v for i,v in enumerate(results.observations)}
         ans["results"]["y: activities"] = [
             [t, a, b, pe.value(results.M.y[t, a, b])]
             for t, a, b in results.M.y
@@ -481,3 +481,20 @@ class HMMBase(object):
     def write_ip_results(self, filename):
         with open(filename, "w") as OUTPUT:
             json.dump(self.get_ip_results(self.results), OUTPUT, sort_keys=True, indent=2, ensure_ascii=False)
+
+    def write_lp_model(self, filename, debug=False):
+        results = getattr(self,"results",None)
+        assert results is not None, "No LP model has been generated!"
+        if debug:
+            results.M.pprint()
+            results.M.display()
+        results.M.write(filename)
+
+    def write_ip_model(self, filename, debug=False):
+        results = getattr(self,"results",None)
+        assert results is not None, "No IP model has been generated!"
+        if debug:
+            results.M.pprint()
+            results.M.display()
+        results.M.write(filename)
+
