@@ -298,7 +298,7 @@ class HMMBase(object):
         emission_probs,
         data,
         y_binary=False,
-        cache_indices=False
+        cache_indices=True
     ):
         return create_hmm_lp(
             observation_index,
@@ -459,6 +459,14 @@ class HMMBase(object):
         ans["results"]["log_likelihood"] = results.log_likelihood
         ans["results"]["states"] = results.states
         ans["results"]["hidden"] = results.hidden
+
+        invomap = {v: k for k, v in self.omap.items()}
+        invsmap = {v: k for k, v in self.smap.items()}
+        ans["results"]["invomap"] = invomap
+        ans["results"]["invsmap"] = invsmap
+
+        if getattr(self.results.M, "G", None) is not None:
+            ans["results"]["objective_coefficient"] = {t+1: {"from":invsmap.get(a,"STARTEND"), "to":invsmap.get(b,"STARTEND"), "coef":  pe.value(self.results.M.G[t,a,b])} for t,a,b in self.results.M.G if pe.value(results.M.y[t,a,b]) > 0}
 
         if self.model_data is not None:
             if results.hidden[0] not in self.model_data.start_probs:
