@@ -24,6 +24,7 @@ class HMMBase(object):
         self.data = Munch()
         self.data.O = []
         self.data.seed = None
+        self.model_data = None
 
     def create_ip(self, *, observation_index, emission_probs, data):
         pass
@@ -79,6 +80,8 @@ class HMMBase(object):
                     trans_mat_[self.smap[s]][self.smap[s_]] = (trans_mat_[self.smap[s]][self.smap[s_]]+tolerance)/(1+len(self.smap)*tolerance)
         assert math.fabs(sum(trans_mat_[self.smap[s]]) - 1) < 1e-7
         self.data.trans_mat = np.array(trans_mat_)
+
+        self.model_data = Munch(start_probs=start_probs, emission_probs=emission_probs, trans_mat=trans_mat, tolerance=tolerance)
 
     def run_training_simulations(
         # Always returns a list
@@ -426,6 +429,7 @@ class HMMBase(object):
         ans["results"]["log_likelihood"] = results.log_likelihood
         ans["results"]["states"] = results.states.tolist()
         ans["results"]["hidden"] = results.hidden
+
         return ans
 
     def get_lp_results(self, results):
@@ -455,6 +459,20 @@ class HMMBase(object):
         ans["results"]["log_likelihood"] = results.log_likelihood
         ans["results"]["states"] = results.states
         ans["results"]["hidden"] = results.hidden
+
+        if self.model_data is not None:
+            if results.hidden[0] not in self.model_data.start_probs:
+                ans["results"]["unexpected start"] = results.hidden[0]
+            
+            ans["results"]["unexpected transition"] = {}
+            for t in range(len(results.hidden)-1):
+                if (results.hidden[t], results.hidden[t+1]) not in self.model_data.trans_mat:
+                    ans["results"]["unexpected transition"][t] = (results.hidden[t], results.hidden[t+1])
+            
+            ans["results"]["unexpected emission"] = {}
+            for t in range(len(results.hidden)):
+                if results.observations[t] not in self.model_data.emission_probs[results.hidden[t]]:
+                    ans["results"]["unexpected emission"][t] = results.observations[t]
 
         return ans
 
