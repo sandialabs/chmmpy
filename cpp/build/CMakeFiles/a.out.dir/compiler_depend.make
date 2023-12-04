@@ -467,6 +467,7 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__thread/poll_with_backoff.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__thread/timed_backoff_policy.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__threading_support \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__tree \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__tuple_dir/apply_cv.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__tuple_dir/make_tuple_types.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__tuple_dir/pair_like.h \
@@ -649,6 +650,7 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/ctype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cwchar \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cwctype \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/deque \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/errno.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/exception \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/functional \
@@ -662,6 +664,7 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/limits.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/locale \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/locale.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/map \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/math.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/memory \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/mutex \
@@ -669,6 +672,7 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/numeric \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/optional \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/ostream \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/queue \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/random \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/ratio \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/stddef.h \
@@ -855,10 +859,6 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/resource.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__functional/operations.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_wint_t.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_volatile.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__random/bernoulli_distribution.h:
@@ -866,8 +866,6 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_va_list.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_useconds_t.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_ucontext.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_u_int8_t.h:
 
@@ -1016,6 +1014,12 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/stdexcept:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/ratio:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_ucontext.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__memory_resource/polymorphic_allocator.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/queue:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/optional:
 
@@ -1219,8 +1223,6 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_reference.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_polymorphic.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__node_handle:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_pthread/_pthread_types.h:
@@ -1333,10 +1335,6 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/decay.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/min.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/cdefs.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_constant_evaluated.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_in_addr_t.h:
@@ -1386,6 +1384,12 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__tuple_dir/make_tuple_types.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_seek_set.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_polymorphic.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_partial_sort.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__tree:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__threading_support:
 
@@ -1511,8 +1515,6 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__mutex_base:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__memory_resource/polymorphic_allocator.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/mismatch.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__memory_resource/memory_resource.h:
@@ -1601,11 +1603,9 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/numeric:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/deque:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__iterator/mergeable.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/_xlocale.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/errno.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__random/subtract_with_carry_engine.h:
 
@@ -1685,6 +1685,10 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/disjunction.h:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/errno.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/_xlocale.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__concepts/semiregular.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__functional/hash.h:
@@ -1753,6 +1757,10 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__functional/not_fn.h:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/iterator:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/map:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__random/default_random_engine.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__concepts/swappable.h:
@@ -1776,6 +1784,10 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_mismatch.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__concepts/regular.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_wint_t.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__functional/operations.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__random/ranlux.h:
 
@@ -1808,10 +1820,6 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__concepts/assignable.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__concepts/arithmetic.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_remove.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/appleapiopts.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_prev_permutation.h:
 
@@ -2069,8 +2077,6 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/uniform_random_bit_generator_adaptor.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_partial_sort.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_nth_element.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_next_permutation.h:
@@ -2183,8 +2189,6 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_iterator_concept.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/iterator:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/inplace_merge.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__variant/monostate.h:
@@ -2266,6 +2270,10 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__iterator/iter_swap.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_fd_clr.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/cdefs.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/min.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/make_projected.h:
 
@@ -2464,6 +2472,10 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/_stdio.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__memory/swap_allocator.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/appleapiopts.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_remove.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_count.h:
 
