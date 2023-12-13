@@ -32,6 +32,7 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/arm/limits.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/arm/signal.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/arm/types.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/assert.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/adjacent_find.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/all_of.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/any_of.h \
@@ -630,16 +631,22 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__variant/monostate.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__verbose_abort \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/algorithm \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/any \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/array \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/atomic \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/barrier \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/bit \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/bitset \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cassert \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cctype \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cerrno \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/charconv \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/climits \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cmath \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/compare \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/complex \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/concepts \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/coroutine \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cstdarg \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cstddef \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cstdint \
@@ -653,6 +660,9 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/deque \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/errno.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/exception \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/execution \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/filesystem \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/format \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/functional \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/initializer_list \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/ios \
@@ -660,6 +670,7 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/iostream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/istream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/iterator \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/latch \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/limits \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/limits.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/locale \
@@ -667,14 +678,22 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/map \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/math.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/memory \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/memory_resource \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/mutex \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/new \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/numbers \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/numeric \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/optional \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/ostream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/queue \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/random \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/ranges \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/ratio \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/semaphore \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/shared_mutex \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/source_location \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/span \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/sstream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/stddef.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/stdexcept \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/stdint.h \
@@ -687,6 +706,7 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/system_error \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/tuple \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/type_traits \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/typeindex \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/typeinfo \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/unordered_map \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/utility \
@@ -697,6 +717,7 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/wctype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/ctype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/errno.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/gethostuuid.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/libkern/_OSByteOrder.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/libkern/arm/OSByteOrder.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/limits.h \
@@ -737,6 +758,7 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_pthread/_pthread_rwlockattr_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_pthread/_pthread_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_pthread/_pthread_types.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_select.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_symbol_aliasing.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_blkcnt_t.h \
@@ -774,6 +796,7 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_null.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_off_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_pid_t.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_posix_vdisable.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_rsize_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_rune_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_seek_set.h \
@@ -796,6 +819,7 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_uid_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_uintptr_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_useconds_t.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_uuid_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_va_list.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_wchar_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_wint_t.h \
@@ -804,12 +828,15 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/errno.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/qos.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/resource.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/select.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/signal.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/syslimits.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/types.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/unistd.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/wait.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/time.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/unistd.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/wchar.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/wctype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/xlocale.h \
@@ -826,8 +853,227 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
   /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdarg.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stddef.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdint.h \
-  /Users/clmatte/Desktop/HMM_Code/cpp/HMM.h
+  /Users/clmatte/Desktop/HMM_Code/cpp/HMM.h \
+  /opt/homebrew/include/boost/config.hpp \
+  /opt/homebrew/include/boost/config/compiler/clang.hpp \
+  /opt/homebrew/include/boost/config/compiler/clang_version.hpp \
+  /opt/homebrew/include/boost/config/detail/cxx_composite.hpp \
+  /opt/homebrew/include/boost/config/detail/posix_features.hpp \
+  /opt/homebrew/include/boost/config/detail/select_compiler_config.hpp \
+  /opt/homebrew/include/boost/config/detail/select_platform_config.hpp \
+  /opt/homebrew/include/boost/config/detail/select_stdlib_config.hpp \
+  /opt/homebrew/include/boost/config/detail/suffix.hpp \
+  /opt/homebrew/include/boost/config/helper_macros.hpp \
+  /opt/homebrew/include/boost/config/platform/macos.hpp \
+  /opt/homebrew/include/boost/config/pragma_message.hpp \
+  /opt/homebrew/include/boost/config/stdlib/libcpp.hpp \
+  /opt/homebrew/include/boost/config/user.hpp \
+  /opt/homebrew/include/boost/config/workaround.hpp \
+  /opt/homebrew/include/boost/container_hash/detail/hash_mix.hpp \
+  /opt/homebrew/include/boost/container_hash/detail/hash_range.hpp \
+  /opt/homebrew/include/boost/container_hash/detail/hash_tuple_like.hpp \
+  /opt/homebrew/include/boost/container_hash/detail/mulx.hpp \
+  /opt/homebrew/include/boost/container_hash/detail/requires_cxx11.hpp \
+  /opt/homebrew/include/boost/container_hash/hash.hpp \
+  /opt/homebrew/include/boost/container_hash/hash_fwd.hpp \
+  /opt/homebrew/include/boost/container_hash/is_contiguous_range.hpp \
+  /opt/homebrew/include/boost/container_hash/is_described_class.hpp \
+  /opt/homebrew/include/boost/container_hash/is_range.hpp \
+  /opt/homebrew/include/boost/container_hash/is_tuple_like.hpp \
+  /opt/homebrew/include/boost/container_hash/is_unordered_range.hpp \
+  /opt/homebrew/include/boost/cstdint.hpp \
+  /opt/homebrew/include/boost/describe/bases.hpp \
+  /opt/homebrew/include/boost/describe/detail/config.hpp \
+  /opt/homebrew/include/boost/describe/detail/cx_streq.hpp \
+  /opt/homebrew/include/boost/describe/detail/void_t.hpp \
+  /opt/homebrew/include/boost/describe/members.hpp \
+  /opt/homebrew/include/boost/describe/modifiers.hpp \
+  /opt/homebrew/include/boost/detail/workaround.hpp \
+  /opt/homebrew/include/boost/functional/hash.hpp \
+  /opt/homebrew/include/boost/mp11/algorithm.hpp \
+  /opt/homebrew/include/boost/mp11/bind.hpp \
+  /opt/homebrew/include/boost/mp11/detail/config.hpp \
+  /opt/homebrew/include/boost/mp11/detail/mp_append.hpp \
+  /opt/homebrew/include/boost/mp11/detail/mp_copy_if.hpp \
+  /opt/homebrew/include/boost/mp11/detail/mp_count.hpp \
+  /opt/homebrew/include/boost/mp11/detail/mp_fold.hpp \
+  /opt/homebrew/include/boost/mp11/detail/mp_front.hpp \
+  /opt/homebrew/include/boost/mp11/detail/mp_is_list.hpp \
+  /opt/homebrew/include/boost/mp11/detail/mp_list.hpp \
+  /opt/homebrew/include/boost/mp11/detail/mp_map_find.hpp \
+  /opt/homebrew/include/boost/mp11/detail/mp_min_element.hpp \
+  /opt/homebrew/include/boost/mp11/detail/mp_plus.hpp \
+  /opt/homebrew/include/boost/mp11/detail/mp_remove_if.hpp \
+  /opt/homebrew/include/boost/mp11/detail/mp_rename.hpp \
+  /opt/homebrew/include/boost/mp11/detail/mp_void.hpp \
+  /opt/homebrew/include/boost/mp11/detail/mp_with_index.hpp \
+  /opt/homebrew/include/boost/mp11/function.hpp \
+  /opt/homebrew/include/boost/mp11/integer_sequence.hpp \
+  /opt/homebrew/include/boost/mp11/integral.hpp \
+  /opt/homebrew/include/boost/mp11/list.hpp \
+  /opt/homebrew/include/boost/mp11/set.hpp \
+  /opt/homebrew/include/boost/mp11/utility.hpp \
+  /opt/homebrew/include/boost/mp11/version.hpp \
+  /opt/homebrew/include/boost/static_assert.hpp \
+  /opt/homebrew/include/boost/type_traits/add_const.hpp \
+  /opt/homebrew/include/boost/type_traits/add_rvalue_reference.hpp \
+  /opt/homebrew/include/boost/type_traits/add_volatile.hpp \
+  /opt/homebrew/include/boost/type_traits/conditional.hpp \
+  /opt/homebrew/include/boost/type_traits/conjunction.hpp \
+  /opt/homebrew/include/boost/type_traits/declval.hpp \
+  /opt/homebrew/include/boost/type_traits/detail/config.hpp \
+  /opt/homebrew/include/boost/type_traits/enable_if.hpp \
+  /opt/homebrew/include/boost/type_traits/integral_constant.hpp \
+  /opt/homebrew/include/boost/type_traits/intrinsics.hpp \
+  /opt/homebrew/include/boost/type_traits/is_const.hpp \
+  /opt/homebrew/include/boost/type_traits/is_enum.hpp \
+  /opt/homebrew/include/boost/type_traits/is_floating_point.hpp \
+  /opt/homebrew/include/boost/type_traits/is_integral.hpp \
+  /opt/homebrew/include/boost/type_traits/is_lvalue_reference.hpp \
+  /opt/homebrew/include/boost/type_traits/is_reference.hpp \
+  /opt/homebrew/include/boost/type_traits/is_rvalue_reference.hpp \
+  /opt/homebrew/include/boost/type_traits/is_same.hpp \
+  /opt/homebrew/include/boost/type_traits/is_signed.hpp \
+  /opt/homebrew/include/boost/type_traits/is_union.hpp \
+  /opt/homebrew/include/boost/type_traits/is_unsigned.hpp \
+  /opt/homebrew/include/boost/type_traits/is_void.hpp \
+  /opt/homebrew/include/boost/type_traits/is_volatile.hpp \
+  /opt/homebrew/include/boost/type_traits/make_unsigned.hpp \
+  /opt/homebrew/include/boost/type_traits/remove_cv.hpp \
+  /opt/homebrew/include/boost/version.hpp \
+  /opt/homebrew/include/cbc/coin/CbcBranchBase.hpp \
+  /opt/homebrew/include/cbc/coin/CbcBranchDecision.hpp \
+  /opt/homebrew/include/cbc/coin/CbcBranchingObject.hpp \
+  /opt/homebrew/include/cbc/coin/CbcConsequence.hpp \
+  /opt/homebrew/include/cbc/coin/CbcGeneral.hpp \
+  /opt/homebrew/include/cbc/coin/CbcObject.hpp \
+  /opt/homebrew/include/cbc/coin/CbcObjectUpdateData.hpp \
+  /opt/homebrew/include/coinutils/coin/CoinError.hpp \
+  /opt/homebrew/include/coinutils/coin/CoinPragma.hpp \
+  /opt/homebrew/include/coinutils/coin/CoinTypes.hpp \
+  /opt/homebrew/include/coinutils/coin/CoinUtilsConfig.h \
+  /opt/homebrew/include/osi/coin/OsiBranchingObject.hpp
 
+
+/opt/homebrew/include/osi/coin/OsiBranchingObject.hpp:
+
+/opt/homebrew/include/coinutils/coin/CoinTypes.hpp:
+
+/opt/homebrew/include/coinutils/coin/CoinError.hpp:
+
+/opt/homebrew/include/cbc/coin/CbcGeneral.hpp:
+
+/opt/homebrew/include/cbc/coin/CbcConsequence.hpp:
+
+/opt/homebrew/include/cbc/coin/CbcBranchingObject.hpp:
+
+/opt/homebrew/include/cbc/coin/CbcBranchDecision.hpp:
+
+/opt/homebrew/include/cbc/coin/CbcBranchBase.hpp:
+
+/opt/homebrew/include/boost/type_traits/make_unsigned.hpp:
+
+/opt/homebrew/include/boost/type_traits/is_volatile.hpp:
+
+/opt/homebrew/include/boost/type_traits/is_void.hpp:
+
+/opt/homebrew/include/boost/type_traits/is_unsigned.hpp:
+
+/opt/homebrew/include/boost/type_traits/is_signed.hpp:
+
+/opt/homebrew/include/boost/type_traits/is_same.hpp:
+
+/opt/homebrew/include/boost/type_traits/is_integral.hpp:
+
+/opt/homebrew/include/boost/type_traits/is_floating_point.hpp:
+
+/opt/homebrew/include/boost/type_traits/is_enum.hpp:
+
+/opt/homebrew/include/boost/type_traits/is_const.hpp:
+
+/opt/homebrew/include/boost/type_traits/intrinsics.hpp:
+
+/opt/homebrew/include/boost/type_traits/integral_constant.hpp:
+
+/opt/homebrew/include/boost/type_traits/detail/config.hpp:
+
+/opt/homebrew/include/boost/type_traits/conjunction.hpp:
+
+/opt/homebrew/include/boost/type_traits/add_rvalue_reference.hpp:
+
+/opt/homebrew/include/boost/type_traits/add_const.hpp:
+
+/opt/homebrew/include/boost/mp11/utility.hpp:
+
+/opt/homebrew/include/boost/mp11/list.hpp:
+
+/opt/homebrew/include/boost/mp11/integral.hpp:
+
+/opt/homebrew/include/boost/mp11/integer_sequence.hpp:
+
+/opt/homebrew/include/boost/mp11/function.hpp:
+
+/opt/homebrew/include/boost/mp11/detail/mp_with_index.hpp:
+
+/opt/homebrew/include/boost/mp11/detail/mp_rename.hpp:
+
+/opt/homebrew/include/boost/mp11/detail/mp_plus.hpp:
+
+/opt/homebrew/include/boost/mp11/detail/mp_min_element.hpp:
+
+/opt/homebrew/include/boost/mp11/detail/mp_map_find.hpp:
+
+/opt/homebrew/include/boost/mp11/detail/mp_is_list.hpp:
+
+/opt/homebrew/include/boost/mp11/detail/mp_fold.hpp:
+
+/opt/homebrew/include/boost/mp11/detail/mp_count.hpp:
+
+/opt/homebrew/include/boost/mp11/detail/mp_copy_if.hpp:
+
+/opt/homebrew/include/boost/mp11/bind.hpp:
+
+/opt/homebrew/include/boost/detail/workaround.hpp:
+
+/opt/homebrew/include/boost/describe/modifiers.hpp:
+
+/opt/homebrew/include/boost/mp11/version.hpp:
+
+/opt/homebrew/include/boost/describe/members.hpp:
+
+/opt/homebrew/include/boost/describe/detail/cx_streq.hpp:
+
+/opt/homebrew/include/boost/describe/detail/config.hpp:
+
+/opt/homebrew/include/boost/describe/bases.hpp:
+
+/opt/homebrew/include/boost/cstdint.hpp:
+
+/opt/homebrew/include/boost/container_hash/is_unordered_range.hpp:
+
+/opt/homebrew/include/boost/container_hash/is_tuple_like.hpp:
+
+/opt/homebrew/include/boost/container_hash/is_described_class.hpp:
+
+/opt/homebrew/include/boost/container_hash/detail/mulx.hpp:
+
+/opt/homebrew/include/boost/container_hash/detail/hash_tuple_like.hpp:
+
+/opt/homebrew/include/boost/container_hash/detail/hash_mix.hpp:
+
+/opt/homebrew/include/boost/config/workaround.hpp:
+
+/opt/homebrew/include/boost/config/user.hpp:
+
+/opt/homebrew/include/boost/config/stdlib/libcpp.hpp:
+
+/opt/homebrew/include/boost/config/pragma_message.hpp:
+
+/opt/homebrew/include/boost/config/helper_macros.hpp:
+
+/opt/homebrew/include/boost/config/detail/select_platform_config.hpp:
+
+/opt/homebrew/include/boost/config/detail/select_compiler_config.hpp:
 
 /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdint.h:
 
@@ -857,27 +1103,47 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/syslimits.h:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/select.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/resource.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_volatile.h:
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_wchar_t.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__random/bernoulli_distribution.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_va_list.h:
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_uuid_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_useconds_t.h:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_uid_t.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/unistd.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_ucontext.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_u_short.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_u_int8_t.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_u_int64_t.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_u_int32_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_u_int16_t.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/common_type.h:
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_u_int.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_u_char.h:
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_timespec.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/alignment_of.h:
+/opt/homebrew/include/cbc/coin/CbcObject.hpp:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_time_t.h:
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_suseconds_t.h:
+
+/opt/homebrew/include/boost/mp11/detail/mp_front.hpp:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_sigset_t.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_sigaltstack.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_seek_set.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cmath:
 
@@ -886,8 +1152,6 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_nlink_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_mode_t.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_u_int.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__memory/assume_aligned.h:
 
@@ -907,9 +1171,7 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_id_t.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_fd_def.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_u_short.h:
+/opt/homebrew/include/boost/mp11/detail/mp_append.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_dev_t.h:
 
@@ -943,9 +1205,13 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_pthread/_pthread_key_t.h:
 
+/opt/homebrew/include/boost/config/detail/posix_features.hpp:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/stdint.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_pthread/_pthread_attr_t.h:
+
+/opt/homebrew/include/boost/type_traits/declval.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_endian.h:
 
@@ -953,7 +1219,11 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/stdint.h:
 
+/opt/homebrew/include/boost/type_traits/enable_if.hpp:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__ios/fpos.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/execution:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_fd_zero.h:
 
@@ -981,6 +1251,10 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/libkern/_OSByteOrder.h:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__iterator/erase_if_container.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/gethostuuid.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/common_reference.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/errno.h:
@@ -1001,7 +1275,13 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/typeinfo:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_fsblkcnt_t.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/typeindex:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/type_traits:
+
+/opt/homebrew/include/boost/mp11/detail/mp_remove_if.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/string_view:
 
@@ -1013,15 +1293,31 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/stdexcept:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_member_pointer.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/sstream:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/span:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/source_location:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/shared_mutex:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_fd_def.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/semaphore:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/ratio:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_ucontext.h:
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/ranges:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__memory_resource/polymorphic_allocator.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/queue:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/optional:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/numbers:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/search_n.h:
 
@@ -1047,10 +1343,6 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/iostream:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__tuple_dir/tuple_element.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_ssize_t.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/iosfwd:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/ios:
@@ -1060,6 +1352,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/includes.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/functional:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/filesystem:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_pod.h:
 
@@ -1075,15 +1369,17 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cstring:
 
+/opt/homebrew/include/boost/functional/hash.hpp:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cstdlib:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cstdio:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_copy_backward.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_rune_t.h:
+/opt/homebrew/include/boost/type_traits/add_volatile.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cstdarg:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/coroutine:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_equal_range.h:
 
@@ -1101,6 +1397,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/climits:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/charconv:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_rotate.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/wctype.h:
@@ -1111,11 +1409,11 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/array:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/any:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__memory/destruct_n.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/algorithm:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_suseconds_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__verbose_abort:
 
@@ -1135,6 +1433,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__utility/integer_sequence.h:
 
+/opt/homebrew/include/coinutils/coin/CoinPragma.hpp:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__compare/partial_order.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__utility/in_place.h:
@@ -1144,6 +1444,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__utility/exception_guard.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__utility/forward.h:
+
+/opt/homebrew/include/boost/config/detail/cxx_composite.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__utility/declval.h:
 
@@ -1159,15 +1461,13 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/remove_const_ref.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_uid_t.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/_types/_intmax_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/remove_all_extents.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/min_max_result.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__random/extreme_value_distribution.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/min_max_result.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/rank.h:
 
@@ -1247,9 +1547,13 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/version:
 
+/opt/homebrew/include/cbc/coin/CbcObjectUpdateData.hpp:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/replace_if.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_function.h:
+
+/opt/homebrew/include/boost/type_traits/remove_cv.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_floating_point.h:
 
@@ -1278,6 +1582,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/_types/_wctrans_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_copy_constructible.h:
+
+/opt/homebrew/include/boost/mp11/detail/config.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_convertible.h:
 
@@ -1339,6 +1645,10 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_in_addr_t.h:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_u_char.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/common_type.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/xlocale/_wctype.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/machine/limits.h:
@@ -1359,6 +1669,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/add_const.h:
 
+/opt/homebrew/include/boost/version.hpp:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__tuple_dir/tuple_types.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/unwrap_iter.h:
@@ -1370,6 +1682,10 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__tuple_dir/tuple_like.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__tuple_dir/tuple_indices.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_ssize_t.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__tuple_dir/tuple_element.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__tuple_dir/sfinae_helpers.h:
 
@@ -1383,8 +1699,6 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__tuple_dir/make_tuple_types.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_seek_set.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_polymorphic.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_partial_sort.h:
@@ -1393,13 +1707,13 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__threading_support:
 
+/opt/homebrew/include/boost/config/compiler/clang_version.hpp:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/partition_copy.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__thread/timed_backoff_policy.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__string/extern_template_lists.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_sigaltstack.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_set_union.h:
 
@@ -1433,6 +1747,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__random/uniform_random_bit_generator.h:
 
+/opt/homebrew/include/boost/type_traits/is_rvalue_reference.hpp:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__random/uniform_int_distribution.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/reverse_copy.h:
@@ -1463,11 +1779,15 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/add_volatile.h:
 
+/opt/homebrew/include/boost/container_hash/detail/requires_cxx11.hpp:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__random/mersenne_twister_engine.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__random/lognormal_distribution.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__utility/swap.h:
+
+/opt/homebrew/include/boost/container_hash/hash_fwd.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__random/is_seed_sequence.h:
 
@@ -1497,6 +1817,12 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__random/cauchy_distribution.h:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_va_list.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_volatile.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__random/bernoulli_distribution.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__numeric/transform_inclusive_scan.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__debug_utils/randomize_range.h:
@@ -1511,6 +1837,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__numeric/exclusive_scan.h:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/latch:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__numeric/adjacent_difference.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__mutex_base:
@@ -1519,9 +1847,15 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__memory_resource/memory_resource.h:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_time_t.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/alignment_of.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_make_heap.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__concepts/destructible.h:
+
+/opt/homebrew/include/boost/config/platform/macos.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_lexicographical_compare.h:
 
@@ -1536,6 +1870,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_transform.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__memory/pointer_traits.h:
+
+/opt/homebrew/include/boost/container_hash/is_range.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__memory/construct_at.h:
 
@@ -1565,6 +1901,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_min_element.h:
 
+/opt/homebrew/include/boost/config/detail/select_stdlib_config.hpp:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/arm/_types.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/_types/_uint64_t.h:
@@ -1591,7 +1929,11 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__iterator/ostream_iterator.h:
 
+/opt/homebrew/include/boost/type_traits/is_union.hpp:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_pthread/_pthread_condattr_t.h:
+
+/opt/homebrew/include/boost/config.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_find_first_of.h:
 
@@ -1617,9 +1959,9 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__iterator/next.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__iterator/erase_if_container.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__random/log2.h:
+
+/opt/homebrew/include/boost/type_traits/is_lvalue_reference.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_pthread/_pthread_t.h:
 
@@ -1703,6 +2045,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_standard_layout.h:
 
+/opt/homebrew/include/boost/container_hash/detail/hash_range.hpp:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/arm/types.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_binary_search.h:
@@ -1712,6 +2056,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/void_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__memory/auto_ptr.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/complex:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__functional/binary_negate.h:
 
@@ -1817,6 +2163,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_move_constructible.h:
 
+/opt/homebrew/include/boost/mp11/detail/mp_list.hpp:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__concepts/assignable.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__concepts/arithmetic.h:
@@ -1831,9 +2179,7 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__compare/synth_three_way.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/machine/_mcontext.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_uintptr_t.h:
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_select.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__compare/ordering.h:
 
@@ -1844,6 +2190,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__compare/compare_three_way_result.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_specialization.h:
+
+/opt/homebrew/include/boost/config/detail/suffix.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/partial_sort_copy.h:
 
@@ -1858,6 +2206,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__iterator/segmented_iterator.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/string:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/format:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/any_of.h:
 
@@ -1887,13 +2237,19 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__bit/byteswap.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_u_int64_t.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__functional/identity.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_uintptr_t.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/machine/_mcontext.h:
+
+/opt/homebrew/include/boost/static_assert.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_fd_setsize.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__bit/bit_cast.h:
+
+/opt/homebrew/include/boost/container_hash/is_contiguous_range.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/remove_copy.h:
 
@@ -1955,6 +2311,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__iterator/advance.h:
 
+/opt/homebrew/include/coinutils/coin/CoinUtilsConfig.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__functional/reference_wrapper.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/is_heap.h:
@@ -1966,6 +2324,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__functional/ranges_operations.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/sample.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/barrier:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_replace_if.h:
 
@@ -2025,8 +2385,6 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_sample.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_u_int32_t.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_rotate_copy.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__iterator/data.h:
@@ -2080,8 +2438,6 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_nth_element.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_next_permutation.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_wchar_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__memory/allocator.h:
 
@@ -2137,6 +2493,10 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_is_heap.h:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_rune_t.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_copy_backward.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/lower_bound.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_inplace_merge.h:
@@ -2191,6 +2551,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/inplace_merge.h:
 
+/opt/homebrew/include/boost/describe/detail/void_t.hpp:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__variant/monostate.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__ranges/empty.h:
@@ -2215,17 +2577,9 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/add_rvalue_reference.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__compare/compare_partial_order_fallback.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_max_element.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/_types/_uint16_t.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_replace.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__functional/weak_result_type.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_member_pointer.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__functional/unary_negate.h:
 
@@ -2247,9 +2601,11 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__functional/function.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_fsblkcnt_t.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_compound.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_max_element.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__compare/compare_partial_order_fallback.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__fwd/array.h:
 
@@ -2271,6 +2627,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_fd_clr.h:
 
+/opt/homebrew/include/boost/container_hash/hash.hpp:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/cdefs.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/min.h:
@@ -2289,7 +2647,9 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/partition.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_sigset_t.h:
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__iterator/reverse_iterator.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/memory_resource:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__concepts/predicate.h:
 
@@ -2319,6 +2679,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/find_if.h:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/_types/_uint16_t.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/is_permutation.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/make_heap.h:
@@ -2328,6 +2690,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__memory/raw_storage_iterator.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__iterator/counted_iterator.h:
+
+/opt/homebrew/include/boost/type_traits/conditional.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_pointer.h:
 
@@ -2361,9 +2725,11 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/half_positive.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_all_of.h:
+/opt/homebrew/include/boost/mp11/algorithm.hpp:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_timespec.h:
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cassert:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_all_of.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_search.h:
 
@@ -2379,13 +2745,13 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/_types/_uint8_t.h:
 
+/opt/homebrew/include/boost/mp11/detail/mp_void.hpp:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__functional/is_transparent.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/equal.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/for_each_n.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__iterator/reverse_iterator.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__iterator/istreambuf_iterator.h:
 
@@ -2402,6 +2768,10 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__iterator/indirectly_comparable.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_find_if_not.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/assert.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_posix_vdisable.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/arm/limits.h:
 
@@ -2435,6 +2805,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/alloca.h:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/unistd.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_trivially_copyable.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/is_arithmetic.h:
@@ -2446,6 +2818,8 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/copy_if.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/is_sorted.h:
+
+/opt/homebrew/include/boost/type_traits/is_reference.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__type_traits/remove_extent.h:
 
@@ -2473,10 +2847,14 @@ CMakeFiles/a.out.dir/main.cpp.o: /Users/clmatte/Desktop/HMM_Code/cpp/main.cpp \
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__memory/swap_allocator.h:
 
+/opt/homebrew/include/boost/mp11/set.hpp:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/appleapiopts.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_remove.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/ranges_count.h:
+
+/opt/homebrew/include/boost/config/compiler/clang.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/AvailabilityInternal.h:

@@ -33,6 +33,7 @@ CMakeFiles/a.out.dir/main.cpp.o
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/arm/limits.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/arm/signal.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/arm/types.h
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/assert.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/adjacent_find.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/all_of.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__algorithm/any_of.h
@@ -631,16 +632,22 @@ CMakeFiles/a.out.dir/main.cpp.o
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__variant/monostate.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/__verbose_abort
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/algorithm
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/any
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/array
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/atomic
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/barrier
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/bit
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/bitset
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cassert
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cctype
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cerrno
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/charconv
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/climits
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cmath
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/compare
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/complex
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/concepts
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/coroutine
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cstdarg
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cstddef
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cstdint
@@ -654,6 +661,9 @@ CMakeFiles/a.out.dir/main.cpp.o
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/deque
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/errno.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/exception
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/execution
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/filesystem
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/format
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/functional
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/initializer_list
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/ios
@@ -661,6 +671,7 @@ CMakeFiles/a.out.dir/main.cpp.o
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/iostream
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/istream
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/iterator
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/latch
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/limits
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/limits.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/locale
@@ -668,14 +679,22 @@ CMakeFiles/a.out.dir/main.cpp.o
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/map
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/math.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/memory
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/memory_resource
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/mutex
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/new
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/numbers
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/numeric
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/optional
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/ostream
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/queue
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/random
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/ranges
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/ratio
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/semaphore
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/shared_mutex
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/source_location
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/span
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/sstream
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/stddef.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/stdexcept
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/stdint.h
@@ -688,6 +707,7 @@ CMakeFiles/a.out.dir/main.cpp.o
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/system_error
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/tuple
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/type_traits
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/typeindex
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/typeinfo
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/unordered_map
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/utility
@@ -698,6 +718,7 @@ CMakeFiles/a.out.dir/main.cpp.o
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/wctype.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/ctype.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/errno.h
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/gethostuuid.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/libkern/_OSByteOrder.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/libkern/arm/OSByteOrder.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/limits.h
@@ -738,6 +759,7 @@ CMakeFiles/a.out.dir/main.cpp.o
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_pthread/_pthread_rwlockattr_t.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_pthread/_pthread_t.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_pthread/_pthread_types.h
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_select.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_symbol_aliasing.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_blkcnt_t.h
@@ -775,6 +797,7 @@ CMakeFiles/a.out.dir/main.cpp.o
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_null.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_off_t.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_pid_t.h
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_posix_vdisable.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_rsize_t.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_rune_t.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_seek_set.h
@@ -797,6 +820,7 @@ CMakeFiles/a.out.dir/main.cpp.o
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_uid_t.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_uintptr_t.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_useconds_t.h
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_uuid_t.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_va_list.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_wchar_t.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_wint_t.h
@@ -805,12 +829,15 @@ CMakeFiles/a.out.dir/main.cpp.o
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/errno.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/qos.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/resource.h
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/select.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/signal.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/stdio.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/syslimits.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/types.h
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/unistd.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/wait.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/time.h
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/unistd.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/wchar.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/wctype.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/xlocale.h
@@ -828,4 +855,103 @@ CMakeFiles/a.out.dir/main.cpp.o
  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stddef.h
  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdint.h
  /Users/clmatte/Desktop/HMM_Code/cpp/HMM.h
+ /opt/homebrew/include/boost/config.hpp
+ /opt/homebrew/include/boost/config/compiler/clang.hpp
+ /opt/homebrew/include/boost/config/compiler/clang_version.hpp
+ /opt/homebrew/include/boost/config/detail/cxx_composite.hpp
+ /opt/homebrew/include/boost/config/detail/posix_features.hpp
+ /opt/homebrew/include/boost/config/detail/select_compiler_config.hpp
+ /opt/homebrew/include/boost/config/detail/select_platform_config.hpp
+ /opt/homebrew/include/boost/config/detail/select_stdlib_config.hpp
+ /opt/homebrew/include/boost/config/detail/suffix.hpp
+ /opt/homebrew/include/boost/config/helper_macros.hpp
+ /opt/homebrew/include/boost/config/platform/macos.hpp
+ /opt/homebrew/include/boost/config/pragma_message.hpp
+ /opt/homebrew/include/boost/config/stdlib/libcpp.hpp
+ /opt/homebrew/include/boost/config/user.hpp
+ /opt/homebrew/include/boost/config/workaround.hpp
+ /opt/homebrew/include/boost/container_hash/detail/hash_mix.hpp
+ /opt/homebrew/include/boost/container_hash/detail/hash_range.hpp
+ /opt/homebrew/include/boost/container_hash/detail/hash_tuple_like.hpp
+ /opt/homebrew/include/boost/container_hash/detail/mulx.hpp
+ /opt/homebrew/include/boost/container_hash/detail/requires_cxx11.hpp
+ /opt/homebrew/include/boost/container_hash/hash.hpp
+ /opt/homebrew/include/boost/container_hash/hash_fwd.hpp
+ /opt/homebrew/include/boost/container_hash/is_contiguous_range.hpp
+ /opt/homebrew/include/boost/container_hash/is_described_class.hpp
+ /opt/homebrew/include/boost/container_hash/is_range.hpp
+ /opt/homebrew/include/boost/container_hash/is_tuple_like.hpp
+ /opt/homebrew/include/boost/container_hash/is_unordered_range.hpp
+ /opt/homebrew/include/boost/cstdint.hpp
+ /opt/homebrew/include/boost/describe/bases.hpp
+ /opt/homebrew/include/boost/describe/detail/config.hpp
+ /opt/homebrew/include/boost/describe/detail/cx_streq.hpp
+ /opt/homebrew/include/boost/describe/detail/void_t.hpp
+ /opt/homebrew/include/boost/describe/members.hpp
+ /opt/homebrew/include/boost/describe/modifiers.hpp
+ /opt/homebrew/include/boost/detail/workaround.hpp
+ /opt/homebrew/include/boost/functional/hash.hpp
+ /opt/homebrew/include/boost/mp11/algorithm.hpp
+ /opt/homebrew/include/boost/mp11/bind.hpp
+ /opt/homebrew/include/boost/mp11/detail/config.hpp
+ /opt/homebrew/include/boost/mp11/detail/mp_append.hpp
+ /opt/homebrew/include/boost/mp11/detail/mp_copy_if.hpp
+ /opt/homebrew/include/boost/mp11/detail/mp_count.hpp
+ /opt/homebrew/include/boost/mp11/detail/mp_fold.hpp
+ /opt/homebrew/include/boost/mp11/detail/mp_front.hpp
+ /opt/homebrew/include/boost/mp11/detail/mp_is_list.hpp
+ /opt/homebrew/include/boost/mp11/detail/mp_list.hpp
+ /opt/homebrew/include/boost/mp11/detail/mp_map_find.hpp
+ /opt/homebrew/include/boost/mp11/detail/mp_min_element.hpp
+ /opt/homebrew/include/boost/mp11/detail/mp_plus.hpp
+ /opt/homebrew/include/boost/mp11/detail/mp_remove_if.hpp
+ /opt/homebrew/include/boost/mp11/detail/mp_rename.hpp
+ /opt/homebrew/include/boost/mp11/detail/mp_void.hpp
+ /opt/homebrew/include/boost/mp11/detail/mp_with_index.hpp
+ /opt/homebrew/include/boost/mp11/function.hpp
+ /opt/homebrew/include/boost/mp11/integer_sequence.hpp
+ /opt/homebrew/include/boost/mp11/integral.hpp
+ /opt/homebrew/include/boost/mp11/list.hpp
+ /opt/homebrew/include/boost/mp11/set.hpp
+ /opt/homebrew/include/boost/mp11/utility.hpp
+ /opt/homebrew/include/boost/mp11/version.hpp
+ /opt/homebrew/include/boost/static_assert.hpp
+ /opt/homebrew/include/boost/type_traits/add_const.hpp
+ /opt/homebrew/include/boost/type_traits/add_rvalue_reference.hpp
+ /opt/homebrew/include/boost/type_traits/add_volatile.hpp
+ /opt/homebrew/include/boost/type_traits/conditional.hpp
+ /opt/homebrew/include/boost/type_traits/conjunction.hpp
+ /opt/homebrew/include/boost/type_traits/declval.hpp
+ /opt/homebrew/include/boost/type_traits/detail/config.hpp
+ /opt/homebrew/include/boost/type_traits/enable_if.hpp
+ /opt/homebrew/include/boost/type_traits/integral_constant.hpp
+ /opt/homebrew/include/boost/type_traits/intrinsics.hpp
+ /opt/homebrew/include/boost/type_traits/is_const.hpp
+ /opt/homebrew/include/boost/type_traits/is_enum.hpp
+ /opt/homebrew/include/boost/type_traits/is_floating_point.hpp
+ /opt/homebrew/include/boost/type_traits/is_integral.hpp
+ /opt/homebrew/include/boost/type_traits/is_lvalue_reference.hpp
+ /opt/homebrew/include/boost/type_traits/is_reference.hpp
+ /opt/homebrew/include/boost/type_traits/is_rvalue_reference.hpp
+ /opt/homebrew/include/boost/type_traits/is_same.hpp
+ /opt/homebrew/include/boost/type_traits/is_signed.hpp
+ /opt/homebrew/include/boost/type_traits/is_union.hpp
+ /opt/homebrew/include/boost/type_traits/is_unsigned.hpp
+ /opt/homebrew/include/boost/type_traits/is_void.hpp
+ /opt/homebrew/include/boost/type_traits/is_volatile.hpp
+ /opt/homebrew/include/boost/type_traits/make_unsigned.hpp
+ /opt/homebrew/include/boost/type_traits/remove_cv.hpp
+ /opt/homebrew/include/boost/version.hpp
+ /opt/homebrew/include/cbc/coin/CbcBranchBase.hpp
+ /opt/homebrew/include/cbc/coin/CbcBranchDecision.hpp
+ /opt/homebrew/include/cbc/coin/CbcBranchingObject.hpp
+ /opt/homebrew/include/cbc/coin/CbcConsequence.hpp
+ /opt/homebrew/include/cbc/coin/CbcGeneral.hpp
+ /opt/homebrew/include/cbc/coin/CbcObject.hpp
+ /opt/homebrew/include/cbc/coin/CbcObjectUpdateData.hpp
+ /opt/homebrew/include/coinutils/coin/CoinError.hpp
+ /opt/homebrew/include/coinutils/coin/CoinPragma.hpp
+ /opt/homebrew/include/coinutils/coin/CoinTypes.hpp
+ /opt/homebrew/include/coinutils/coin/CoinUtilsConfig.h
+ /opt/homebrew/include/osi/coin/OsiBranchingObject.hpp
 

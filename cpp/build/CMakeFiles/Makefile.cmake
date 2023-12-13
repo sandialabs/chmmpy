@@ -24,6 +24,9 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/opt/homebrew/Cellar/cmake/3.27.6/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake"
   "/opt/homebrew/Cellar/cmake/3.27.6/share/cmake/Modules/Compiler/Clang.cmake"
   "/opt/homebrew/Cellar/cmake/3.27.6/share/cmake/Modules/Compiler/GNU.cmake"
+  "/opt/homebrew/Cellar/cmake/3.27.6/share/cmake/Modules/FindBoost.cmake"
+  "/opt/homebrew/Cellar/cmake/3.27.6/share/cmake/Modules/FindPackageHandleStandardArgs.cmake"
+  "/opt/homebrew/Cellar/cmake/3.27.6/share/cmake/Modules/FindPackageMessage.cmake"
   "/opt/homebrew/Cellar/cmake/3.27.6/share/cmake/Modules/Platform/Apple-AppleClang-C.cmake"
   "/opt/homebrew/Cellar/cmake/3.27.6/share/cmake/Modules/Platform/Apple-AppleClang-CXX.cmake"
   "/opt/homebrew/Cellar/cmake/3.27.6/share/cmake/Modules/Platform/Apple-Clang-C.cmake"
@@ -32,6 +35,17 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/opt/homebrew/Cellar/cmake/3.27.6/share/cmake/Modules/Platform/Darwin-Initialize.cmake"
   "/opt/homebrew/Cellar/cmake/3.27.6/share/cmake/Modules/Platform/Darwin.cmake"
   "/opt/homebrew/Cellar/cmake/3.27.6/share/cmake/Modules/Platform/UnixPaths.cmake"
+  "/opt/homebrew/lib/cmake/Boost-1.82.0/BoostConfig.cmake"
+  "/opt/homebrew/lib/cmake/Boost-1.82.0/BoostConfigVersion.cmake"
+  "/opt/homebrew/lib/cmake/BoostDetectToolset-1.82.0.cmake"
+  "/opt/homebrew/lib/cmake/boost_headers-1.82.0/boost_headers-config-version.cmake"
+  "/opt/homebrew/lib/cmake/boost_headers-1.82.0/boost_headers-config.cmake"
+  "/opt/homebrew/lib/cmake/boost_program_options-1.82.0/boost_program_options-config-version.cmake"
+  "/opt/homebrew/lib/cmake/boost_program_options-1.82.0/boost_program_options-config.cmake"
+  "/opt/homebrew/lib/cmake/boost_program_options-1.82.0/libboost_program_options-variant-mt-shared.cmake"
+  "/opt/homebrew/lib/cmake/boost_program_options-1.82.0/libboost_program_options-variant-mt-static.cmake"
+  "/opt/homebrew/lib/cmake/boost_program_options-1.82.0/libboost_program_options-variant-shared.cmake"
+  "/opt/homebrew/lib/cmake/boost_program_options-1.82.0/libboost_program_options-variant-static.cmake"
   )
 
 # The corresponding makefile is:

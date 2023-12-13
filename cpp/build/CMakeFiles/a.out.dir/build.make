@@ -92,6 +92,7 @@ a_out_EXTERNAL_OBJECTS =
 
 a.out: CMakeFiles/a.out.dir/main.cpp.o
 a.out: CMakeFiles/a.out.dir/build.make
+a.out: /opt/homebrew/lib/libboost_program_options-mt.dylib
 a.out: CMakeFiles/a.out.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/clmatte/Desktop/HMM_Code/cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable a.out"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/a.out.dir/link.txt --verbose=$(VERBOSE)
