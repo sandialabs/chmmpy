@@ -38,6 +38,7 @@ class ProcessConstrained(HMMBase):
         alldata.L = data["L"]
         alldata.E = data["E"]
         alldata.A = data["A"]
+        alldata.hidden_states = alldata.A
         alldata.N = len(alldata.A)
         alldata.sim = data["sim"]
         alldata.seed = data["sim"].get("seed", None)
@@ -51,9 +52,9 @@ class ProcessConstrained(HMMBase):
         #
         self.name = data["name"]
 
-    def create_ip(self, *, observation_index, emission_probs, data):
+    def create_ip(self, *, observations_index, emission_probs, data):
         M = self.create_lp(
-            observation_index=observation_index,
+            observations_index=observations_index,
             emission_probs=emission_probs,
             data=data,
             y_binary=True,
@@ -203,10 +204,10 @@ class ProcessConstrained(HMMBase):
 
 
 class ProcessConstrained_StartAfterTimeZero(ProcessConstrained):
-    def create_ip(self, *, observation_index, emission_probs, data):
+    def create_ip(self, *, observations_index, emission_probs, data):
         M = ProcessConstrained.create_ip(
             self,
-            observation_index=observation_index,
+            observations_index=observations_index,
             emission_probs=emission_probs,
             data=data,
         )

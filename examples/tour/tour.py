@@ -24,6 +24,7 @@ class TourHMM_Default(HMMBase):
 
         alldata = self.data
         alldata.N = data["N"] + 2
+        alldata.hidden_states = list(range(alldata.N))
         alldata.Costs = {(from_, to_): cost_ for from_, to_, cost_ in data["Costs"]}
         alldata.CityNames = data["CityNames"]
         alldata.home_city = None
@@ -42,9 +43,9 @@ class TourHMM_Default(HMMBase):
         alldata.seed = data["sim"].get("seed", None)
         self.name = data["name"]
 
-    def create_ip(self, *, observation_index, emission_probs, data):
+    def create_ip(self, *, observations_index, emission_probs, data):
         M = self.create_lp(
-            observation_index=observation_index,
+            observations_index=observations_index,
             emission_probs=emission_probs,
             data=data,
             y_binary=True,
@@ -275,10 +276,10 @@ class TourHMM_Default(HMMBase):
 
 
 class TourHMM_City3(TourHMM_Default):
-    def create_ip(self, *, observation_index, emission_probs, data):
+    def create_ip(self, *, observations_index, emission_probs, data):
         M = TourHMM_Default.create_ip(
             self,
-            observation_index=observation_index,
+            observations_index=observations_index,
             emission_probs=emission_probs,
             data=data,
         )

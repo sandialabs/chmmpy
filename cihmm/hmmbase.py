@@ -26,7 +26,7 @@ class HMMBase(object):
         self.data.seed = None
         self.model_data = None
 
-    def create_ip(self, *, observation_index, emission_probs, data):
+    def create_ip(self, *, observations_index, emission_probs, data):
         pass
 
     def load_observations(self, observations, time=None):
@@ -36,7 +36,7 @@ class HMMBase(object):
         #
         if time is None:
             time = list(range(len(observations)))
-        self.O = [ dict(time=time, observations=observations) ]
+        self.O = [dict(time=time, observations=observations)]
 
         for o in observations:
             assert o in self.omap, "Unexpected observation {}".format(o)
@@ -44,48 +44,65 @@ class HMMBase(object):
     def load_model(self, *, start_probs, emission_probs, trans_mat, tolerance=0.0):
         # start_probs
         start_probs_ = [0.0] * self.data.N
-        for s,v in start_probs.items():
+        for s, v in start_probs.items():
             start_probs_[self.smap[s]] = v
         if tolerance:
             for i in range(self.data.N):
-                start_probs_[i] = (start_probs_[i]+tolerance)/(1+self.data.N*tolerance)
-        assert math.fabs(sum(start_probs_) - 1) < 1e-7, "Total start probability is {} but expected 1.0".format(sum(start_probs_))
+                start_probs_[i] = (start_probs_[i] + tolerance) / (
+                    1 + self.data.N * tolerance
+                )
+        assert (
+            math.fabs(sum(start_probs_) - 1) < 1e-7
+        ), "Total start probability is {} but expected 1.0".format(sum(start_probs_))
         self.data.start_probs = np.array(start_probs_)
 
         # emission probs
         emission_probs_ = []
         for i in range(self.data.N):
-            emission_probs_.append([0.0]*len(self.omap))
-        for s,v in emission_probs.items():
-            for o,p in v.items():
+            emission_probs_.append([0.0] * len(self.omap))
+        for s, v in emission_probs.items():
+            for o, p in v.items():
                 emission_probs_[self.smap[s]][self.omap[o]] = p
             if tolerance:
                 for i in range(len(self.omap)):
-                    emission_probs_[self.smap[s]][i] = (emission_probs_[self.smap[s]][i]+tolerance)/(1+len(self.omap)*tolerance)
+                    emission_probs_[self.smap[s]][i] = (
+                        emission_probs_[self.smap[s]][i] + tolerance
+                    ) / (1 + len(self.omap) * tolerance)
             assert math.fabs(sum(emission_probs_[self.smap[s]]) - 1) < 1e-7
         self.data._emission_probs = emission_probs_
 
-        self.data._total_obs = {i:1.0 for i in range(self.data.N)}
+        self.data._total_obs = {i: 1.0 for i in range(self.data.N)}
 
         # transition matrix
         trans_mat_ = []
         for i in range(self.data.N):
-            trans_mat_.append([0.0]*self.data.N)
-        for k,v in trans_mat.items():
-            s,s_ = k
+            trans_mat_.append([0.0] * self.data.N)
+        for k, v in trans_mat.items():
+            s, s_ = k
             trans_mat_[self.smap[s]][self.smap[s_]] = v
         if tolerance:
             for s in self.smap:
                 for s_ in self.smap:
-                    trans_mat_[self.smap[s]][self.smap[s_]] = (trans_mat_[self.smap[s]][self.smap[s_]]+tolerance)/(1+len(self.smap)*tolerance)
+                    trans_mat_[self.smap[s]][self.smap[s_]] = (
+                        trans_mat_[self.smap[s]][self.smap[s_]] + tolerance
+                    ) / (1 + len(self.smap) * tolerance)
         assert math.fabs(sum(trans_mat_[self.smap[s]]) - 1) < 1e-7
         self.data.trans_mat = np.array(trans_mat_)
 
-        self.model_data = Munch(start_probs=start_probs, emission_probs=emission_probs, trans_mat=trans_mat, tolerance=tolerance)
+        self.model_data = Munch(
+            start_probs=start_probs,
+            emission_probs=emission_probs,
+            trans_mat=trans_mat,
+            tolerance=tolerance,
+        )
 
     def run_training_simulations(
         # Always returns a list
-        self, n=None, debug=False, return_observations=False, seed=None
+        self,
+        n=None,
+        debug=False,
+        return_observations=False,
+        seed=None,
     ):
         pass
 
@@ -116,12 +133,17 @@ class HMMBase(object):
 
     def train_HMM(self, debug=False):
         assert len(self.O) > 0, "Expecting simulations in the self.O object"
-        Tmax = len(self.O[0]["observations"][0])
-        #Tmax = self.data['sim']['Tmax']
-        #print("HERE",Tmax,len(self.O[0]["observations"][0]))
+        if type(self.O[0]["observations"]) is dict:
+            Tmax = len(self.O[0]["observations"][0])
+        else:
+            Tmax = len(self.O[0]["observations"])
         self._estimate_start_probs(debug=debug)
         self._estimate_transition_matrix(Tmax=Tmax, debug=debug)
         self._estimate_emissions_matrix(Tmax=Tmax, debug=debug)
+        smap = {}
+        for i, s in enumerate(self.data.hidden_states):
+            smap[s] = i
+        self.smap = smap
 
     def _estimate_start_probs(self, debug=False):
         #
@@ -282,9 +304,12 @@ class HMMBase(object):
         logprob, received = self.model.decode(np.array(encoded_observations))
 
         self.results = Munch(
-            M=self.model, log_likelihood=logprob, states=received, observations=observations,
-            hidden={i:self.data.hidden_states[s] for i,s in enumerate(received)},
-            )
+            M=self.model,
+            log_likelihood=logprob,
+            states=received,
+            observations=observations,
+            hidden={i: self.data.hidden_states[s] for i, s in enumerate(received)},
+        )
 
         if debug:
             self.print_hmm_results()
@@ -294,14 +319,14 @@ class HMMBase(object):
     def create_lp(
         self,
         *,
-        observation_index,
+        observations_index,
         emission_probs,
         data,
         y_binary=False,
         cache_indices=True
     ):
         return create_hmm_lp(
-            observation_index,
+            observations_index,
             data.N,
             data.start_probs,
             emission_probs,
@@ -315,11 +340,11 @@ class HMMBase(object):
             print("")
             print("LP")
             print("")
-        _observations, omap, emission_probs = self._presolve(observations)
-        observation_index = [omap[obs] for obs in _observations]
 
+        _observations, omap, emission_probs = self._presolve(observations)
+        observations_index = [omap[obs] for obs in _observations]
         M = self.create_lp(
-            observation_index=observation_index,
+            observations_index=observations_index,
             emission_probs=emission_probs,
             data=self.data,
         )
@@ -335,10 +360,10 @@ class HMMBase(object):
         if log_likelihood < -(10**6):
             log_likelihood = -np.inf
 
-        states = [None] * len(observation_index)
+        states = [None] * len(observations_index)
         for t, a, b in M.y:
             if pe.value(M.y[t, a, b]) > 0:
-                if t + 1 < len(observation_index):
+                if t + 1 < len(observations_index):
                     states[t + 1] = b
 
         self.results = Munch(
@@ -349,7 +374,7 @@ class HMMBase(object):
             M=M,
             log_likelihood=log_likelihood,
             states=states,
-            hidden={i:self.data.hidden_states[s] for i,s in enumerate(states)},
+            hidden={i: self.data.hidden_states[s] for i, s in enumerate(states)},
         )
         if debug:
             self.print_lp_results()
@@ -360,11 +385,11 @@ class HMMBase(object):
             print("")
             print("IP")
             print("")
-        _observations, omap, emission_probs = self._presolve(observations)
-        observation_index = [omap[obs] for obs in _observations]
 
+        _observations, omap, emission_probs = self._presolve(observations)
+        observations_index = [omap[obs] for obs in _observations]
         M = self.create_ip(
-            observations=observation_index,
+            observations_index=observations_index,
             emission_probs=emission_probs,
             data=self.data,
         )
@@ -379,15 +404,15 @@ class HMMBase(object):
         log_likelihood = pe.value(M.o)
 
         if debug:
-            print("sequence:        ", observation_index)
+            print("sequence:        ", observations_index)
             print("logprob", log_likelihood)
         if log_likelihood < -(10**6):
             log_likelihood = -np.inf
 
-        states = [None] * len(observation_index)
+        states = [None] * len(observations_index)
         for t, a, b in M.y:
             if pe.value(M.y[t, a, b]) > 0:
-                if t + 1 < len(observation_index):
+                if t + 1 < len(observations_index):
                     states[t + 1] = b
 
         self.results = Munch(
@@ -398,7 +423,7 @@ class HMMBase(object):
             M=M,
             log_likelihood=log_likelihood,
             states=states,
-            hidden={i:self.data.hidden_states[s] for i,s in enumerate(states)},
+            hidden={i: self.data.hidden_states[s] for i, s in enumerate(states)},
         )
         if debug:
             self.print_ip_results()
@@ -407,22 +432,31 @@ class HMMBase(object):
     def get_hmm_results(self, results):
         ans = {"results": {}, "model": {}}
 
-
         ans["model"]["n_features"] = results.M.n_features
 
         tmp = results.M.startprob_.tolist()
-        ans["model"]["start_probs"] = {s:tmp[i] for s,i in self.smap.items() if tmp[i] > 0.0}
+        ans["model"]["start_probs"] = {
+            s: tmp[i] for s, i in self.smap.items() if tmp[i] > 0.0
+        }
 
         tmp = results.M.emissionprob_.tolist()
         emission_probs = {}
         for s in self.smap:
-            emission_probs[s] = [{"key":o, "prob":tmp[self.smap[s]][self.omap[o]]} for o in self.omap if tmp[self.smap[s]][self.omap[o]] > 0.0]
+            emission_probs[s] = [
+                {"key": o, "prob": tmp[self.smap[s]][self.omap[o]]}
+                for o in self.omap
+                if tmp[self.smap[s]][self.omap[o]] > 0.0
+            ]
         ans["model"]["emission_probs"] = emission_probs
 
         tmp = results.M.transmat_.tolist()
         trans_mat = {}
         for s in self.smap:
-            trans_mat[s] = {s_:tmp[self.smap[s]][self.smap[s_]] for s_ in self.smap if tmp[self.smap[s]][self.smap[s_]] > 0.0}
+            trans_mat[s] = {
+                s_: tmp[self.smap[s]][self.smap[s_]]
+                for s_ in self.smap
+                if tmp[self.smap[s]][self.smap[s_]] > 0.0
+            }
         ans["model"]["trans_mat"] = trans_mat
 
         ans["results"]["observations"] = results.observations
@@ -436,21 +470,33 @@ class HMMBase(object):
         ans = {"results": {}, "model": {}}
 
         tmp = results.start_probs.tolist()
-        ans["model"]["start_probs"] = {s:tmp[i] for s,i in self.smap.items() if tmp[i] > 0.0}
+        ans["model"]["start_probs"] = {
+            s: tmp[i] for s, i in self.smap.items() if tmp[i] > 0.0
+        }
 
         tmp = results.emission_probs
         emission_probs = {}
         for s in self.smap:
-            emission_probs[s] = [{"key":o, "prob":tmp[self.smap[s]][self.omap[o]]} for o in self.omap if tmp[self.smap[s]][self.omap[o]] > 0.0]
+            emission_probs[s] = [
+                {"key": o, "prob": tmp[self.smap[s]][self.omap[o]]}
+                for o in self.omap
+                if tmp[self.smap[s]][self.omap[o]] > 0.0
+            ]
         ans["model"]["emission_probs"] = emission_probs
 
         tmp = results.trans_mat.tolist()
         trans_mat = {}
         for s in self.smap:
-            trans_mat[s] = {s_:tmp[self.smap[s]][self.smap[s_]] for s_ in self.smap if tmp[self.smap[s]][self.smap[s_]] > 0.0}
+            trans_mat[s] = {
+                s_: tmp[self.smap[s]][self.smap[s_]]
+                for s_ in self.smap
+                if tmp[self.smap[s]][self.smap[s_]] > 0.0
+            }
         ans["model"]["trans_mat"] = trans_mat
 
-        ans["results"]["observations"] = {i:v for i,v in enumerate(results.observations)}
+        ans["results"]["observations"] = {
+            i: v for i, v in enumerate(results.observations)
+        }
         ans["results"]["y: activities"] = [
             [t, a, b, pe.value(results.M.y[t, a, b])]
             for t, a, b in results.M.y
@@ -466,20 +512,38 @@ class HMMBase(object):
         ans["results"]["invsmap"] = invsmap
 
         if getattr(self.results.M, "G", None) is not None:
-            ans["results"]["objective_coefficient"] = {t+1: {"from":invsmap.get(a,"STARTEND"), "to":invsmap.get(b,"STARTEND"), "coef":  pe.value(self.results.M.G[t,a,b])} for t,a,b in self.results.M.G if pe.value(results.M.y[t,a,b]) > 0}
+            ans["results"]["objective_coefficient"] = {
+                t
+                + 1: {
+                    "from": invsmap.get(a, "STARTEND"),
+                    "to": invsmap.get(b, "STARTEND"),
+                    "coef": pe.value(self.results.M.G[t, a, b]),
+                }
+                for t, a, b in self.results.M.G
+                if pe.value(results.M.y[t, a, b]) > 0
+            }
 
         if self.model_data is not None:
             if results.hidden[0] not in self.model_data.start_probs:
                 ans["results"]["unexpected start"] = results.hidden[0]
-            
+
             ans["results"]["unexpected transition"] = {}
-            for t in range(len(results.hidden)-1):
-                if (results.hidden[t], results.hidden[t+1]) not in self.model_data.trans_mat:
-                    ans["results"]["unexpected transition"][t] = (results.hidden[t], results.hidden[t+1])
-            
+            for t in range(len(results.hidden) - 1):
+                if (
+                    results.hidden[t],
+                    results.hidden[t + 1],
+                ) not in self.model_data.trans_mat:
+                    ans["results"]["unexpected transition"][t] = (
+                        results.hidden[t],
+                        results.hidden[t + 1],
+                    )
+
             ans["results"]["unexpected emission"] = {}
             for t in range(len(results.hidden)):
-                if results.observations[t] not in self.model_data.emission_probs[results.hidden[t]]:
+                if (
+                    results.observations[t]
+                    not in self.model_data.emission_probs[results.hidden[t]]
+                ):
                     ans["results"]["unexpected emission"][t] = results.observations[t]
 
         return ans
@@ -498,18 +562,36 @@ class HMMBase(object):
 
     def write_hmm_results(self, filename):
         with open(filename, "w") as OUTPUT:
-            json.dump(self.get_hmm_results(self.results), OUTPUT, sort_keys=True, indent=2, ensure_ascii=False)
+            json.dump(
+                self.get_hmm_results(self.results),
+                OUTPUT,
+                sort_keys=True,
+                indent=2,
+                ensure_ascii=False,
+            )
 
     def write_lp_results(self, filename):
         with open(filename, "w") as OUTPUT:
-            json.dump(self.get_lp_results(self.results), OUTPUT, sort_keys=True, indent=2, ensure_ascii=False)
+            json.dump(
+                self.get_lp_results(self.results),
+                OUTPUT,
+                sort_keys=True,
+                indent=2,
+                ensure_ascii=False,
+            )
 
     def write_ip_results(self, filename):
         with open(filename, "w") as OUTPUT:
-            json.dump(self.get_ip_results(self.results), OUTPUT, sort_keys=True, indent=2, ensure_ascii=False)
+            json.dump(
+                self.get_ip_results(self.results),
+                OUTPUT,
+                sort_keys=True,
+                indent=2,
+                ensure_ascii=False,
+            )
 
     def write_lp_model(self, filename, debug=False):
-        results = getattr(self,"results",None)
+        results = getattr(self, "results", None)
         assert results is not None, "No LP model has been generated!"
         if debug:
             results.M.pprint()
@@ -517,10 +599,9 @@ class HMMBase(object):
         results.M.write(filename)
 
     def write_ip_model(self, filename, debug=False):
-        results = getattr(self,"results",None)
+        results = getattr(self, "results", None)
         assert results is not None, "No IP model has been generated!"
         if debug:
             results.M.pprint()
             results.M.display()
         results.M.write(filename)
-

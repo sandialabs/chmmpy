@@ -21,15 +21,16 @@ class TravelHMM_Default(HMMBase):
 
         alldata = self.data
         alldata.N = data["N"] + 1
+        alldata.hidden_states = list(range(alldata.N))
         alldata.Costs = {(from_, to_): cost_ for from_, to_, cost_ in data["Costs"]}
         alldata.CityNames = data["CityNames"]
         alldata.sim = data["sim"]
         alldata.seed = data["sim"].get("seed", None)
         self.name = data["name"]
 
-    def create_ip(self, *, observation_index, emission_probs, data):
+    def create_ip(self, *, observations_index, emission_probs, data):
         M = self.create_lp(
-            observation_index=observation_index,
+            observations_index=observations_index,
             emission_probs=emission_probs,
             data=data,
             y_binary=True,
@@ -262,10 +263,10 @@ class TravelHMM_Default(HMMBase):
 
 
 class TravelHMM_City4(TravelHMM_Default):
-    def create_ip(self, *, observation_index, emission_probs, data):
+    def create_ip(self, *, observations_index, emission_probs, data):
         M = TravelHMM_Default.create_ip(
             self,
-            observation_index=observation_index,
+            observations_index=observations_index,
             emission_probs=emission_probs,
             data=data,
         )

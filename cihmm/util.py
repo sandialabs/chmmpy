@@ -21,16 +21,29 @@ def print_differences(s1, s2):
         print("", "None")
 
 
-def run_all(model, debug=False, training=True, seed=None, n=None, output=None, hmmlearn=True, lp=True, ip=True, solver="glpk"):
+def run_all(
+    model,
+    debug=False,
+    training=True,
+    seed=None,
+    n=None,
+    output=None,
+    hmmlearn=True,
+    lp=True,
+    ip=True,
+    solver="glpk",
+):
     if training:
         if seed is None:
             seed = model.data.seed
         print("Running with seed:", seed)
-    
+
         model.run_training_simulations(n=n, debug=debug, seed=seed)
         model.train_HMM(debug=debug)
-    
-        obs, ground_truth = model.generate_observations_and_states(seed=seed, debug=debug)
+
+        obs, ground_truth = model.generate_observations_and_states(
+            seed=seed, debug=debug
+        )
         print("Observations:")
         for i, o in enumerate(obs):
             print(i, model.omap.get(o, None), o)
@@ -38,7 +51,7 @@ def run_all(model, debug=False, training=True, seed=None, n=None, output=None, h
         print("Ground Truth:", ground_truth)
         print("")
     else:
-        obs = model.O[0]['observations']
+        obs = model.O[0]["observations"]
         ground_truth = None
 
     if hmmlearn:
@@ -78,4 +91,3 @@ def run_all(model, debug=False, training=True, seed=None, n=None, output=None, h
         if output is not None:
             model.write_ip_results(output + "_ip.json")
         print("")
-

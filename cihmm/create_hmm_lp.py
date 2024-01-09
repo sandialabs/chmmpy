@@ -1,6 +1,7 @@
 import math
 import pyomo.environ as pe
 import numpy as np
+import pprint
 
 
 #
@@ -13,7 +14,7 @@ import numpy as np
 #        negative value.
 #
 def create_hmm_lp(
-    observations,
+    observations_index,
     N,
     start_probs,
     emission_probs,
@@ -26,7 +27,7 @@ def create_hmm_lp(
     # emission_probes[i][k] - probability that output k is generated when in hidden state i
     # trans_mat[i][j] - probability of transitioning from hidden state i to hidden state j
 
-    Tmax = len(observations)
+    Tmax = len(observations_index)
     T = list(range(Tmax))
 
     A = list(range(N))
@@ -37,7 +38,7 @@ def create_hmm_lp(
     for t in T:
         if t == 0:
             for i in A:
-                tmp = start_probs[i] * emission_probs[i][observations[t]]
+                tmp = start_probs[i] * emission_probs[i][observations_index[t]]
                 if tmp > 0:
                     # print("HERE",(-1,-1,i), tmp, math.log(tmp))
                     G[-1, -1, i] = math.log(tmp)
@@ -49,7 +50,7 @@ def create_hmm_lp(
             for val in it:
                 F.add(it.multi_index)
                 a, b = it.multi_index
-                tmp = val * emission_probs[b][observations[t]]
+                tmp = val * emission_probs[b][observations_index[t]]
                 # print("----",(t-1,a,b),val,tmp, [observations[t], emission_probs[b][observations[t]]])
                 if tmp > 0:
                     # print("HERE",(t-1,a,b), tmp, math.log(tmp))
@@ -88,7 +89,7 @@ def create_hmm_lp(
                 m.y[t, b, aa] for aa in A if (b, aa) in F
             )
 
-    M.flow = pe.Constraint(T+[Tmax], A, rule=flow_)
+    M.flow = pe.Constraint(T + [Tmax], A, rule=flow_)
 
     def flow_start_(m):
         return sum(m.y[-1, -1, b] for b in A) == 1
