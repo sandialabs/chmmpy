@@ -87,7 +87,10 @@ class HMM {
             E = inputE;
         }
 
-        //----------------------------------
+        //-------------------
+        
+        
+        //Useful in debugging---------------
         //-----Access private variables-----
         //----------------------------------
 
@@ -311,7 +314,8 @@ class HMM {
                 for(int h1 = 0; h1 < H; ++h1) {
                     double temp = -10E12;
                     for(int h2 = 0; h2 < H; ++h2) {
-                        temp = std::max(temp, v[t+1][h2] + logA[h1][h2] + logE[h2][observations[t+1]]);
+                        //temp = std::max(temp, v[t+1][h2] + logA[h1][h2] + logE[h2][observations[t+1]]);
+                        temp = std::max(temp, v[t+1][h2] + logA[h1][h2] + logE[h2][observations[t]]);
                     }
                     v[t][h1] = temp;
                 }
@@ -323,7 +327,6 @@ class HMM {
             //TODO make better hash for tuple
             //Would gScore be better as a multi-dimensional array? <- probably not, b/c we are hoping it stays sparse
             std::unordered_map< std::tuple<int, int, int>, int, boost::hash< std::tuple<int,int,int> > > prev; //Used to recover sequence;
-
             for(int h = 0; h < H; ++h) {
                 double tempGScore = std::log(S[h]) + logE[h][observations[0]]; //Avoids extra look-up operation
             
@@ -348,7 +351,7 @@ class HMM {
 
                 if(t == T) {
                     if(fVal == numZeros) {
-                        logProb = -oldGScore;
+                        logProb = oldGScore;
                         std::vector<int> output;
                         output.push_back(h1);
 
@@ -381,6 +384,141 @@ class HMM {
                                 openSet.push(std::make_tuple(tempGScore + v[t][h2], h2,t+1,newFVal));
                                 prev[std::make_tuple(h2,t+1,newFVal)] = h1;
                             }
+                            else if(tempGScore >  gScore.at(std::make_tuple(h2,t+1,newFVal))) { //Makes sure we don't have empty call to map
+                                gScore.at(std::make_tuple(h2,t+1,newFVal)) = tempGScore;
+                                openSet.push(std::make_tuple(tempGScore + v[t][h2], h2,t+1,newFVal));
+                                prev.at(std::make_tuple(h2,t+1,newFVal)) = h1;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return {};
+        }
+
+
+        //--------------------------------
+        //-----Multiple solns from A*-----
+        //--------------------------------
+
+        //Just a test case right now
+        std::vector< std::vector<int> > aStarMult(const std::vector<int> &observations, double &logProb, const int numZeros, int numSolns) const{
+            const int T = observations.size();
+
+            //So we don't need to keep recomputing logs
+            std::vector< std::vector<double> > logA;
+            std::vector<double> logS;
+            std::vector< std::vector<double> > logE;
+
+            logA.resize(H);
+            logE.resize(H);
+            
+            for(int h1 = 0; h1 < H; ++h1) {
+                logA[h1].resize(H);
+                for(int h2 = 0; h2 < H; ++h2) {
+                    logA[h1][h2] = std::log(A[h1][h2]);
+                }
+            }
+
+            for(int h = 0; h < H; ++h) {
+                logE[h].resize(O);
+                for(int o = 0; o < O; ++o) {
+                    logE[h][o] = std::log(E[h][o]);
+                }
+            }
+            
+            std::vector< std::vector<double> > v; //Stands for Viterbi
+            v.resize(T);
+            for(int t = 0; t < T; ++t) {
+                v[t].resize(H);
+            }
+            
+            for(int h = 0; h < H; ++h) {
+                v[T-1][h] = 0;
+            }
+
+            for(int t = T-2; t >= 0; --t) {
+                for(int h1 = 0; h1 < H; ++h1) {
+                    double temp = -10E12;
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        temp = std::max(temp, v[t+1][h2] + logA[h1][h2] + logE[h2][observations[t+1]]);
+                    }
+                    v[t][h1] = temp;
+                }
+            }
+
+            int counter = 0;
+            std::vector< std::vector<int> > output;
+
+            //Dist, current h, time, constraint val
+            std::priority_queue< std::tuple<double, int, int, int> > openSet; //Works b/c c++ orders tuples lexigraphically
+            std::unordered_map< std::tuple<int, int, int>, double, boost::hash< std::tuple<int,int,int> > > gScore; //pair is h,t, constraintVal
+            //TODO make better hash for tuple
+            //Would gScore be better as a multi-dimensional array? <- probably not, b/c we are hoping it stays sparse
+            std::unordered_map< std::tuple<int, int, int>, int, boost::hash< std::tuple<int,int,int> > > prev; //Used to recover sequence;
+            for(int h = 0; h < H; ++h) {
+                double tempGScore = std::log(S[h]) + logE[h][observations[0]]; //Avoids extra look-up operation
+            
+                if(h == 0) {
+                    openSet.push(std::make_tuple(tempGScore + v[0][h],0,1,1));
+                    gScore[std::make_tuple(0,1,1)] = tempGScore;
+                }
+                else {
+                    openSet.push(std::make_tuple(tempGScore + v[0][h],1,1,0));
+                    gScore[std::make_tuple(1,1,0)] = tempGScore;
+                }
+            }
+
+            while(!openSet.empty()) { 
+                auto tempTuple = openSet.top();
+                int h1 = get<1>(tempTuple);
+                int t = get<2>(tempTuple);
+                int fVal = get<3>(tempTuple); 
+
+                openSet.pop();
+                double oldGScore = gScore.at(std::make_tuple(h1,t,fVal));
+
+                if(t == T) {
+                    if(fVal == numZeros) {
+                        logProb = -oldGScore;
+                        output.push_back({});
+                        output[counter].push_back(h1);
+
+                        while(t > 1) { 
+                            int h = prev[std::make_tuple(h1,t,fVal)];
+                            if(h1 == 0) {
+                                --fVal;
+                            }
+                            --t;
+                            output[counter].push_back(h);
+                            h1 = h;
+                        }
+                        
+                        std::reverse(output[counter].begin(), output[counter].end());
+                        ++counter;
+                        std::cout << "Counter:" << counter << "\n";
+
+                        if(counter == numSolns) {
+                            return output;
+                        }
+                    }
+                }
+
+                else {
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        int newFVal = fVal;
+                        if(h2 == 0) {
+                            ++newFVal;
+                        }
+
+                        if(newFVal <= numZeros) {
+                            double tempGScore = oldGScore + logA[h1][h2] + logE[h2][observations[t]];
+                            if(gScore.count(std::make_tuple(h2,t+1,newFVal)) == 0 ) {
+                                gScore[std::make_tuple(h2,t+1,newFVal)] = tempGScore;
+                                openSet.push(std::make_tuple(tempGScore + v[t][h2], h2,t+1,newFVal));
+                                prev[std::make_tuple(h2,t+1,newFVal)] = h1;
+                            }
                             else if(tempGScore <  gScore.at(std::make_tuple(h2,t+1,newFVal))) { //Makes sure we don't have empty call to map
                                 gScore.at(std::make_tuple(h2,t+1,newFVal)) = tempGScore;
                                 openSet.push(std::make_tuple(tempGScore + v[t][h2], h2,t+1,newFVal));
@@ -394,4 +532,21 @@ class HMM {
             return {};
         }
 
+    //---------------------------
+    //-----Calculate logProb-----
+    //---------------------------
+
+    //Useful in debugging
+    double logProb(std::vector<int> obs, std::vector<int> guess) {
+        double output = 0;
+        int T = guess.size();
+        output += log(S[guess[0]]);
+        for(int t = 0; t < T-1; ++t) {
+            output += log(A[guess[t]][guess[t+1]]) + log(E[guess[t]][obs[t]]);
+        }
+        output += log(E[guess[T-1]][obs[T-1]]);
+        return output;
+    }
 };
+
+
