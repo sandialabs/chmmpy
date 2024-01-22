@@ -41,15 +41,21 @@ class HMMBase(object):
         for o in observations:
             assert o in self.omap, "Unexpected observation {}".format(o)
 
-    def load_model(self, *, start_probs, emission_probs, trans_mat, tolerance=0.0):
+    def load_model(self, *, start_probs, emission_probs, trans_mat, tolerance=None, emission_tolerance=0.0, start_tolerance=0.0, trans_tolerance=0.0):
+
+        if tolerance is not None:
+            start_tolerance=tolerance
+            emission_tolerance=tolerance
+            trans_tolerance=tolerance
+
         # start_probs
         start_probs_ = [0.0] * self.data.N
         for s, v in start_probs.items():
             start_probs_[self.smap[s]] = v
-        if tolerance:
+        if start_tolerance:
             for i in range(self.data.N):
-                start_probs_[i] = (start_probs_[i] + tolerance) / (
-                    1 + self.data.N * tolerance
+                start_probs_[i] = (start_probs_[i] + start_tolerance) / (
+                    1 + self.data.N * start_tolerance
                 )
         assert (
             math.fabs(sum(start_probs_) - 1) < 1e-7
@@ -63,11 +69,11 @@ class HMMBase(object):
         for s, v in emission_probs.items():
             for o, p in v.items():
                 emission_probs_[self.smap[s]][self.omap[o]] = p
-            if tolerance:
+            if emission_tolerance:
                 for i in range(len(self.omap)):
                     emission_probs_[self.smap[s]][i] = (
-                        emission_probs_[self.smap[s]][i] + tolerance
-                    ) / (1 + len(self.omap) * tolerance)
+                        emission_probs_[self.smap[s]][i] + emission_tolerance
+                    ) / (1 + len(self.omap) * emission_tolerance)
             assert math.fabs(sum(emission_probs_[self.smap[s]]) - 1) < 1e-7
         self.data._emission_probs = emission_probs_
 
@@ -80,12 +86,12 @@ class HMMBase(object):
         for k, v in trans_mat.items():
             s, s_ = k
             trans_mat_[self.smap[s]][self.smap[s_]] = v
-        if tolerance:
+        if trans_tolerance:
             for s in self.smap:
                 for s_ in self.smap:
                     trans_mat_[self.smap[s]][self.smap[s_]] = (
-                        trans_mat_[self.smap[s]][self.smap[s_]] + tolerance
-                    ) / (1 + len(self.smap) * tolerance)
+                        trans_mat_[self.smap[s]][self.smap[s_]] + trans_tolerance
+                    ) / (1 + len(self.smap) * trans_tolerance)
         assert math.fabs(sum(trans_mat_[self.smap[s]]) - 1) < 1e-7
         self.data.trans_mat = np.array(trans_mat_)
 
@@ -93,7 +99,9 @@ class HMMBase(object):
             start_probs=start_probs,
             emission_probs=emission_probs,
             trans_mat=trans_mat,
-            tolerance=tolerance,
+            start_tolerance=start_tolerance,
+            emission_tolerance=emission_tolerance,
+            trans_tolerance=trans_tolerance,
         )
 
     def run_training_simulations(
