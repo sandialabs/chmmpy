@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <boost/functional/hash.hpp> //Hash for pairs
 #include <time.h> //Used for seed
+#include <utility> //Pairs
 
 //--------------------------
 //-----Hash for Vectors-----
@@ -87,10 +88,7 @@ class HMM {
             E = inputE;
         }
 
-        //-------------------
-        
-        
-        //Useful in debugging---------------
+        //----------------------------------
         //-----Access private variables-----
         //----------------------------------
 
@@ -398,12 +396,13 @@ class HMM {
         }
 
 
-        //--------------------------------
-        //-----Multiple solns from A*-----
-        //--------------------------------
+        //---------------
+        //-----A* II-----
+        //---------------
 
-        //Just a test case right now
-        std::vector< std::vector<int> > aStarMult(const std::vector<int> &observations, double &logProb, const int numZeros, int numSolns) const{
+        //Keeps track of all values not just constraint value. Need for more complicated constraints
+        //Note: This may produce a different solution from A* I. However, they will have the same logProb
+        std::vector< int > aStarII(const std::vector<int> &observations, double &logProb, const int numZeros) const{
             const int T = observations.size();
 
             //So we don't need to keep recomputing logs
@@ -442,69 +441,55 @@ class HMM {
                 for(int h1 = 0; h1 < H; ++h1) {
                     double temp = -10E12;
                     for(int h2 = 0; h2 < H; ++h2) {
-                        temp = std::max(temp, v[t+1][h2] + logA[h1][h2] + logE[h2][observations[t+1]]);
+                        temp = std::max(temp, v[t+1][h2] + logA[h1][h2] + logE[h2][observations[t]]);
                     }
                     v[t][h1] = temp;
                 }
             }
 
-            int counter = 0;
-            std::vector< std::vector<int> > output;
+            std::vector< int > output;
 
             //Dist, current h, time, constraint val
-            std::priority_queue< std::tuple<double, int, int, int> > openSet; //Works b/c c++ orders tuples lexigraphically
-            std::unordered_map< std::tuple<int, int, int>, double, boost::hash< std::tuple<int,int,int> > > gScore; //pair is h,t, constraintVal
+            std::priority_queue< std::pair<double, std::vector<int> > > openSet; //Works b/c c++ orders tuples lexigraphically
+            std::unordered_map< std::vector<int>, double, boost::hash< std::vector<int> > > gScore; //pair is h,t, constraintVal
             //TODO make better hash for tuple
             //Would gScore be better as a multi-dimensional array? <- probably not, b/c we are hoping it stays sparse
-            std::unordered_map< std::tuple<int, int, int>, int, boost::hash< std::tuple<int,int,int> > > prev; //Used to recover sequence;
             for(int h = 0; h < H; ++h) {
                 double tempGScore = std::log(S[h]) + logE[h][observations[0]]; //Avoids extra look-up operation
             
                 if(h == 0) {
-                    openSet.push(std::make_tuple(tempGScore + v[0][h],0,1,1));
-                    gScore[std::make_tuple(0,1,1)] = tempGScore;
+                    std::vector<int> tempVec = {0}; //Otherwise C++ can't figure out what is happening
+                    openSet.push(std::make_pair(tempGScore + v[0][h],tempVec));
+                    gScore[{0}] = tempGScore;
                 }
                 else {
-                    openSet.push(std::make_tuple(tempGScore + v[0][h],1,1,0));
-                    gScore[std::make_tuple(1,1,0)] = tempGScore;
+                    std::vector<int> tempVec = {1};
+                    openSet.push(std::make_pair(tempGScore + v[0][h],tempVec));
+                    gScore[{1}] = tempGScore;
                 }
             }
-
-            while(!openSet.empty()) { 
-                auto tempTuple = openSet.top();
-                int h1 = get<1>(tempTuple);
-                int t = get<2>(tempTuple);
-                int fVal = get<3>(tempTuple); 
-
-                openSet.pop();
-                double oldGScore = gScore.at(std::make_tuple(h1,t,fVal));
-
-                if(t == T) {
-                    if(fVal == numZeros) {
-                        logProb = -oldGScore;
-                        output.push_back({});
-                        output[counter].push_back(h1);
-
-                        while(t > 1) { 
-                            int h = prev[std::make_tuple(h1,t,fVal)];
-                            if(h1 == 0) {
-                                --fVal;
-                            }
-                            --t;
-                            output[counter].push_back(h);
-                            h1 = h;
-                        }
-                        
-                        std::reverse(output[counter].begin(), output[counter].end());
-                        ++counter;
-                        std::cout << "Counter:" << counter << "\n";
-
-                        if(counter == numSolns) {
-                            return output;
-                        }
+            
+            while(!openSet.empty()) {
+                auto tempPair= openSet.top();
+                std::vector<int> currentSequence = get<1>(tempPair);
+                int t = currentSequence.size();
+                int h1 = currentSequence[t-1];
+                int fVal = 0;
+                for(int i = 0; i < t; ++i) {
+                    if(currentSequence[i] == 0) {
+                        ++fVal;
                     }
                 }
 
+                openSet.pop();
+                double oldGScore = gScore.at(currentSequence);
+                if(t == T) {
+                    if(fVal == numZeros) {
+                        logProb = oldGScore;
+                        return currentSequence;
+                    }
+                }
+                
                 else {
                     for(int h2 = 0; h2 < H; ++h2) {
                         int newFVal = fVal;
@@ -514,39 +499,397 @@ class HMM {
 
                         if(newFVal <= numZeros) {
                             double tempGScore = oldGScore + logA[h1][h2] + logE[h2][observations[t]];
-                            if(gScore.count(std::make_tuple(h2,t+1,newFVal)) == 0 ) {
-                                gScore[std::make_tuple(h2,t+1,newFVal)] = tempGScore;
-                                openSet.push(std::make_tuple(tempGScore + v[t][h2], h2,t+1,newFVal));
-                                prev[std::make_tuple(h2,t+1,newFVal)] = h1;
+                            std::vector<int> newSequence = currentSequence;
+                            newSequence.push_back(h2);
+
+                            gScore[newSequence] = tempGScore;
+                            openSet.push(std::make_pair(tempGScore + v[t][h2],newSequence));
+                        }
+                    }
+                }
+            }
+            return {};
+        }
+
+
+        //---------------------
+        //-----A* multiple-----
+        //---------------------
+
+        //Keeps track of all values not just constraint value. Need for more complicated constraints
+        //Note: This may produce a different solution from A* I. However, they will have the same logProb
+        std::vector< std::vector< int > > aStarMult(const std::vector<int> &observations, double &logProb, const int numZeros, const int numSolns) const{
+            const int T = observations.size();
+
+            //So we don't need to keep recomputing logs
+            std::vector< std::vector<double> > logA;
+            std::vector<double> logS;
+            std::vector< std::vector<double> > logE;
+
+            logA.resize(H);
+            logE.resize(H);
+            
+            for(int h1 = 0; h1 < H; ++h1) {
+                logA[h1].resize(H);
+                for(int h2 = 0; h2 < H; ++h2) {
+                    logA[h1][h2] = std::log(A[h1][h2]);
+                }
+            }
+
+            for(int h = 0; h < H; ++h) {
+                logE[h].resize(O);
+                for(int o = 0; o < O; ++o) {
+                    logE[h][o] = std::log(E[h][o]);
+                }
+            }
+            
+            std::vector< std::vector<double> > v; //Stands for Viterbi
+            v.resize(T);
+            for(int t = 0; t < T; ++t) {
+                v[t].resize(H);
+            }
+            
+            for(int h = 0; h < H; ++h) {
+                v[T-1][h] = 0;
+            }
+
+            for(int t = T-2; t >= 0; --t) {
+                for(int h1 = 0; h1 < H; ++h1) {
+                    double temp = -10E12;
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        temp = std::max(temp, v[t+1][h2] + logA[h1][h2] + logE[h2][observations[t]]);
+                    }
+                    v[t][h1] = temp;
+                }
+            }
+
+            std::vector< std::vector<int> > output;
+            int counter = 0;
+
+            //Dist, current h, time, constraint val
+            std::priority_queue< std::pair<double, std::vector<int> > > openSet; //Works b/c c++ orders tuples lexigraphically
+            std::unordered_map< std::vector<int>, double, boost::hash< std::vector<int> > > gScore; //pair is h,t, constraintVal
+            //TODO make better hash for tuple
+            //Would gScore be better as a multi-dimensional array? <- probably not, b/c we are hoping it stays sparse
+            for(int h = 0; h < H; ++h) {
+                double tempGScore = std::log(S[h]) + logE[h][observations[0]]; //Avoids extra look-up operation
+            
+                if(h == 0) {
+                    std::vector<int> tempVec = {0}; //Otherwise C++ can't figure out what is happening
+                    openSet.push(std::make_pair(tempGScore + v[0][h],tempVec));
+                    gScore[{0}] = tempGScore;
+                }
+                else {
+                    std::vector<int> tempVec = {1};
+                    openSet.push(std::make_pair(tempGScore + v[0][h],tempVec));
+                    gScore[{1}] = tempGScore;
+                }
+            }
+            
+            while(!openSet.empty()) {
+                auto tempPair= openSet.top();
+                std::vector<int> currentSequence = get<1>(tempPair);
+                int t = currentSequence.size();
+                int h1 = currentSequence[t-1];
+                int fVal = 0;
+                for(int i = 0; i < t; ++i) {
+                    if(currentSequence[i] == 0) {
+                        ++fVal;
+                    }
+                }
+
+                openSet.pop();
+                double oldGScore = gScore.at(currentSequence);
+                if(t == T) {
+                    if(fVal == numZeros) {
+                        logProb = oldGScore;
+                        output.push_back(currentSequence);
+                        ++counter;
+                        if(counter == numSolns) {
+                            return output;
+                        }
+                    }
+                }
+                
+                else {
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        int newFVal = fVal;
+                        if(h2 == 0) {
+                            ++newFVal;
+                        }
+
+                        if(newFVal <= numZeros) {
+                            double tempGScore = oldGScore + logA[h1][h2] + logE[h2][observations[t]];
+                            std::vector<int> newSequence = currentSequence;
+                            newSequence.push_back(h2);
+
+                            gScore[newSequence] = tempGScore;
+                            openSet.push(std::make_pair(tempGScore + v[t][h2],newSequence));
+                        }
+                    }
+                }
+            }
+            return {};
+        }
+
+
+        //---------------------------
+        //-----Calculate logProb-----
+        //---------------------------
+
+        //Useful in debugging
+        double logProb(std::vector<int> obs, std::vector<int> guess) const {
+            double output = 0;
+            int T = guess.size();
+            output += log(S[guess[0]]);
+            for(int t = 0; t < T-1; ++t) {
+                output += log(A[guess[t]][guess[t+1]]) + log(E[guess[t]][obs[t]]);
+            }
+            output += log(E[guess[T-1]][obs[T-1]]);
+            return output;
+        }
+
+
+        //-----------------------------------
+        //-----Learning with constraints-----
+        //-----------------------------------
+
+        //Takes the current info as a prior information (refered to as theta in comments), and then updates
+        //Right now only works for a single set of observations
+        //A first iterations, here we are just given the number of zeros in the sequence
+        void learn(const std::vector<int> &obs, int numZeros) {   
+            int T = obs.size();
+
+            //alpha
+            std::vector< std::vector< std::vector<double> > > alpha; //alpha[c][h][t] = P(O_0 = obs[0], ... ,O_t = obs[t], H_t = h | theta, c 0's)
+            alpha.resize(numZeros+1);
+            for(int c = 0; c <= numZeros; ++c) {
+                alpha[c].resize(H);
+                for(int h = 0; h < H; ++h) {
+                    alpha[c][h].resize(T);
+
+                    if(((c == 1) && (h == 0)) || ((c == 0) && (h != 0))) {
+                        alpha[c][h][0] = S[h]*E[h][obs[0]];
+                    }
+
+                    else{
+                        alpha[c][h][0] = 0.;
+                    } 
+                }
+            }
+
+            for(int t = 1; t < T-1; ++t) {
+                for(int c = 0; c <= numZeros; ++c) {
+                    for(int h = 0; h < H; ++h) {
+                        alpha[c][h][t] = E[h][obs[t]];
+                        double sum = 0.;
+                        for(int h1 = 0; h1 < H; ++h1) {
+                            int oldC = c;
+                            if(h1 == 0) {
+                                --oldC;
                             }
-                            else if(tempGScore <  gScore.at(std::make_tuple(h2,t+1,newFVal))) { //Makes sure we don't have empty call to map
-                                gScore.at(std::make_tuple(h2,t+1,newFVal)) = tempGScore;
-                                openSet.push(std::make_tuple(tempGScore + v[t][h2], h2,t+1,newFVal));
-                                prev.at(std::make_tuple(h2,t+1,newFVal)) = h1;
+
+                            if(oldC >= 0) {
+                                sum += alpha[oldC][h1][t-1]*A[h1][h];
+                            }
+                        }
+                        alpha[c][h][t] *= sum;
+                    }
+                }
+            }
+
+            //t = T-1
+            for(int c = 0; c <= numZeros; ++c) {
+                for(int h = 0; h < H; ++h) {
+                    if(c < numZeros) {
+                        alpha[c][h][T-1] = 0;
+                    }
+
+                    else {
+                        alpha[c][h][T-1] = E[h][obs[T-1]];
+                        double sum = 0.;
+                        for(int h1 = 0; h1 < H; ++h1) {
+                            int oldC  =c;
+                            if(h1 == 0) {
+                                --oldC;
+                            }
+
+                            if(oldC >= 0) {
+                                sum += alpha[oldC][h1][T-1]*A[h1][h];
+                            }
+                        }
+                        alpha[c][h][T-1] *= sum;
+                    }
+                }
+            }
+
+            //beta
+            std::vector< std::vector< std::vector<double> > > beta; //beta[c][h][t] = P(O_{t+1} = o_{t+1} ... O_{T-1} = o_{T-1} | H_t = h theta, c 0's )
+            beta.resize(numZeros+1);
+            for(int c = 0; c <= numZeros; ++c) {
+                beta[c].resize(numZeros+1);
+                for(int h = 0; h < H; ++h) {
+                    beta[c][h].resize(T);
+
+                    if(c == numZeros) {
+                        beta[c][h][T-1] = 1;
+                    }
+                    else {
+                        beta[c][h][T-1] = 0;
+                    }
+                }
+            }
+
+            for(int t = T-2; t > 0; --t) {
+                for(int c = 0; c <= numZeros; ++c) {
+                    for(int h = 0; h < H; ++h) {
+                        beta[c][h][t] = 0.;
+                        for(int h2 = 0; h2 < H; ++h2) {
+                            int newC = c;
+                            if(h2 == 0) {
+                                ++newC;
+                            }
+
+                            if(newC <= numZeros) {
+                                beta[c][h][t] += beta[newC][h2][t+1]*A[h][h2]*E[h2][obs[t+1]];
                             }
                         }
                     }
                 }
             }
 
-            return {};
-        }
+            //t = 0
+            for(int c = 0; c <= numZeros; ++c) {
+                for(int h = 0; h < H; ++h) {
+                    beta[c][h][0] = 0;
+                    if(((h == 0) && (c == 1)) || ((h != 0) && (c == 0))) {
+                        for(int h2 = 0; h2 < H; ++h2) {
+                            int newC = c;
+                            if (h2 == 0) {
+                                ++newC;
+                            }
 
-    //---------------------------
-    //-----Calculate logProb-----
-    //---------------------------
+                            if(newC <= numZeros) {
+                                beta[c][h][0] += beta[newC][h2][1]*A[h][h2]*E[h2][obs[1]];
+                            }
+                        }
+                    }
 
-    //Useful in debugging
-    double logProb(std::vector<int> obs, std::vector<int> guess) {
-        double output = 0;
-        int T = guess.size();
-        output += log(S[guess[0]]);
-        for(int t = 0; t < T-1; ++t) {
-            output += log(A[guess[t]][guess[t+1]]) + log(E[guess[t]][obs[t]]);
+                }
+            }
+
+            //Rescale alpha and beta
+            for(int t = 0; t < T; ++t) {
+                double z = 0.;
+                for(int c = 0; c <= numZeros; ++c) {
+                    for(int h = 0; h < H; ++h) {
+                        z += alpha[c][h][t];
+                    }
+                }
+
+                for(int c = 0; c <= numZeros; ++c) {
+                    for(int h = 0; h < H; ++h) {
+                        alpha[c][h][t] = alpha[c][h][t]/z;
+                        beta[c][h][t] = beta[c][h][t]/z;
+                    }
+                }
+            }
+
+            //den = P(O | theta) 
+            double den = 0; 
+            for(int h = 0; h < H; ++h) {
+                for(int c = 0; c <= numZeros; ++c) {
+                    den += alpha[c][h][0]*beta[numZeros-c][h][0];
+                }
+            }
+
+            //Gamma
+            std::vector< std::vector<double> > gamma; //gamma[h][t] = P(H_t = h | Y , theta)
+            gamma.resize(H);
+            for(int h = 0; h < H; ++h) {
+                gamma[h].resize(T);
+            }
+
+
+            for(int h = 0; h < H; ++h) {
+                for(int t = 0; t < T; ++t) {
+                    double num = 0.;
+                    for(int c = 0; c <= numZeros; ++c) {
+                        num += alpha[c][h][t]*beta[numZeros-c][h][t];
+                    }
+
+                    gamma[h][t] = num/den;
+                }
+            }
+
+            //xi
+            std::vector< std::vector< std::vector<double> > > xi; //xi[i][j][t] = P(H_t = i, H_t+1 = j, O| theta) 
+            xi.resize(H);
+            for(int h1 = 0; h1 < H; ++h1) {
+                xi[h1].resize(H);
+                for(int h2 = 0; h2 < H; ++h2) {
+                    xi[h1][h2].resize(T-1);
+                }
+            }
+
+            for(int h1 = 0; h1 < H; ++h1) {
+                for(int h2 = 0; h2 < H; ++h2) {
+                    for(int t = 0; t < T-1; ++t) {
+                        double num = A[h1][h2]*E[h2][obs[t+1]];
+                        double temp;
+
+                        for(int c = 0; c <= numZeros; ++c) {
+                            int middleC = 0;
+                            if(h2 == 0) {
+                                ++middleC;
+                            }
+                            temp += alpha[c][h1][t]*beta[numZeros-middleC-c][h2][t+1];
+                        }
+                        num *= temp;
+
+                        xi[h1][h2][t] = num/den;
+                    }
+                }
+            }
+
+            //New S
+            for(int h = 0; h < H; ++h) {
+                S[h] = gamma[h][0];
+            }
+
+            //New E
+            for(int h = 0; h < H; ++h) {
+                for(int o = 0; o < O; ++o) {
+                    double num = 0.;
+                    den = 0.;
+
+                    for(int t = 0; t < T; ++t) {
+                        if(obs[t] == o) {
+                            num += gamma[h][t];
+                        }
+                        den += gamma[h][t];
+                    }
+
+                    E[h][o] = num/den;
+                }
+            }
+
+            //New A
+            for(int h1 = 0; h1 < H; ++h1) {
+                for(int h2 = 0; h2 < H; ++h2) {
+                    double num = 0.;
+                    den = 0.;
+
+                    for(int t = 0; t < T-1; ++t) {
+                        num += xi[h1][h2][t];
+                        den += gamma[h1][t];
+                    }
+
+                    A[h1][h2] = num/den;
+                }
+            }
+
         }
-        output += log(E[guess[T-1]][obs[T-1]]);
-        return output;
-    }
 };
 
 
