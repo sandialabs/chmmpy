@@ -3,17 +3,40 @@
 int main() {
     std::vector< std::vector<double> > A{{0.899,0.101},{0.099,0.901}};
     ///std::vector< std::vector<double> > A1{{0.7,0.3},{0.1,0.9}};
-    std::vector<double> S =  {0.499,0.501};
+    std::vector<double> S =  {0.501,0.499};
     std::vector< std::vector<double> > E{{0.699,0.301},{0.299,0.701}};
     
-    int numIt = 100;
-    int T = 500;
-    int timeSum = 0;
-    int timeSumSq = 0;
-    int maxTime = -1;
+    int T = 100;
+    int numIt = 1000;
 
+    //Learning
+    std::vector< std::vector<double> > AInitial{{0.61,0.39},{0.4,0.6}};
+    std::vector<double> SInitial{0.51,0.49};
+    std::vector< std::vector<double> > EInitial{{0.61,0.39},{0.4,0.6}};
 
-   /*HMM myHMM(A,S,E);
+    HMM toLearn(AInitial,SInitial,EInitial);
+    HMM trueHMM(A,S,E);
+
+    std::vector< std::vector<int> > obs;
+    std::vector< std::vector<int> > hid;
+    std::vector<int> numZeros;
+
+    for(int i = 0; i < numIt; ++i) {
+        //std::cout << "Iteration number: " << i << "\n";
+        obs.push_back({});
+        hid.push_back({});
+
+        trueHMM.run(T,obs[i],hid[i],time(NULL)+i);
+        numZeros.push_back(count(hid[i].begin(), hid[i].end(), 0));
+    }
+
+    toLearn.learn(obs, numZeros);
+
+        std::cout << toLearn.getA()[0][0] << " " << toLearn.getA()[0][1] << "\n" << toLearn.getA()[1][0] << " "  << toLearn.getA()[1][1] << "\n\n";
+        std::cout << toLearn.getS()[0] << " " << toLearn.getS()[1] << "\n\n";
+        std::cout << toLearn.getE()[0][0] << " " << toLearn.getE()[0][1] << "\n" << toLearn.getE()[1][0] << " "  << toLearn.getE()[1][1] << "\n\n\n";
+
+    /*HMM myHMM(A,S,E);
     std::vector<int> obs;
     std::vector<int> hid;
     myHMM.run(T,obs,hid);
@@ -59,7 +82,7 @@ int main() {
     std::cout << "\n\n";
     */
 
-    for(int i = 0; i < numIt; ++i) {
+    /*for(int i = 0; i < numIt; ++i) {
         std::cout << "Iteration: " << i << "\n";
         HMM myHMM(A,S,E);
         std::vector<int> obs;
@@ -84,7 +107,7 @@ int main() {
 
     std::cout << "Mean run time in milliseconds: " << timeSum/numIt << "\n";
     //std::cout << "Standard deviation: " << std::sqrt(timeSumSq/numIt - timeSum*timeSum/(numIt*numIt)) << "\n";
-    std::cout << "Max time: " << maxTime << "\n\n"; 
+    std::cout << "Max time: " << maxTime << "\n\n";*/
 
     return 0;
 }

@@ -656,240 +656,713 @@ class HMM {
 
         //Takes the current info as a prior information (refered to as theta in comments), and then updates
         //Right now only works for a single set of observations
-        //A first iterations, here we are just given the number of zeros in the sequence
-        void learn(const std::vector<int> &obs, int numZeros) {   
+        //A first iteration, here we are just given the number of zeros in the sequence
+        //Epsilon are tolerance
+        void learn(const std::vector<int> &obs, int numZeros, double eps = 10E-6) {   
             int T = obs.size();
 
-            //alpha
-            std::vector< std::vector< std::vector<double> > > alpha; //alpha[c][h][t] = P(O_0 = obs[0], ... ,O_t = obs[t], H_t = h | theta, c 0's)
-            alpha.resize(numZeros+1);
-            for(int c = 0; c <= numZeros; ++c) {
-                alpha[c].resize(H);
-                for(int h = 0; h < H; ++h) {
-                    alpha[c][h].resize(T);
-
-                    if(((c == 1) && (h == 0)) || ((c == 0) && (h != 0))) {
-                        alpha[c][h][0] = S[h]*E[h][obs[0]];
-                    }
-
-                    else{
-                        alpha[c][h][0] = 0.;
-                    } 
-                }
-            }
-
-            for(int t = 1; t < T-1; ++t) {
+            while(true) { 
+                //alpha
+                std::vector< std::vector< std::vector<double> > > alpha; //alpha[c][h][t] = P(O_0 = obs[0], ... ,O_t = obs[t], H_t = h | theta, c 0's)
+                alpha.resize(numZeros+1);
                 for(int c = 0; c <= numZeros; ++c) {
+                    alpha[c].resize(H);
                     for(int h = 0; h < H; ++h) {
-                        alpha[c][h][t] = E[h][obs[t]];
-                        double sum = 0.;
-                        for(int h1 = 0; h1 < H; ++h1) {
-                            int oldC = c;
-                            if(h1 == 0) {
-                                --oldC;
-                            }
+                        alpha[c][h].resize(T);
 
-                            if(oldC >= 0) {
-                                sum += alpha[oldC][h1][t-1]*A[h1][h];
-                            }
+                        if(((c == 1) && (h == 0)) || ((c == 0) && (h != 0))) {
+                            alpha[c][h][0] = S[h]*E[h][obs[0]];
                         }
-                        alpha[c][h][t] *= sum;
-                    }
-                }
-            }
 
-            //t = T-1
-            for(int c = 0; c <= numZeros; ++c) {
-                for(int h = 0; h < H; ++h) {
-                    if(c < numZeros) {
-                        alpha[c][h][T-1] = 0;
-                    }
-
-                    else {
-                        alpha[c][h][T-1] = E[h][obs[T-1]];
-                        double sum = 0.;
-                        for(int h1 = 0; h1 < H; ++h1) {
-                            int oldC  =c;
-                            if(h1 == 0) {
-                                --oldC;
-                            }
-
-                            if(oldC >= 0) {
-                                sum += alpha[oldC][h1][T-1]*A[h1][h];
-                            }
-                        }
-                        alpha[c][h][T-1] *= sum;
-                    }
-                }
-            }
-
-            //beta
-            std::vector< std::vector< std::vector<double> > > beta; //beta[c][h][t] = P(O_{t+1} = o_{t+1} ... O_{T-1} = o_{T-1} | H_t = h theta, c 0's )
-            beta.resize(numZeros+1);
-            for(int c = 0; c <= numZeros; ++c) {
-                beta[c].resize(numZeros+1);
-                for(int h = 0; h < H; ++h) {
-                    beta[c][h].resize(T);
-
-                    if(c == numZeros) {
-                        beta[c][h][T-1] = 1;
-                    }
-                    else {
-                        beta[c][h][T-1] = 0;
-                    }
-                }
-            }
-
-            for(int t = T-2; t > 0; --t) {
-                for(int c = 0; c <= numZeros; ++c) {
-                    for(int h = 0; h < H; ++h) {
-                        beta[c][h][t] = 0.;
-                        for(int h2 = 0; h2 < H; ++h2) {
-                            int newC = c;
-                            if(h2 == 0) {
-                                ++newC;
-                            }
-
-                            if(newC <= numZeros) {
-                                beta[c][h][t] += beta[newC][h2][t+1]*A[h][h2]*E[h2][obs[t+1]];
-                            }
-                        }
-                    }
-                }
-            }
-
-            //t = 0
-            for(int c = 0; c <= numZeros; ++c) {
-                for(int h = 0; h < H; ++h) {
-                    beta[c][h][0] = 0;
-                    if(((h == 0) && (c == 1)) || ((h != 0) && (c == 0))) {
-                        for(int h2 = 0; h2 < H; ++h2) {
-                            int newC = c;
-                            if (h2 == 0) {
-                                ++newC;
-                            }
-
-                            if(newC <= numZeros) {
-                                beta[c][h][0] += beta[newC][h2][1]*A[h][h2]*E[h2][obs[1]];
-                            }
-                        }
-                    }
-
-                }
-            }
-
-            //Rescale alpha and beta
-            for(int t = 0; t < T; ++t) {
-                double z = 0.;
-                for(int c = 0; c <= numZeros; ++c) {
-                    for(int h = 0; h < H; ++h) {
-                        z += alpha[c][h][t];
+                        else{
+                            alpha[c][h][0] = 0.;
+                        } 
                     }
                 }
 
-                for(int c = 0; c <= numZeros; ++c) {
-                    for(int h = 0; h < H; ++h) {
-                        alpha[c][h][t] = alpha[c][h][t]/z;
-                        beta[c][h][t] = beta[c][h][t]/z;
-                    }
-                }
-            }
-
-            //den = P(O | theta) 
-            double den = 0; 
-            for(int h = 0; h < H; ++h) {
-                for(int c = 0; c <= numZeros; ++c) {
-                    den += alpha[c][h][0]*beta[numZeros-c][h][0];
-                }
-            }
-
-            //Gamma
-            std::vector< std::vector<double> > gamma; //gamma[h][t] = P(H_t = h | Y , theta)
-            gamma.resize(H);
-            for(int h = 0; h < H; ++h) {
-                gamma[h].resize(T);
-            }
-
-
-            for(int h = 0; h < H; ++h) {
-                for(int t = 0; t < T; ++t) {
-                    double num = 0.;
+                for(int t = 1; t < T-1; ++t) {
                     for(int c = 0; c <= numZeros; ++c) {
-                        num += alpha[c][h][t]*beta[numZeros-c][h][t];
+                        for(int h = 0; h < H; ++h) {
+                            alpha[c][h][t] = 0.;
+                            for(int h1 = 0; h1 < H; ++h1) {
+                                int oldC = c;
+                                if(h1 == 0) {
+                                    --oldC;
+                                }
+
+                                if(oldC >= 0) {
+                                    alpha[c][h][t] += alpha[oldC][h1][t-1]*A[h1][h];
+                                }
+                            }
+                            alpha[c][h][t] *= E[h][obs[t]];
+                        }
+                    }
+                }
+
+                //t = T-1
+                for(int c = 0; c <= numZeros; ++c) {
+                    for(int h = 0; h < H; ++h) {   
+                        alpha[c][h][T-1] = 0.;
+                        if(c == numZeros) {                   
+                            for(int h1 = 0; h1 < H; ++h1) {
+                                int oldC  = c;
+                                if(h1 == 0) {
+                                    --oldC;
+                                }
+
+                                if(oldC >= 0) {
+                                    alpha[c][h][T-1] += alpha[oldC][h1][T-2]*A[h1][h];
+                                }
+                            }
+                            alpha[c][h][T-1] *= E[h][obs[T-1]];
+                        }
+                    }
+                }
+
+                //beta
+                std::vector< std::vector< std::vector<double> > > beta; //beta[c][h][t] = P(O_{t+1} = o_{t+1} ... O_{T-1} = o_{T-1} | H_t = h theta, c 0's )
+                beta.resize(numZeros+1);
+                for(int c = 0; c <= numZeros; ++c) {
+                    beta[c].resize(numZeros+1);
+                    for(int h = 0; h < H; ++h) {
+                        beta[c][h].resize(T);
+
+                        if(c == 0) {
+                            beta[c][h][T-1] = 1;
+                        }
+
+                        else {
+                            beta[c][h][T-1] = 0;
+                        }
+                    }
+                }
+
+                for(int t = T-2; t > 0; --t) {
+                    for(int c = 0; c <= numZeros; ++c) {
+                        for(int h = 0; h < H; ++h) {
+                            beta[c][h][t] = 0.;
+                            for(int h2 = 0; h2 < H; ++h2) {
+                                int newC = c;
+                                if(h2 == 0) {
+                                    --newC;
+                                }
+
+                                if(newC >= 0) {
+                                    beta[c][h][t] += beta[newC][h2][t+1]*A[h][h2]*E[h2][obs[t+1]];
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //t = 0
+                for(int c = 0; c <= numZeros; ++c) {
+                    for(int h = 0; h < H; ++h) {
+                        beta[c][h][0] = 0.;
+                    }
+                }
+
+                //h[0] = 0
+                if(numZeros > 0) { 
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        int newC = numZeros -1; 
+                        if(h2 == 0) {
+                            --newC;
+                        }
+                        if(newC >= 0) {
+                            beta[numZeros-1][0][0] += beta[newC][h2][1]*A[0][h2]*E[h2][obs[1]];
+                        }
+                    }
+                }
+
+                //h[0] != 0
+                for(int h = 1; h < H; ++h) {
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        int newC = numZeros; 
+                        if(h2 == 0) {
+                            --newC;
+                        }
+
+                        if(newC >= 0) {
+                            beta[numZeros][h][0] += beta[newC][h2][1]*A[h][h2]*E[h2][obs[1]];
+                        }
+                    }
+                }
+                
+                //Rescale alpha and beta
+                /*for(int t = 0; t < T; ++t) {
+                    double z = 0.;
+                    for(int c = 0; c <= numZeros; ++c) {
+                        for(int h = 0; h < H; ++h) {
+                            z += alpha[c][h][t];
+                        }
                     }
 
-                    gamma[h][t] = num/den;
+                    for(int c = 0; c <= numZeros; ++c) {
+                        for(int h = 0; h < H; ++h) {
+                            alpha[c][h][t] = alpha[c][h][t]/z;
+                            beta[c][h][t] = beta[c][h][t]/z;
+                        }
+                    }
+                }*/
+
+                //den = P(O | theta) 
+                //Need different denominators because of the scaling
+                //This is numerically a VERY weird algorithm
+                std::vector<double> den;
+                for(int t = 0; t < T; ++t) {
+                    den.push_back(0.);
+                    for(int h = 0; h < H; ++h) {
+                        for(int c = 0; c <= numZeros; ++c) {
+                            den[t] += alpha[c][h][t]*beta[numZeros-c][h][t];
+                        }
+                    }
+                }
+                
+                //Gamma
+                std::vector< std::vector<double> > gamma; //gamma[h][t] = P(H_t = h | Y , theta)
+                gamma.resize(H);
+                for(int h = 0; h < H; ++h) {
+                    gamma[h].resize(T);
+                }
+
+                for(int h = 0; h < H; ++h) {
+                    for(int t = 0; t < T; ++t) {
+                        double num = 0.;
+                        for(int c = 0; c <= numZeros; ++c) {
+                            num += alpha[c][h][t]*beta[numZeros-c][h][t];
+                        }
+                        gamma[h][t] = num/den[t];
+                    }
+                }
+                
+                //xi
+                std::vector< std::vector< std::vector<double> > > xi; //xi[i][j][t] = P(H_t = i, H_t+1 = j, O| theta) 
+                xi.resize(H);
+                for(int h1 = 0; h1 < H; ++h1) {
+                    xi[h1].resize(H);
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        xi[h1][h2].resize(T-1);
+                    }
+                }
+
+                for(int h1 = 0; h1 < H; ++h1) {
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        for(int t = 0; t < T-1; ++t) {
+                            double num = 0.;
+
+                            for(int c = 0; c <= numZeros; ++c) {
+                                int middleC = 0;
+                                if(h2 == 0) {
+                                    ++middleC;
+                                }
+
+                                if(numZeros-middleC-c >= 0) {
+                                    num += alpha[c][h1][t]*beta[numZeros-middleC-c][h2][t+1];
+                                }
+                            }
+                            num *= A[h1][h2]*E[h2][obs[t+1]];
+
+                            xi[h1][h2][t] = num/den[t];
+                        }
+                    }
+                }
+                
+                //New S
+                for(int h = 0; h < H; ++h) {
+                    S[h] = gamma[h][0];
+                }
+                
+                //New E
+                for(int h = 0; h < H; ++h) {
+                    for(int o = 0; o < O; ++o) {
+                        double num = 0.;
+                        double newDen = 0.;
+
+                        for(int t = 0; t < T; ++t) {
+                            if(obs[t] == o) {
+                                num += gamma[h][t];
+                            }
+                            newDen += gamma[h][t];
+                        }
+
+                        E[h][o] = num/newDen;
+                    }
+                }
+                
+                double tol = 0.;
+
+                //New A
+                for(int h1 = 0; h1 < H; ++h1) {
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        double num = 0.;
+                        double newDen = 0.;
+
+                        for(int t = 0; t < T-1; ++t) {
+                            num += xi[h1][h2][t];
+                            newDen += gamma[h1][t];
+                        }
+                        tol = std::max(std::abs(A[h1][h2] - num/newDen), tol); 
+                        A[h1][h2] = num/newDen;
+                    }
+                }
+
+                std::cout << "Tolerance: " << tol << "\n";
+                //tol = 0.;
+                if(tol < eps) {
+                    break;
                 }
             }
+        }
 
-            //xi
-            std::vector< std::vector< std::vector<double> > > xi; //xi[i][j][t] = P(H_t = i, H_t+1 = j, O| theta) 
-            xi.resize(H);
-            for(int h1 = 0; h1 < H; ++h1) {
-                xi[h1].resize(H);
-                for(int h2 = 0; h2 < H; ++h2) {
-                    xi[h1][h2].resize(T-1);
-                }
-            }
+        //Multiple Constraints
+        //Using the same terminology as the Wikipedia page, we use r to deal with constraints
+        void learn(const std::vector< std::vector<int> > &obs, std::vector<int> numZeros, double eps = 10E-6) {   
+            int T = obs[0].size();
+            int R = obs.size();
 
-            for(int h1 = 0; h1 < H; ++h1) {
-                for(int h2 = 0; h2 < H; ++h2) {
-                    for(int t = 0; t < T-1; ++t) {
-                        double num = A[h1][h2]*E[h2][obs[t+1]];
-                        double temp;
+            while(true) { 
+                std::vector< std::vector< std::vector<double> > > totalGamma;
+                std::vector< std::vector< std::vector< std::vector<double> > > > totalXi;
+                for(int r = 0; r < R; ++r) { 
+                    //alpha
+                    std::vector< std::vector< std::vector<double> > > alpha; //alpha[c][h][t] = P(O_0 = obs[0], ... ,O_t = obs[t], H_t = h | theta, c 0's)
+                    alpha.resize(numZeros[r]+1);
+                    for(int c = 0; c <= numZeros[r]; ++c) {
+                        alpha[c].resize(H);
+                        for(int h = 0; h < H; ++h) {
+                            alpha[c][h].resize(T);
+
+                            if(((c == 1) && (h == 0)) || ((c == 0) && (h != 0))) {
+                                alpha[c][h][0] = S[h]*E[h][obs[r][0]];
+                            }
+
+                            else{
+                                alpha[c][h][0] = 0.;
+                            } 
+                        }
+                    }
+
+                    for(int t = 1; t < T-1; ++t) {
+                        for(int c = 0; c <= numZeros[r]; ++c) {
+                            for(int h = 0; h < H; ++h) {
+                                alpha[c][h][t] = 0.;
+                                for(int h1 = 0; h1 < H; ++h1) {
+                                    int oldC = c;
+                                    if(h1 == 0) {
+                                        --oldC;
+                                    }
+
+                                    if(oldC >= 0) {
+                                        alpha[c][h][t] += alpha[oldC][h1][t-1]*A[h1][h];
+                                    }
+                                }
+                                alpha[c][h][t] *= E[h][obs[r][t]];
+                            }
+                        }
+                    }
+
+                    //t = T-1
+                    for(int c = 0; c <= numZeros[r]; ++c) {
+                        for(int h = 0; h < H; ++h) {   
+                            alpha[c][h][T-1] = 0.;
+                            if(c == numZeros[r]) {                   
+                                for(int h1 = 0; h1 < H; ++h1) {
+                                    int oldC  = c;
+                                    if(h1 == 0) {
+                                        --oldC;
+                                    }
+
+                                    if(oldC >= 0) {
+                                        alpha[c][h][T-1] += alpha[oldC][h1][T-2]*A[h1][h];
+                                    }
+                                }
+                                alpha[c][h][T-1] *= E[h][obs[r][T-1]];
+                            }
+                        }
+                    }
+
+                    //beta
+                    std::vector< std::vector< std::vector<double> > > beta; //beta[c][h][t] = P(O_{t+1} = o_{t+1} ... O_{T-1} = o_{T-1} | H_t = h theta, c 0's )
+                    beta.resize(numZeros[r]+1);
+                    for(int c = 0; c <= numZeros[r]; ++c) {
+                        beta[c].resize(numZeros[r]+1);
+                        for(int h = 0; h < H; ++h) {
+                            beta[c][h].resize(T);
+
+                            if(c == 0) {
+                                beta[c][h][T-1] = 1;
+                            }
+
+                            else {
+                                beta[c][h][T-1] = 0;
+                            }
+                        }
+                    }
+
+                    for(int t = T-2; t > 0; --t) {
+                        for(int c = 0; c <= numZeros[r]; ++c) {
+                            for(int h = 0; h < H; ++h) {
+                                beta[c][h][t] = 0.;
+                                for(int h2 = 0; h2 < H; ++h2) {
+                                    int newC = c;
+                                    if(h2 == 0) {
+                                        --newC;
+                                    }
+
+                                    if(newC >= 0) {
+                                        beta[c][h][t] += beta[newC][h2][t+1]*A[h][h2]*E[h2][obs[r][t+1]];
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    //t = 0
+                    for(int c = 0; c <= numZeros[r]; ++c) {
+                        for(int h = 0; h < H; ++h) {
+                            beta[c][h][0] = 0.;
+                        }
+                    }
+
+                    //h[0] = 0
+                    if(numZeros[r] > 0) { 
+                        for(int h2 = 0; h2 < H; ++h2) {
+                            int newC = numZeros[r] -1; 
+                            if(h2 == 0) {
+                                --newC;
+                            }
+                            if(newC >= 0) {
+                                beta[numZeros[r]-1][0][0] += beta[newC][h2][1]*A[0][h2]*E[h2][obs[r][1]];
+                            }
+                        }
+                    }
+
+                    //h[0] != 0
+                    for(int h = 1; h < H; ++h) {
+                        for(int h2 = 0; h2 < H; ++h2) {
+                            int newC = numZeros[r]; 
+                            if(h2 == 0) {
+                                --newC;
+                            }
+
+                            if(newC >= 0) {
+                                beta[numZeros[r]][h][0] += beta[newC][h2][1]*A[h][h2]*E[h2][obs[r][1]];
+                            }
+                        }
+                    }
+                    
+                    //Rescale alpha and beta
+                    /*for(int t = 0; t < T; ++t) {
+                        double z = 0.;
+                        for(int c = 0; c <= numZeros; ++c) {
+                            for(int h = 0; h < H; ++h) {
+                                z += alpha[c][h][t];
+                            }
+                        }
 
                         for(int c = 0; c <= numZeros; ++c) {
-                            int middleC = 0;
-                            if(h2 == 0) {
-                                ++middleC;
+                            for(int h = 0; h < H; ++h) {
+                                alpha[c][h][t] = alpha[c][h][t]/z;
+                                beta[c][h][t] = beta[c][h][t]/z;
                             }
-                            temp += alpha[c][h1][t]*beta[numZeros-middleC-c][h2][t+1];
                         }
-                        num *= temp;
+                    }*/
 
-                        xi[h1][h2][t] = num/den;
-                    }
-                }
-            }
-
-            //New S
-            for(int h = 0; h < H; ++h) {
-                S[h] = gamma[h][0];
-            }
-
-            //New E
-            for(int h = 0; h < H; ++h) {
-                for(int o = 0; o < O; ++o) {
-                    double num = 0.;
-                    den = 0.;
-
+                    //den = P(O | theta) 
+                    //Need different denominators because of the scaling
+                    //This is numerically a VERY weird algorithm
+                    std::vector<double> den;
                     for(int t = 0; t < T; ++t) {
-                        if(obs[t] == o) {
-                            num += gamma[h][t];
+                        den.push_back(0.);
+                        for(int h = 0; h < H; ++h) {
+                            for(int c = 0; c <= numZeros[r]; ++c) {
+                                den[t] += alpha[c][h][t]*beta[numZeros[r]-c][h][t];
+                            }
                         }
-                        den += gamma[h][t];
+                    }
+                    
+                    //Gamma
+                    std::vector< std::vector<double> > gamma; //gamma[h][t] = P(H_t = h | Y , theta)
+                    gamma.resize(H);
+                    for(int h = 0; h < H; ++h) {
+                        gamma[h].resize(T);
                     }
 
-                    E[h][o] = num/den;
-                }
-            }
-
-            //New A
-            for(int h1 = 0; h1 < H; ++h1) {
-                for(int h2 = 0; h2 < H; ++h2) {
-                    double num = 0.;
-                    den = 0.;
-
-                    for(int t = 0; t < T-1; ++t) {
-                        num += xi[h1][h2][t];
-                        den += gamma[h1][t];
+                    for(int h = 0; h < H; ++h) {
+                        for(int t = 0; t < T; ++t) {
+                            double num = 0.;
+                            for(int c = 0; c <= numZeros[r]; ++c) {
+                                num += alpha[c][h][t]*beta[numZeros[r]-c][h][t];
+                            }
+                            gamma[h][t] = num/den[t];
+                        }
                     }
 
-                    A[h1][h2] = num/den;
+                    totalGamma.push_back(gamma);
+                    
+                    //xi
+                    std::vector< std::vector< std::vector<double> > > xi; //xi[i][j][t] = P(H_t = i, H_t+1 = j, O| theta) 
+                    xi.resize(H);
+                    for(int h1 = 0; h1 < H; ++h1) {
+                        xi[h1].resize(H);
+                        for(int h2 = 0; h2 < H; ++h2) {
+                            xi[h1][h2].resize(T-1);
+                        }
+                    }
+
+                    for(int h1 = 0; h1 < H; ++h1) {
+                        for(int h2 = 0; h2 < H; ++h2) {
+                            for(int t = 0; t < T-1; ++t) {
+                                double num = 0.;
+
+                                for(int c = 0; c <= numZeros[r]; ++c) {
+                                    int middleC = 0;
+                                    if(h2 == 0) {
+                                        ++middleC;
+                                    }
+
+                                    if(numZeros[r]-middleC-c >= 0) {
+                                        num += alpha[c][h1][t]*beta[numZeros[r]-middleC-c][h2][t+1];
+                                    }
+                                }
+                                num *= A[h1][h2]*E[h2][obs[r][t+1]];
+
+                                xi[h1][h2][t] = num/den[t];
+                            }
+                        }
+                    }
+
+                    totalXi.push_back(xi);
+                }
+                
+                //New S
+                for(int h = 0; h < H; ++h) {
+                    S[h] = 0.;
+                    for(int r = 0; r < R; ++r) {
+                        S[h] += totalGamma[r][h][0];
+                    }
+                    S[h] /= R;
+                }
+                
+                //New E
+                for(int r = 0; r < R; ++r) {
+                    for(int h = 0; h < H; ++h) {
+                        for(int o = 0; o < O; ++o) {
+                            double num = 0.;
+                            double newDen = 0.;
+
+                            for(int t = 0; t < T; ++t) {
+                                if(obs[r][t] == o) {
+                                    num += totalGamma[r][h][t];
+                                }
+                                newDen += totalGamma[r][h][t];
+                            }
+
+                            E[h][o] = num/newDen;
+                        }
+                    }
+                }
+                
+                double tol = 0.;
+
+                //New A
+                for(int h1 = 0; h1 < H; ++h1) {
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        double num = 0.;
+                        double newDen = 0.;
+                        for(int r = 0; r < R; ++r) {                     
+                            for(int t = 0; t < T-1; ++t) {
+                                num += totalXi[r][h1][h2][t];
+                                newDen += totalGamma[r][h1][t];
+                            }
+                        }
+                        tol = std::max(std::abs(A[h1][h2] - num/newDen), tol); 
+                        A[h1][h2] = num/newDen;
+                    }
+                }
+
+                std::cout << "Tolerance: " << tol << "\n";
+                //tol = 0.;
+                if(tol < eps) {
+                    break;
                 }
             }
-
         }
+
+
+        //---------------------------------------
+        //-----Learning without Constraints------
+        //---------------------------------------
+
+        void learn(const std::vector<int> &obs, double eps = 10E-6) {   
+            int T = obs.size();
+
+            while(true) { 
+                //alpha
+                std::vector< std::vector<double> > alpha; //alpha[h][t] = P(O_0 = obs[0], ... ,O_t = obs[t], H_t = h | theta)
+                alpha.resize(H);
+                for(int h = 0; h < H; ++h) {
+                    alpha[h].resize(T);
+                    alpha[h][0] = S[h]*E[h][obs[0]];
+                }
+                for(int h = 0; h < H; ++h) {
+                    for(int t = 1; t < T; ++t) {
+                        alpha[h][t] = 0;
+
+                        for(int h2 = 0; h2 < H; ++h2) {
+                            alpha[h][t] += alpha[h2][t-1]*A[h][h2];
+                        }
+
+                        alpha[h][t] *= E[h][obs[t]];
+                    }
+                }
+
+                //beta
+                std::vector< std::vector<double> > beta; //beta[h][t] = P(O_{t+1} = o_{t+1} ... O_{T-1} = o_{T-1} | H_t = h theta)
+                beta.resize(H);
+                for(int h = 0; h < H; ++h) {
+                    beta[h].resize(T);
+                    beta[h][T-1] = 1.;
+                }
+
+                for(int h = 0; h < H; ++h) {
+                    for(int t = 0; t < T-1; ++t) {
+                        beta[h][t] = 0.;
+
+                        for(int h2 = 0; h2 < H; ++h2) {
+                            beta[h][t] += beta[h2][t+1]*A[h][h2]*
+                        }
+                    }
+                }
+
+
+                //Rescale alpha and beta
+                /*for(int t = 0; t < T; ++t) {
+                    double z = 0.;
+                    for(int c = 0; c <= numZeros; ++c) {
+                        for(int h = 0; h < H; ++h) {
+                            z += alpha[c][h][t];
+                        }
+                    }
+
+                    for(int c = 0; c <= numZeros; ++c) {
+                        for(int h = 0; h < H; ++h) {
+                            alpha[c][h][t] = alpha[c][h][t]/z;
+                            beta[c][h][t] = beta[c][h][t]/z;
+                        }
+                    }
+                }*/
+
+                //den = P(O | theta) 
+                //Need different denominators because of the scaling
+                //This is numerically a VERY weird algorithm
+                std::vector<double> den;
+                for(int t = 0; t < T; ++t) {
+                    den.push_back(0.);
+                    for(int h = 0; h < H; ++h) {
+                        for(int c = 0; c <= numZeros; ++c) {
+                            den[t] += alpha[c][h][t]*beta[numZeros-c][h][t];
+                        }
+                    }
+                }
+                
+                //Gamma
+                std::vector< std::vector<double> > gamma; //gamma[h][t] = P(H_t = h | Y , theta)
+                gamma.resize(H);
+                for(int h = 0; h < H; ++h) {
+                    gamma[h].resize(T);
+                }
+
+                for(int h = 0; h < H; ++h) {
+                    for(int t = 0; t < T; ++t) {
+                        double num = 0.;
+                        for(int c = 0; c <= numZeros; ++c) {
+                            num += alpha[c][h][t]*beta[numZeros-c][h][t];
+                        }
+                        gamma[h][t] = num/den[t];
+                    }
+                }
+                
+                //xi
+                std::vector< std::vector< std::vector<double> > > xi; //xi[i][j][t] = P(H_t = i, H_t+1 = j, O| theta) 
+                xi.resize(H);
+                for(int h1 = 0; h1 < H; ++h1) {
+                    xi[h1].resize(H);
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        xi[h1][h2].resize(T-1);
+                    }
+                }
+
+                for(int h1 = 0; h1 < H; ++h1) {
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        for(int t = 0; t < T-1; ++t) {
+                            double num = 0.;
+
+                            for(int c = 0; c <= numZeros; ++c) {
+                                int middleC = 0;
+                                if(h2 == 0) {
+                                    ++middleC;
+                                }
+
+                                if(numZeros-middleC-c >= 0) {
+                                    num += alpha[c][h1][t]*beta[numZeros-middleC-c][h2][t+1];
+                                }
+                            }
+                            num *= A[h1][h2]*E[h2][obs[t+1]];
+
+                            xi[h1][h2][t] = num/den[t];
+                        }
+                    }
+                }
+                
+                //New S
+                for(int h = 0; h < H; ++h) {
+                    S[h] = gamma[h][0];
+                }
+                
+                //New E
+                for(int h = 0; h < H; ++h) {
+                    for(int o = 0; o < O; ++o) {
+                        double num = 0.;
+                        double newDen = 0.;
+
+                        for(int t = 0; t < T; ++t) {
+                            if(obs[t] == o) {
+                                num += gamma[h][t];
+                            }
+                            newDen += gamma[h][t];
+                        }
+
+                        E[h][o] = num/newDen;
+                    }
+                }
+                
+                double tol = 0.;
+
+                //New A
+                for(int h1 = 0; h1 < H; ++h1) {
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        double num = 0.;
+                        double newDen = 0.;
+
+                        for(int t = 0; t < T-1; ++t) {
+                            num += xi[h1][h2][t];
+                            newDen += gamma[h1][t];
+                        }
+                        tol = std::max(std::abs(A[h1][h2] - num/newDen), tol); 
+                        A[h1][h2] = num/newDen;
+                    }
+                }
+
+                std::cout << "Tolerance: " << tol << "\n";
+                //tol = 0.;
+                if(tol < eps) {
+                    break;
+                }
+            }
+        }
+
 };
 
 
