@@ -1,20 +1,28 @@
 #include "HMM.h"
+#include <vector>
+
+bool oracleConstraint(std::vector<int> hid, double numZeros) {
+    return (numZeros == count(hid.begin(), hid.end(), 0));
+}
 
 int main() {
+   //bool oracleConstraint(std::vector<int> hid, double numZeros);
+
     std::vector< std::vector<double> > A{{0.899,0.101},{0.099,0.901}};
     ///std::vector< std::vector<double> > A1{{0.7,0.3},{0.1,0.9}};
     std::vector<double> S =  {0.501,0.499};
     std::vector< std::vector<double> > E{{0.699,0.301},{0.299,0.701}};
     
     int T = 100;
-    int numIt = 1000;
+    int numIt = 10;
 
     //Learning
     std::vector< std::vector<double> > AInitial{{0.61,0.39},{0.4,0.6}};
     std::vector<double> SInitial{0.51,0.49};
-    std::vector< std::vector<double> > EInitial{{0.61,0.39},{0.4,0.6}};
+    std::vector< std::vector<double> > EInitial{{0.91,0.09},{0.1,0.9}};
 
-    HMM toLearn(AInitial,SInitial,EInitial);
+    HMM toLearn1(AInitial,SInitial,EInitial);
+    HMM toLearn2(AInitial,SInitial,EInitial);
     HMM trueHMM(A,S,E);
 
     std::vector< std::vector<int> > obs;
@@ -28,13 +36,30 @@ int main() {
 
         trueHMM.run(T,obs[i],hid[i],time(NULL)+i);
         numZeros.push_back(count(hid[i].begin(), hid[i].end(), 0));
+        double numZerosTemp = numZeros[i];
+
+        double logProb1;
+        double logProb2;
+
+        trueHMM.aStar(obs[i],logProb1,numZeros[i]);
+        trueHMM.aStarOracle(obs[i],logProb2, [numZerosTemp](std::vector<int> myHid) -> bool { return (numZerosTemp == count(myHid.begin(), myHid.end(), 0));  });
+        std::cout << logProb1 << " " << logProb2 << "\n";
+
     }
+    return 0;
 
-    toLearn.learn(obs, numZeros);
+    toLearn1.learn(obs, numZeros);
+    toLearn2.learn(obs);
 
-        std::cout << toLearn.getA()[0][0] << " " << toLearn.getA()[0][1] << "\n" << toLearn.getA()[1][0] << " "  << toLearn.getA()[1][1] << "\n\n";
-        std::cout << toLearn.getS()[0] << " " << toLearn.getS()[1] << "\n\n";
-        std::cout << toLearn.getE()[0][0] << " " << toLearn.getE()[0][1] << "\n" << toLearn.getE()[1][0] << " "  << toLearn.getE()[1][1] << "\n\n\n";
+    std::cout << "\n" << toLearn1.getA()[0][0] << " " << toLearn1.getA()[0][1] << "\n" << toLearn1.getA()[1][0] << " "  << toLearn1.getA()[1][1] << "\n\n";
+    std::cout << toLearn1.getS()[0] << " " << toLearn1.getS()[1] << "\n\n";
+    std::cout << toLearn1.getE()[0][0] << " " << toLearn1.getE()[0][1] << "\n" << toLearn1.getE()[1][0] << " "  << toLearn1.getE()[1][1] << "\n\n\n";
+
+    std::cout << toLearn2.getA()[0][0] << " " << toLearn2.getA()[0][1] << "\n" << toLearn2.getA()[1][0] << " "  << toLearn2.getA()[1][1] << "\n\n";
+    std::cout << toLearn2.getS()[0] << " " << toLearn2.getS()[1] << "\n\n";
+    std::cout << toLearn2.getE()[0][0] << " " << toLearn2.getE()[0][1] << "\n" << toLearn2.getE()[1][0] << " "  << toLearn2.getE()[1][1] << "\n\n\n";
+
+
 
     /*HMM myHMM(A,S,E);
     std::vector<int> obs;

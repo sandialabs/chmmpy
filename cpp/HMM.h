@@ -11,12 +11,15 @@
 #include <time.h> //Used for seed
 #include <utility> //Pairs
 
+//To-Do
+//How do we want to deal with errors?
+//Create A* algorithm with oracle
+
 //--------------------------
 //-----Hash for Vectors-----
 //--------------------------
 
-//Who knows why C++ doesn't have built in hash for vectors
-//Stolen for stackoverflow (https://stackoverflow.com/questions/35985960/c-why-is-boosthash-combine-the-best-way-to-combine-hash-values/50978188#50978188)
+//Taken for Stack Overflow (https://stackoverflow.com/questions/35985960/c-why-is-boosthash-combine-the-best-way-to-combine-hash-values/50978188#50978188)
 template<typename T>
 T xorshift(const T& n,int i){
   return n^(n>>i);
@@ -57,6 +60,15 @@ struct vectorHash {
     }
 };
 
+
+//-------------------
+//-------------------
+//-----HMM Class-----
+//-------------------
+//-------------------
+
+//This is the class for dealing with HMMs
+//It stores (as private variables) the transition matrix (A), start probabilities (S), and Emission Probabilities (E) as well as the number of hidden states (H) and observed states (O)
 class HMM {
     
     private:
@@ -66,6 +78,20 @@ class HMM {
         std::vector< std::vector<double> > A; //Transition matrix, size HxH
         std::vector<double> S; //Start probs, size H
         std::vector< std::vector<double> > E; //Emission probs, size HxO
+        std::mt19937 generator; //Needed for running the HMM
+        std::uniform_real_distribution<double> dist; //Ditto
+
+
+        //--------------------
+        //-----Get Random-----
+        //--------------------
+
+        //Return a random number from 0,1
+        //Needs to be an internal function b/c we are calling random a bunch of different times in the run function, possibly multiple times
+
+        double getRandom() {
+            return dist(generator);
+        }
 
     public:
 
@@ -73,20 +99,92 @@ class HMM {
         //-----Constructor-----
         //---------------------
 
-        HMM(const std::vector< std::vector<double> > &inputA, const std::vector<double> &inputS, const std::vector< std::vector<double> > &inputE) {
+        HMM(const std::vector< std::vector<double> > &inputA, const std::vector<double> &inputS, const std::vector< std::vector<double> > &inputE, int seed = time(NULL)) {
             H = inputA.size();
 
-            if((inputA[0].size() != H) || (inputS.size() != H) || (inputE.size() != H)) {
+            //Check if sizes are correct
+            if((inputS.size() != H) || (inputE.size() != H)) {
                 std::cout << "Error in constructor for HMM, matrices not appropriately sized." << std::endl;
                 throw std::exception();
             }
 
+            for(int h = 0; h < H; ++h) {
+                if(inputA[h].size() != H) {
+                    std::cout << "Error in constructor for HMM, A is not a square matrix." << std::endl;
+                    throw std::exception();
+                }
+            }
+
             O = inputE[0].size();
+
+            for(int h = 0; h < H; ++h) {
+                if(inputE[h].size() != O) {
+                    std::cout << "Error in constructor for HMM, E is not a matrix." << std::endl;
+                    throw std::exception();
+                }
+            }
+            
+
+            //Check if matrices represent probabilities
+            double sum = 0;
+            for(int h1 = 0; h1 < H; ++h1) {
+                sum = 0;
+                for(int h2 = 0; h2 < H; ++h2) {
+                    if(inputA[h1][h2] < 0.) {
+                        std::cout << "Error in constructor for HMM, A cannot have negative entries." << std::endl;
+                        throw std::exception();
+                    }
+
+                    sum += inputA[h1][h2];
+                }
+
+                if(std::abs(sum-1.) > 10E-6) {
+                    std::cout << "Error in constructor for HMM, the rows of A must sum to 1." << std::endl;
+                    throw std::exception();
+                }
+            }
+
+            sum = 0;
+            for(int h = 0; h < H; ++h) {
+                if(inputS[h] < 0.) {
+                    std::cout << "Error in constructor for HMM, S cannot have negative entries." << std::endl;
+                    throw std::exception();
+                }
+                sum += inputS[h];
+            }
+            if(std::abs(sum-1.) > 10E-6) {
+                std::cout << "Error in constructor for HMM, the entries of S must sum to 1." << std::endl;
+            }
+
+            for(int h = 0; h < H; ++h) {
+                sum = 0;
+                for(int o = 0; o < O; ++o) {
+                    if(inputE[h][o] < 0.) {
+                        std::cout << "Error in constructor for HMM, E cannot have negative entries." << std::endl;
+                        throw std::exception();
+                    }
+
+                    sum += inputE[h][o];
+                }
+
+                if(std::abs(sum-1.) > 10E-6) {
+                    std::cout << "Error in constructor for HMM, the rows of E must sum to 1." << std::endl;
+                    throw std::exception();
+                }
+            }
 
             A = inputA;
             S = inputS;
             E = inputE;
+            
+            std::random_device rand_dev;
+            std::mt19937 myGenerator(rand_dev());
+            generator = myGenerator;
+            generator.seed(seed);
+            std::uniform_real_distribution<double> myDist(0., 1.);
+            dist = myDist;
         }
+
 
         //----------------------------------
         //-----Access private variables-----
@@ -125,21 +223,21 @@ class HMM {
             return E[h][o];
         }
 
+
         //---------------------
         //-----Run the HMM-----
         //---------------------
 
-        void run(int T, std::vector<int> &observedStates, std::vector<int> &hiddenStates, int seed = time(NULL)) const{
+        //This generates the observed states and hidden states running the HMM for T time steps
+        //The seed is set to time(NULL) be default
+        //Be careful with the seed!!!! If you are running tests that take faster than a second this will cause repeat runs
+        //Not const b/c of the random stuff
+        void run(int T, std::vector<int> &observedStates, std::vector<int> &hiddenStates, int seed = time(NULL)) {
             observedStates.clear();
             hiddenStates.clear();
 
-            std::random_device rand_dev;
-            std::mt19937 generator(rand_dev());
-            generator.seed(seed);
-            std::uniform_real_distribution<double> dist(0., 1.);
-
             //Initial Hidden State
-            double startProb = dist(generator);
+            double startProb = getRandom();
             double prob = 0;
             for(int h = 0; h < H; ++h) {
                 prob += S[h];
@@ -150,7 +248,7 @@ class HMM {
             }
 
             //Initial Observed State
-            double obsProb = dist(generator);
+            double obsProb = getRandom();
             prob = 0;
             for(int o = 0; o < O; ++o) {
                 prob += E[hiddenStates[0]][o];
@@ -162,7 +260,7 @@ class HMM {
 
             //All other states
             for(int t = 1; t < T; ++t) {
-                startProb = dist(generator);
+                startProb = getRandom();
                 prob = 0;
                 for(int h = 0; h < H; ++h) {
                     prob += A[hiddenStates[t-1]][h];
@@ -172,7 +270,7 @@ class HMM {
                     }
                 }
                 
-                obsProb = dist(generator);
+                obsProb = getRandom();
                 prob = 0;
                 for(int o = 0; o < O; ++o) {
                     prob += E[hiddenStates[t]][o];
@@ -188,6 +286,9 @@ class HMM {
         //-----A star-----
         //----------------
 
+        //Does inference with a given set of observations
+        //logProb is the log of the probability that the given states occur (we use logs as otherwise we could get numerical underflow)
+        //Uses the A* algorithm for inference 
         std::vector<int> aStar(const std::vector<int> &observations, double &logProb) const{
             const int T = observations.size();
 
@@ -268,11 +369,11 @@ class HMM {
             return {};
         }
     
-        //------------------------------------
-        //-----A star with constraints II-----
-        //------------------------------------
+        //---------------------------------
+        //-----A star with constraints-----
+        //---------------------------------
 
-        //Just a test case right now
+        //The same as the function above, however here we are allowed to specify the number of times the function is in hidden state 0 with the parameter numZeros
         std::vector<int> aStar(const std::vector<int> &observations, double &logProb, const int numZeros) const{
             const int T = observations.size();
 
@@ -396,13 +497,14 @@ class HMM {
         }
 
 
-        //---------------
-        //-----A* II-----
-        //---------------
+        //------------------------
+        //-----A* with oracle-----
+        //------------------------
 
+        //Rather than having some nice function that we can take advantage of the structure of, we just have an oracle which  
         //Keeps track of all values not just constraint value. Need for more complicated constraints
-        //Note: This may produce a different solution from A* I. However, they will have the same logProb
-        std::vector< int > aStarII(const std::vector<int> &observations, double &logProb, const int numZeros) const{
+        //Note: This may produce a different solution from other A* functions. However, they will have the same logProb
+        std::vector< int > aStarOracle(const std::vector<int> &observations, double &logProb, const std::function<bool(std::vector<int>)> &constraintOracle) const{
             const int T = observations.size();
 
             //So we don't need to keep recomputing logs
@@ -474,17 +576,11 @@ class HMM {
                 std::vector<int> currentSequence = get<1>(tempPair);
                 int t = currentSequence.size();
                 int h1 = currentSequence[t-1];
-                int fVal = 0;
-                for(int i = 0; i < t; ++i) {
-                    if(currentSequence[i] == 0) {
-                        ++fVal;
-                    }
-                }
 
                 openSet.pop();
                 double oldGScore = gScore.at(currentSequence);
                 if(t == T) {
-                    if(fVal == numZeros) {
+                    if(constraintOracle(currentSequence)) {
                         logProb = oldGScore;
                         return currentSequence;
                     }
@@ -492,19 +588,12 @@ class HMM {
                 
                 else {
                     for(int h2 = 0; h2 < H; ++h2) {
-                        int newFVal = fVal;
-                        if(h2 == 0) {
-                            ++newFVal;
-                        }
+                        double tempGScore = oldGScore + logA[h1][h2] + logE[h2][observations[t]];
+                        std::vector<int> newSequence = currentSequence;
+                        newSequence.push_back(h2);
 
-                        if(newFVal <= numZeros) {
-                            double tempGScore = oldGScore + logA[h1][h2] + logE[h2][observations[t]];
-                            std::vector<int> newSequence = currentSequence;
-                            newSequence.push_back(h2);
-
-                            gScore[newSequence] = tempGScore;
-                            openSet.push(std::make_pair(tempGScore + v[t][h2],newSequence));
-                        }
+                        gScore[newSequence] = tempGScore;
+                        openSet.push(std::make_pair(tempGScore + v[t][h2],newSequence));
                     }
                 }
             }
@@ -516,8 +605,8 @@ class HMM {
         //-----A* multiple-----
         //---------------------
 
-        //Keeps track of all values not just constraint value. Need for more complicated constraints
-        //Note: This may produce a different solution from A* I. However, they will have the same logProb
+        //Returns the top numSolns solutions to the inference problem.
+        //Uses the same inference technique as A*II, so it is much slower than A*
         std::vector< std::vector< int > > aStarMult(const std::vector<int> &observations, double &logProb, const int numZeros, const int numSolns) const{
             const int T = observations.size();
 
@@ -638,6 +727,7 @@ class HMM {
         //---------------------------
 
         //Useful in debugging
+        //Should match A* function
         double logProb(std::vector<int> obs, std::vector<int> guess) const {
             double output = 0;
             int T = guess.size();
@@ -654,9 +744,9 @@ class HMM {
         //-----Learning with constraints-----
         //-----------------------------------
 
-        //Takes the current info as a prior information (refered to as theta in comments), and then updates
-        //Right now only works for a single set of observations
-        //A first iteration, here we are just given the number of zeros in the sequence
+        //Your HMM should be initalized with your prior guess of the probabilities (referred to as theta in the comments) 
+        //Only for a single set of observations
+        //The constraint is the number of zeros in the hidden states, denoted by numZeros
         //Epsilon are tolerance
         void learn(const std::vector<int> &obs, int numZeros, double eps = 10E-6) {   
             int T = obs.size();
@@ -668,25 +758,19 @@ class HMM {
                 for(int c = 0; c <= numZeros; ++c) {
                     alpha[c].resize(H);
                     for(int h = 0; h < H; ++h) {
-                        alpha[c][h].resize(T);
-
+                        alpha[c][h].resize(T,0.);
                         if(((c == 1) && (h == 0)) || ((c == 0) && (h != 0))) {
                             alpha[c][h][0] = S[h]*E[h][obs[0]];
                         }
-
-                        else{
-                            alpha[c][h][0] = 0.;
-                        } 
                     }
                 }
 
                 for(int t = 1; t < T-1; ++t) {
                     for(int c = 0; c <= numZeros; ++c) {
                         for(int h = 0; h < H; ++h) {
-                            alpha[c][h][t] = 0.;
                             for(int h1 = 0; h1 < H; ++h1) {
                                 int oldC = c;
-                                if(h1 == 0) {
+                                if(h == 0) {
                                     --oldC;
                                 }
 
@@ -702,11 +786,10 @@ class HMM {
                 //t = T-1
                 for(int c = 0; c <= numZeros; ++c) {
                     for(int h = 0; h < H; ++h) {   
-                        alpha[c][h][T-1] = 0.;
                         if(c == numZeros) {                   
                             for(int h1 = 0; h1 < H; ++h1) {
                                 int oldC  = c;
-                                if(h1 == 0) {
+                                if(h == 0) {
                                     --oldC;
                                 }
 
@@ -725,14 +808,9 @@ class HMM {
                 for(int c = 0; c <= numZeros; ++c) {
                     beta[c].resize(numZeros+1);
                     for(int h = 0; h < H; ++h) {
-                        beta[c][h].resize(T);
-
+                        beta[c][h].resize(T,0.);
                         if(c == 0) {
-                            beta[c][h][T-1] = 1;
-                        }
-
-                        else {
-                            beta[c][h][T-1] = 0;
+                            beta[c][h][T-1] = 1.;
                         }
                     }
                 }
@@ -740,7 +818,6 @@ class HMM {
                 for(int t = T-2; t > 0; --t) {
                     for(int c = 0; c <= numZeros; ++c) {
                         for(int h = 0; h < H; ++h) {
-                            beta[c][h][t] = 0.;
                             for(int h2 = 0; h2 < H; ++h2) {
                                 int newC = c;
                                 if(h2 == 0) {
@@ -756,12 +833,6 @@ class HMM {
                 }
 
                 //t = 0
-                for(int c = 0; c <= numZeros; ++c) {
-                    for(int h = 0; h < H; ++h) {
-                        beta[c][h][0] = 0.;
-                    }
-                }
-
                 //h[0] = 0
                 if(numZeros > 0) { 
                     for(int h2 = 0; h2 < H; ++h2) {
@@ -915,7 +986,12 @@ class HMM {
             }
         }
 
-        //Multiple Constraints
+
+        //----------------------------------------------------------------
+        //-----Constrained Learning with Multiple Set of Observations-----
+        //----------------------------------------------------------------
+
+        //This is the exact same as the algorithm above, but here we allow multiple observations
         //Using the same terminology as the Wikipedia page, we use r to deal with constraints
         void learn(const std::vector< std::vector<int> > &obs, std::vector<int> numZeros, double eps = 10E-6) {   
             int T = obs[0].size();
@@ -1181,7 +1257,6 @@ class HMM {
                         A[h1][h2] = num/newDen;
                     }
                 }
-
                 std::cout << "Tolerance: " << tol << "\n";
                 //tol = 0.;
                 if(tol < eps) {
@@ -1203,15 +1278,14 @@ class HMM {
                 std::vector< std::vector<double> > alpha; //alpha[h][t] = P(O_0 = obs[0], ... ,O_t = obs[t], H_t = h | theta)
                 alpha.resize(H);
                 for(int h = 0; h < H; ++h) {
-                    alpha[h].resize(T);
+                    alpha[h].resize(T,0.);
                     alpha[h][0] = S[h]*E[h][obs[0]];
                 }
-                for(int h = 0; h < H; ++h) {
-                    for(int t = 1; t < T; ++t) {
-                        alpha[h][t] = 0;
-
-                        for(int h2 = 0; h2 < H; ++h2) {
-                            alpha[h][t] += alpha[h2][t-1]*A[h][h2];
+                
+                for(int t = 1; t < T; ++t) {
+                    for(int h = 0; h < H; ++h) {
+                        for(int h1 = 0; h1 < H; ++h1) {
+                            alpha[h][t] += alpha[h1][t-1]*A[h1][h];
                         }
 
                         alpha[h][t] *= E[h][obs[t]];
@@ -1226,12 +1300,11 @@ class HMM {
                     beta[h][T-1] = 1.;
                 }
 
-                for(int h = 0; h < H; ++h) {
-                    for(int t = 0; t < T-1; ++t) {
-                        beta[h][t] = 0.;
-
+                
+                for(int t = T-2; t >= 0; --t) {
+                    for(int h = 0; h < H; ++h) {
                         for(int h2 = 0; h2 < H; ++h2) {
-                            beta[h][t] += beta[h2][t+1]*A[h][h2]*
+                            beta[h][t] += beta[h2][t+1]*A[h][h2]*E[h2][obs[t+1]];
                         }
                     }
                 }
@@ -1240,30 +1313,23 @@ class HMM {
                 //Rescale alpha and beta
                 /*for(int t = 0; t < T; ++t) {
                     double z = 0.;
-                    for(int c = 0; c <= numZeros; ++c) {
-                        for(int h = 0; h < H; ++h) {
-                            z += alpha[c][h][t];
-                        }
+                    for(int h = 0; h < H; ++h) {
+                        z += alpha[h][t];
                     }
 
-                    for(int c = 0; c <= numZeros; ++c) {
-                        for(int h = 0; h < H; ++h) {
-                            alpha[c][h][t] = alpha[c][h][t]/z;
-                            beta[c][h][t] = beta[c][h][t]/z;
-                        }
+                    for(int h = 0; h < H; ++h) {
+                        alpha[h][t] = alpha[h][t]/z;
+                        beta[h][t] = beta[h][t]/z;
                     }
                 }*/
 
                 //den = P(O | theta) 
                 //Need different denominators because of the scaling
                 //This is numerically a VERY weird algorithm
-                std::vector<double> den;
+                std::vector<double> den(T,0);
                 for(int t = 0; t < T; ++t) {
-                    den.push_back(0.);
                     for(int h = 0; h < H; ++h) {
-                        for(int c = 0; c <= numZeros; ++c) {
-                            den[t] += alpha[c][h][t]*beta[numZeros-c][h][t];
-                        }
+                        den[t] += alpha[h][t]*beta[h][t];
                     }
                 }
                 
@@ -1276,11 +1342,7 @@ class HMM {
 
                 for(int h = 0; h < H; ++h) {
                     for(int t = 0; t < T; ++t) {
-                        double num = 0.;
-                        for(int c = 0; c <= numZeros; ++c) {
-                            num += alpha[c][h][t]*beta[numZeros-c][h][t];
-                        }
-                        gamma[h][t] = num/den[t];
+                        gamma[h][t] = alpha[h][t]*beta[h][t]/den[t];
                     }
                 }
                 
@@ -1297,21 +1359,7 @@ class HMM {
                 for(int h1 = 0; h1 < H; ++h1) {
                     for(int h2 = 0; h2 < H; ++h2) {
                         for(int t = 0; t < T-1; ++t) {
-                            double num = 0.;
-
-                            for(int c = 0; c <= numZeros; ++c) {
-                                int middleC = 0;
-                                if(h2 == 0) {
-                                    ++middleC;
-                                }
-
-                                if(numZeros-middleC-c >= 0) {
-                                    num += alpha[c][h1][t]*beta[numZeros-middleC-c][h2][t+1];
-                                }
-                            }
-                            num *= A[h1][h2]*E[h2][obs[t+1]];
-
-                            xi[h1][h2][t] = num/den[t];
+                            xi[h1][h2][t] = alpha[h1][t]*beta[h2][t+1]*A[h1][h2]*E[h2][obs[t+1]]/den[t];
                         }
                     }
                 }
@@ -1354,8 +1402,168 @@ class HMM {
                         A[h1][h2] = num/newDen;
                     }
                 }
-
                 std::cout << "Tolerance: " << tol << "\n";
+                //tol = 0.;
+                if(tol < eps) {
+                    break;
+                }
+            }
+        }
+
+
+        //Unconstrained learning with multiple observations
+        void learn(const std::vector< std::vector<int> > &obs, double eps = 10E-6) {   
+            int T = obs[0].size();
+            int R = obs.size();
+            int numIt = 0;
+
+            while(true) {
+                ++numIt;
+                std::vector< std::vector< std::vector<double> > > totalGamma;
+                std::vector< std::vector< std::vector< std::vector<double> > > > totalXi;
+
+                for(int r = 0; r < R; ++r) { 
+                    //alpha
+                    std::vector< std::vector<double> > alpha; //alpha[h][t] = P(O_0 = obs[0], ... ,O_t = obs[t], H_t = h | theta)
+                    alpha.resize(H);
+                    for(int h = 0; h < H; ++h) {
+                        alpha[h].resize(T,0.);
+                        alpha[h][0] = S[h]*E[h][obs[r][0]];
+                    }
+                    
+                    for(int t = 1; t < T; ++t) {
+                        for(int h = 0; h < H; ++h) {
+                            for(int h1 = 0; h1 < H; ++h1) {
+                                alpha[h][t] += alpha[h1][t-1]*A[h1][h];
+                            }
+
+                            alpha[h][t] *= E[h][obs[r][t]];
+                        }
+                    }
+
+                    //beta
+                    std::vector< std::vector<double> > beta; //beta[h][t] = P(O_{t+1} = o_{t+1} ... O_{T-1} = o_{T-1} | H_t = h theta)
+                    beta.resize(H);
+                    for(int h = 0; h < H; ++h) {
+                        beta[h].resize(T);
+                        beta[h][T-1] = 1.;
+                    }
+
+                    
+                    for(int t = T-2; t >= 0; --t) {
+                        for(int h = 0; h < H; ++h) {
+                            for(int h2 = 0; h2 < H; ++h2) {
+                                beta[h][t] += beta[h2][t+1]*A[h][h2]*E[h2][obs[r][t+1]];
+                            }
+                        }
+                    }
+
+
+                    //Rescale alpha and beta
+                    /*for(int t = 0; t < T; ++t) {
+                        double z = 0.;
+                        for(int h = 0; h < H; ++h) {
+                            z += alpha[h][t];
+                        }
+
+                        for(int h = 0; h < H; ++h) {
+                            alpha[h][t] = alpha[h][t]/z;
+                            beta[h][t] = beta[h][t]/z;
+                        }
+                    }*/
+
+                    //den = P(O | theta) 
+                    //Need different denominators because of the scaling
+                    //This is numerically a VERY weird algorithm
+                    std::vector<double> den(T,0);
+                    for(int t = 0; t < T; ++t) {
+                        for(int h = 0; h < H; ++h) {
+                            den[t] += alpha[h][t]*beta[h][t];
+                        }
+                    }
+                    
+                    //Gamma
+                    std::vector< std::vector<double> > gamma; //gamma[h][t] = P(H_t = h | Y , theta)
+                    gamma.resize(H);
+                    for(int h = 0; h < H; ++h) {
+                        gamma[h].resize(T);
+                    }
+
+                    for(int h = 0; h < H; ++h) {
+                        for(int t = 0; t < T; ++t) {
+                            gamma[h][t] = alpha[h][t]*beta[h][t]/den[t];
+                        }
+                    }
+                    totalGamma.push_back(gamma);
+                    
+                    //xi
+                    std::vector< std::vector< std::vector<double> > > xi; //xi[i][j][t] = P(H_t = i, H_t+1 = j, O| theta) 
+                    xi.resize(H);
+                    for(int h1 = 0; h1 < H; ++h1) {
+                        xi[h1].resize(H);
+                        for(int h2 = 0; h2 < H; ++h2) {
+                            xi[h1][h2].resize(T-1);
+                        }
+                    }
+
+                    for(int h1 = 0; h1 < H; ++h1) {
+                        for(int h2 = 0; h2 < H; ++h2) {
+                            for(int t = 0; t < T-1; ++t) {
+                                xi[h1][h2][t] = alpha[h1][t]*beta[h2][t+1]*A[h1][h2]*E[h2][obs[r][t+1]]/den[t];
+                            }
+                        }
+                    }
+                    totalXi.push_back(xi);
+                }
+                
+                //New S
+                for(int h = 0; h < H; ++h) {
+                    S[h] = 0.;
+                    for(int r = 0; r < R; ++r) {
+                        S[h] += totalGamma[r][h][0];
+                    }
+                    S[h] /= R;
+                }
+                
+                //New E
+                for(int r = 0; r < R; ++r) {
+                    for(int h = 0; h < H; ++h) {
+                        for(int o = 0; o < O; ++o) {
+                            double num = 0.;
+                            double newDen = 0.;
+
+                            for(int t = 0; t < T; ++t) {
+                                if(obs[r][t] == o) {
+                                    num += totalGamma[r][h][t];
+                                }
+                                newDen += totalGamma[r][h][t];
+                            }
+
+                            E[h][o] = num/newDen;
+                        }
+                    }
+                }
+                
+                double tol = 0.;
+
+                //New A
+                for(int h1 = 0; h1 < H; ++h1) {
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        double num = 0.;
+                        double newDen = 0.;
+                        for(int r = 0; r < R; ++r) {                     
+                            for(int t = 0; t < T-1; ++t) {
+                                num += totalXi[r][h1][h2][t];
+                                newDen += totalGamma[r][h1][t];
+                            }
+                        }
+                        tol = std::max(std::abs(A[h1][h2] - num/newDen), tol); 
+                        A[h1][h2] = num/newDen;
+                    }
+                }
+                //if((numIt % 10) == 0) {
+                    std::cout << "Tolerance: " << tol << "\n";
+                //}
                 //tol = 0.;
                 if(tol < eps) {
                     break;
