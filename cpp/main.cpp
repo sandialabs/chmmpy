@@ -13,8 +13,8 @@ int main() {
     std::vector<double> S =  {0.501,0.499};
     std::vector< std::vector<double> > E{{0.699,0.301},{0.299,0.701}};
     
-    int T = 100;
-    int numIt = 10;
+    int T = 10;
+    int numIt = 1;
 
     //Learning
     std::vector< std::vector<double> > AInitial{{0.61,0.39},{0.4,0.6}};
@@ -22,8 +22,8 @@ int main() {
     std::vector< std::vector<double> > EInitial{{0.91,0.09},{0.1,0.9}};
 
     HMM toLearn1(AInitial,SInitial,EInitial);
-    HMM toLearn2(AInitial,SInitial,EInitial);
-    HMM trueHMM(A,S,E);
+    HMM toLearn2(AInitial,SInitial,EInitial,4);
+    HMM trueHMM(A,S,E,7);
 
     std::vector< std::vector<int> > obs;
     std::vector< std::vector<int> > hid;
@@ -34,22 +34,17 @@ int main() {
         obs.push_back({});
         hid.push_back({});
 
-        trueHMM.run(T,obs[i],hid[i],time(NULL)+i);
+        trueHMM.run(T,obs[i],hid[i]);
         numZeros.push_back(count(hid[i].begin(), hid[i].end(), 0));
         double numZerosTemp = numZeros[i];
 
-        double logProb1;
-        double logProb2;
-
-        trueHMM.aStar(obs[i],logProb1,numZeros[i]);
-        trueHMM.aStarOracle(obs[i],logProb2, [numZerosTemp](std::vector<int> myHid) -> bool { return (numZerosTemp == count(myHid.begin(), myHid.end(), 0));  });
-        std::cout << logProb1 << " " << logProb2 << "\n";
-
     }
-    return 0;
 
-    toLearn1.learn(obs, numZeros);
-    toLearn2.learn(obs);
+    int numZerosTemp = numZeros[0];
+
+    toLearn1.learn(obs[0], numZerosTemp);
+    std::cout << "RUN 2" << "\n";
+    toLearn2.learnMC(obs[0], [numZerosTemp](std::vector<int> myHid) -> bool { return (numZerosTemp == count(myHid.begin(), myHid.end(), 0));});
 
     std::cout << "\n" << toLearn1.getA()[0][0] << " " << toLearn1.getA()[0][1] << "\n" << toLearn1.getA()[1][0] << " "  << toLearn1.getA()[1][1] << "\n\n";
     std::cout << toLearn1.getS()[0] << " " << toLearn1.getS()[1] << "\n\n";
@@ -60,6 +55,10 @@ int main() {
     std::cout << toLearn2.getE()[0][0] << " " << toLearn2.getE()[0][1] << "\n" << toLearn2.getE()[1][0] << " "  << toLearn2.getE()[1][1] << "\n\n\n";
 
 
+
+        /*trueHMM.aStar(obs[i],logProb1,numZeros[i]);
+        trueHMM.aStarOracle(obs[i],logProb2, [numZerosTemp](std::vector<int> myHid) -> bool { return (numZerosTemp == count(myHid.begin(), myHid.end(), 0));  });
+        std::cout << logProb1 << " " << logProb2 << "\n";*/
 
     /*HMM myHMM(A,S,E);
     std::vector<int> obs;

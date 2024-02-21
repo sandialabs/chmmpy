@@ -229,10 +229,9 @@ class HMM {
         //---------------------
 
         //This generates the observed states and hidden states running the HMM for T time steps
-        //The seed is set to time(NULL) be default
-        //Be careful with the seed!!!! If you are running tests that take faster than a second this will cause repeat runs
         //Not const b/c of the random stuff
-        void run(int T, std::vector<int> &observedStates, std::vector<int> &hiddenStates, int seed = time(NULL)) {
+        void run(int T, std::vector<int> &observedStates, std::vector<int> &hiddenStates) {
+            
             observedStates.clear();
             hiddenStates.clear();
 
@@ -269,7 +268,7 @@ class HMM {
                         break;
                     }
                 }
-                
+
                 obsProb = getRandom();
                 prob = 0;
                 for(int o = 0; o < O; ++o) {
@@ -280,6 +279,9 @@ class HMM {
                     }
                 }
             }
+            
+            
+            return;
         }
 
         //----------------
@@ -606,7 +608,7 @@ class HMM {
         //---------------------
 
         //Returns the top numSolns solutions to the inference problem.
-        //Uses the same inference technique as A*II, so it is much slower than A*
+        //Uses the same inference technique as A*Oracle, so it is much slower than A*
         std::vector< std::vector< int > > aStarMult(const std::vector<int> &observations, double &logProb, const int numZeros, const int numSolns) const{
             const int T = observations.size();
 
@@ -1568,6 +1570,217 @@ class HMM {
                 if(tol < eps) {
                     break;
                 }
+            }
+        }
+
+
+        //------------------------------
+        //-----Monte Carlo Learning-----
+        //------------------------------
+
+        //Will work best/fastest if the sets of hidden states which satisfy the constraints 
+        void learnMC(const std::vector<int> &obs, const std::function<bool(std::vector<int>)> &constraintOracle, double eps = 10E-4, int C = 10000) { //Can't be const b/c of random stuff from the runs
+            int T = obs.size();
+
+            while(true) {
+                
+                std::vector< std::vector<double> > gamma;
+                std::vector< std::vector<int> > gammaCounter;
+                std::vector< std::vector< std::vector<double> > > xi;
+                std::vector< std::vector< std::vector<int> > > xiCounter;
+
+                gamma.resize(H);
+                gammaCounter.resize(H);
+                xi.resize(H);
+                xiCounter.resize(H);
+                
+                for(int h = 0; h < H; ++h) {
+                    gamma[h].resize(T, 0.);
+                    gammaCounter[h].resize(T, 0);
+                    xi[h].resize(H);
+                    xiCounter[h].resize(H);
+
+                    for(int h1 = 0; h1 < H; ++h1) {
+                        xi[h][h1].resize(T-1, 0.);
+                        xiCounter[h][h1].resize(T-1, 0);
+                    }
+                }
+                
+                //Do Monte Carlo
+                int numIt = 1; 
+                int checkCont = H*H*C/10; //The check for breaking out of the loop is SLOW, so this makes everything run faster
+                double cont = true;
+                while(cont) {
+                    std::vector<int> observed;
+                    std::vector<int> hidden;
+
+                    run(T,observed,hidden);
+
+                    if(constraintOracle(hidden)) {
+                        ++numIt;
+                        double prob = logProb(observed,hidden);
+                        prob = std::exp(prob); //Maybe better to stay with logs?    
+
+                        ++gammaCounter[hidden[0]][0];
+                        gamma[hidden[0]][0] += prob;
+                        for(int t = 1; t < T; ++t) {
+                            ++xiCounter[hidden[t-1]][hidden[t]][t-1];
+                            xi[hidden[t-1]][hidden[t]][t-1] += prob;
+                            ++gammaCounter[hidden[t]][t];
+                            gamma[hidden[t]][t] += prob;
+                        }
+                    }
+                    
+                    if((numIt % checkCont) == 0) {
+                        std::cout << numIt << std::endl;
+                        ++numIt;
+                        int minVal = C;
+                        int temp = 0;
+
+                        for(int h1 = 0; h1 < H; ++h1) {
+                            for(int h2 = 0; h2 <H; ++h2) {
+                                temp = 0;
+                                for(int t = 0; t < T-1; ++t) {
+                                    temp += xiCounter[h1][h2][t];
+                                    if(xiCounter[h1][h2][t] == 0) { //Avoid dividing by 0
+                                        minVal = 0;
+                                    }
+                                }
+                                minVal = std::min(minVal, temp);
+                            }
+                        }
+
+                        for(int h = 0; h < H; ++h) {
+                            temp = 0;
+                            for(int t = 0; t < T; ++t) {
+                                temp += gammaCounter[h][t];
+                                if(gammaCounter[h][t] == 0) {
+                                    minVal = 0;
+                                }
+                            }
+                            minVal = std::min(minVal, temp);
+                        }
+
+                        if(minVal == C) {
+                            cont = false;
+                        }
+                    }
+                }  
+
+
+                for(int h1 = 0; h1 < H; ++h1) {
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        for(int t = 0; t < T-1; ++t) {
+                            xi[h1][h2][t] /= xiCounter[h1][h2][t];
+                        }
+                    }
+                }
+
+                //Normalize
+                for(int t = 0; t < T-1; ++t) {
+                    double sum = 0.;
+                    for(int h1 = 0; h1 < H; ++h1) {
+                        for(int h2 = 0; h2 < H; ++h2) {
+                            sum += xi[h1][h2][t];
+                        }
+                    }
+
+                    for(int h1 = 0; h1 < H; ++h1) {
+                        for(int h2 = 0; h2 < H; ++h2) {
+                            xi[h1][h2][t] /= sum;
+                        }
+                    }
+                }
+
+                for(int h = 0; h < H; ++h) {
+                    for(int t = 0; t < T; ++t) {
+                        gamma[h][t] /= gammaCounter[h][t];
+                    }
+                }
+
+                //Normalize
+                for(int t = 0; t < T; ++t) {
+                    double sum = 0.;
+
+                    for(int h = 0; h < H; ++h) {
+                        sum += gamma[h][t];
+                    }
+
+                    for(int h = 0; h < H; ++h) {
+                        gamma[h][t] /= sum;
+                    }
+                }
+
+                //New S
+                for(int h = 0; h < H; ++h) {
+                    S[h] = gamma[h][0];
+                }
+                
+                //New E
+                for(int h = 0; h < H; ++h) {
+                    for(int o = 0; o < O; ++o) {
+                        double num = 0.;
+                        double newDen = 0.;
+
+                        for(int t = 0; t < T; ++t) {
+                            if(obs[t] == o) {
+                                num += gamma[h][t];
+                            }
+                            newDen += gamma[h][t];
+                        }
+
+                        E[h][o] = num/newDen;
+                    }
+                }
+                
+                double tol = 0.;
+                std::vector< std::vector<double> > newA;
+                newA.resize(H);
+                for(int h = 0; h < H; ++h) {
+                    newA[h].resize(H);
+                }
+
+                //New A
+                for(int h1 = 0; h1 < H; ++h1) {
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        double num = 0.;
+                        double newDen = 0.;
+
+                        for(int t = 0; t < T-1; ++t) {
+                            num += xi[h1][h2][t];
+                            newDen += gamma[h1][t];
+                        }
+                        newA[h1][h2] = num/newDen;
+                    }
+                }
+
+                //Normalize A, we need to do this b/c xi and gamma aren't calculated exactly
+                for(int h1 = 0; h1 < H; ++h1) {
+                    double sum = 0; 
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        sum += newA[h1][h2];
+                    }
+
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        newA[h1][h2] /= sum;
+                        tol = std::max(std::abs(A[h1][h2] - newA[h1][h2]), tol); 
+                        A[h1][h2] = newA[h1][h2];
+                    }
+                }
+
+                std::cout << "Tolerance: " << tol << "\n";
+                for(int h1 = 0; h1 < H; ++h1) {
+                    for(int h2 = 0; h2 < H; ++h2) {
+                        std::cout << A[h1][h2] << " ";
+                    }
+                    std::cout << std::endl;
+                }
+                std::cout << std::endl;
+                //tol = 0.;
+                if(tol < eps) {
+                    break;
+                }
+
             }
         }
 
