@@ -804,16 +804,9 @@ std::vector< std::vector< int > > HMM::aStarMult(const std::vector<int> &observa
     for(int h = 0; h < H; ++h) {
         double tempGScore = std::log(S[h]) + logE[h][observations[0]]; //Avoids extra look-up operation
     
-        if(h == 0) {
-            std::vector<int> tempVec = {0}; //Otherwise C++ can't figure out what is happening
-            openSet.push(std::make_pair(tempGScore + v[0][h],tempVec));
-            gScore[{0}] = tempGScore;
-        }
-        else {
-            std::vector<int> tempVec = {1};
-            openSet.push(std::make_pair(tempGScore + v[0][h],tempVec));
-            gScore[{1}] = tempGScore;
-        }
+        std::vector<int> tempVec = {h}; //Otherwise C++ can't figure out what is happening
+        openSet.push(std::make_pair(tempGScore + v[0][h],tempVec));
+        gScore[tempVec] = tempGScore;
     }
 
     std::vector< std::vector<int> > output;
@@ -821,12 +814,13 @@ std::vector< std::vector< int > > HMM::aStarMult(const std::vector<int> &observa
     
     while(!openSet.empty()) {
         auto tempPair= openSet.top();
+        openSet.pop();
+
         std::vector<int> currentSequence = get<1>(tempPair);
         int t = currentSequence.size();
         int h1 = currentSequence[t-1];
-
-        openSet.pop();
         double oldGScore = gScore.at(currentSequence);
+
         if(t == T) {
             if(constraintOracle(currentSequence)) {
                 output.push_back(currentSequence);
@@ -848,7 +842,7 @@ std::vector< std::vector< int > > HMM::aStarMult(const std::vector<int> &observa
             }
         }
     }
-    return {};
+    return output;
 }
 
 

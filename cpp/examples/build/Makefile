@@ -117,41 +117,189 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named a.out
+# Target rules for targets named simpleInfer
 
 # Build rule for target.
-a.out: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 a.out
-.PHONY : a.out
+simpleInfer: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 simpleInfer
+.PHONY : simpleInfer
 
 # fast build rule for target.
-a.out/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.out.dir/build.make CMakeFiles/a.out.dir/build
-.PHONY : a.out/fast
+simpleInfer/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleInfer.dir/build.make CMakeFiles/simpleInfer.dir/build
+.PHONY : simpleInfer/fast
 
-main.o: main.cpp.o
-.PHONY : main.o
+#=============================================================================
+# Target rules for targets named simpleInferMultiple
+
+# Build rule for target.
+simpleInferMultiple: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 simpleInferMultiple
+.PHONY : simpleInferMultiple
+
+# fast build rule for target.
+simpleInferMultiple/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleInferMultiple.dir/build.make CMakeFiles/simpleInferMultiple.dir/build
+.PHONY : simpleInferMultiple/fast
+
+#=============================================================================
+# Target rules for targets named simpleLearn
+
+# Build rule for target.
+simpleLearn: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 simpleLearn
+.PHONY : simpleLearn
+
+# fast build rule for target.
+simpleLearn/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleLearn.dir/build.make CMakeFiles/simpleLearn.dir/build
+.PHONY : simpleLearn/fast
+
+#=============================================================================
+# Target rules for targets named tourInfer
+
+# Build rule for target.
+tourInfer: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tourInfer
+.PHONY : tourInfer
+
+# fast build rule for target.
+tourInfer/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tourInfer.dir/build.make CMakeFiles/tourInfer.dir/build
+.PHONY : tourInfer/fast
+
+#=============================================================================
+# Target rules for targets named tourInferMultiple
+
+# Build rule for target.
+tourInferMultiple: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tourInferMultiple
+.PHONY : tourInferMultiple
+
+# fast build rule for target.
+tourInferMultiple/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tourInferMultiple.dir/build.make CMakeFiles/tourInferMultiple.dir/build
+.PHONY : tourInferMultiple/fast
+
+simpleInfer.o: simpleInfer.cpp.o
+.PHONY : simpleInfer.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.out.dir/build.make CMakeFiles/a.out.dir/main.cpp.o
-.PHONY : main.cpp.o
+simpleInfer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleInfer.dir/build.make CMakeFiles/simpleInfer.dir/simpleInfer.cpp.o
+.PHONY : simpleInfer.cpp.o
 
-main.i: main.cpp.i
-.PHONY : main.i
+simpleInfer.i: simpleInfer.cpp.i
+.PHONY : simpleInfer.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.out.dir/build.make CMakeFiles/a.out.dir/main.cpp.i
-.PHONY : main.cpp.i
+simpleInfer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleInfer.dir/build.make CMakeFiles/simpleInfer.dir/simpleInfer.cpp.i
+.PHONY : simpleInfer.cpp.i
 
-main.s: main.cpp.s
-.PHONY : main.s
+simpleInfer.s: simpleInfer.cpp.s
+.PHONY : simpleInfer.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.out.dir/build.make CMakeFiles/a.out.dir/main.cpp.s
-.PHONY : main.cpp.s
+simpleInfer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleInfer.dir/build.make CMakeFiles/simpleInfer.dir/simpleInfer.cpp.s
+.PHONY : simpleInfer.cpp.s
+
+simpleInferMultiple.o: simpleInferMultiple.cpp.o
+.PHONY : simpleInferMultiple.o
+
+# target to build an object file
+simpleInferMultiple.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleInferMultiple.dir/build.make CMakeFiles/simpleInferMultiple.dir/simpleInferMultiple.cpp.o
+.PHONY : simpleInferMultiple.cpp.o
+
+simpleInferMultiple.i: simpleInferMultiple.cpp.i
+.PHONY : simpleInferMultiple.i
+
+# target to preprocess a source file
+simpleInferMultiple.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleInferMultiple.dir/build.make CMakeFiles/simpleInferMultiple.dir/simpleInferMultiple.cpp.i
+.PHONY : simpleInferMultiple.cpp.i
+
+simpleInferMultiple.s: simpleInferMultiple.cpp.s
+.PHONY : simpleInferMultiple.s
+
+# target to generate assembly for a file
+simpleInferMultiple.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleInferMultiple.dir/build.make CMakeFiles/simpleInferMultiple.dir/simpleInferMultiple.cpp.s
+.PHONY : simpleInferMultiple.cpp.s
+
+simpleLearn.o: simpleLearn.cpp.o
+.PHONY : simpleLearn.o
+
+# target to build an object file
+simpleLearn.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleLearn.dir/build.make CMakeFiles/simpleLearn.dir/simpleLearn.cpp.o
+.PHONY : simpleLearn.cpp.o
+
+simpleLearn.i: simpleLearn.cpp.i
+.PHONY : simpleLearn.i
+
+# target to preprocess a source file
+simpleLearn.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleLearn.dir/build.make CMakeFiles/simpleLearn.dir/simpleLearn.cpp.i
+.PHONY : simpleLearn.cpp.i
+
+simpleLearn.s: simpleLearn.cpp.s
+.PHONY : simpleLearn.s
+
+# target to generate assembly for a file
+simpleLearn.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleLearn.dir/build.make CMakeFiles/simpleLearn.dir/simpleLearn.cpp.s
+.PHONY : simpleLearn.cpp.s
+
+tourInfer.o: tourInfer.cpp.o
+.PHONY : tourInfer.o
+
+# target to build an object file
+tourInfer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tourInfer.dir/build.make CMakeFiles/tourInfer.dir/tourInfer.cpp.o
+.PHONY : tourInfer.cpp.o
+
+tourInfer.i: tourInfer.cpp.i
+.PHONY : tourInfer.i
+
+# target to preprocess a source file
+tourInfer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tourInfer.dir/build.make CMakeFiles/tourInfer.dir/tourInfer.cpp.i
+.PHONY : tourInfer.cpp.i
+
+tourInfer.s: tourInfer.cpp.s
+.PHONY : tourInfer.s
+
+# target to generate assembly for a file
+tourInfer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tourInfer.dir/build.make CMakeFiles/tourInfer.dir/tourInfer.cpp.s
+.PHONY : tourInfer.cpp.s
+
+tourInferMultiple.o: tourInferMultiple.cpp.o
+.PHONY : tourInferMultiple.o
+
+# target to build an object file
+tourInferMultiple.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tourInferMultiple.dir/build.make CMakeFiles/tourInferMultiple.dir/tourInferMultiple.cpp.o
+.PHONY : tourInferMultiple.cpp.o
+
+tourInferMultiple.i: tourInferMultiple.cpp.i
+.PHONY : tourInferMultiple.i
+
+# target to preprocess a source file
+tourInferMultiple.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tourInferMultiple.dir/build.make CMakeFiles/tourInferMultiple.dir/tourInferMultiple.cpp.i
+.PHONY : tourInferMultiple.cpp.i
+
+tourInferMultiple.s: tourInferMultiple.cpp.s
+.PHONY : tourInferMultiple.s
+
+# target to generate assembly for a file
+tourInferMultiple.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tourInferMultiple.dir/build.make CMakeFiles/tourInferMultiple.dir/tourInferMultiple.cpp.s
+.PHONY : tourInferMultiple.cpp.s
 
 # Help Target
 help:
@@ -161,10 +309,26 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... a.out"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... simpleInfer"
+	@echo "... simpleInferMultiple"
+	@echo "... simpleLearn"
+	@echo "... tourInfer"
+	@echo "... tourInferMultiple"
+	@echo "... simpleInfer.o"
+	@echo "... simpleInfer.i"
+	@echo "... simpleInfer.s"
+	@echo "... simpleInferMultiple.o"
+	@echo "... simpleInferMultiple.i"
+	@echo "... simpleInferMultiple.s"
+	@echo "... simpleLearn.o"
+	@echo "... simpleLearn.i"
+	@echo "... simpleLearn.s"
+	@echo "... tourInfer.o"
+	@echo "... tourInfer.i"
+	@echo "... tourInfer.s"
+	@echo "... tourInferMultiple.o"
+	@echo "... tourInferMultiple.i"
+	@echo "... tourInferMultiple.s"
 .PHONY : help
 
 

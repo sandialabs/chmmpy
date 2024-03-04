@@ -63,7 +63,11 @@ CMAKE_BINARY_DIR = /Users/clmatte/Desktop/HMM/HMM_Code/cpp/examples/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/a.out.dir/all
+all: CMakeFiles/simpleInfer.dir/all
+all: CMakeFiles/simpleInferMultiple.dir/all
+all: CMakeFiles/simpleLearn.dir/all
+all: CMakeFiles/tourInfer.dir/all
+all: CMakeFiles/tourInferMultiple.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -71,34 +75,142 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/a.out.dir/clean
+clean: CMakeFiles/simpleInfer.dir/clean
+clean: CMakeFiles/simpleInferMultiple.dir/clean
+clean: CMakeFiles/simpleLearn.dir/clean
+clean: CMakeFiles/tourInfer.dir/clean
+clean: CMakeFiles/tourInferMultiple.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/a.out.dir
+# Target rules for target CMakeFiles/simpleInfer.dir
 
 # All Build rule for target.
-CMakeFiles/a.out.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.out.dir/build.make CMakeFiles/a.out.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.out.dir/build.make CMakeFiles/a.out.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/clmatte/Desktop/HMM/HMM_Code/cpp/examples/build/CMakeFiles --progress-num=1,2 "Built target a.out"
-.PHONY : CMakeFiles/a.out.dir/all
+CMakeFiles/simpleInfer.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleInfer.dir/build.make CMakeFiles/simpleInfer.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleInfer.dir/build.make CMakeFiles/simpleInfer.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/clmatte/Desktop/HMM/HMM_Code/cpp/examples/build/CMakeFiles --progress-num=1,2 "Built target simpleInfer"
+.PHONY : CMakeFiles/simpleInfer.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/a.out.dir/rule: cmake_check_build_system
+CMakeFiles/simpleInfer.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/clmatte/Desktop/HMM/HMM_Code/cpp/examples/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/a.out.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/simpleInfer.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/clmatte/Desktop/HMM/HMM_Code/cpp/examples/build/CMakeFiles 0
-.PHONY : CMakeFiles/a.out.dir/rule
+.PHONY : CMakeFiles/simpleInfer.dir/rule
 
 # Convenience name for target.
-a.out: CMakeFiles/a.out.dir/rule
-.PHONY : a.out
+simpleInfer: CMakeFiles/simpleInfer.dir/rule
+.PHONY : simpleInfer
 
 # clean rule for target.
-CMakeFiles/a.out.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.out.dir/build.make CMakeFiles/a.out.dir/clean
-.PHONY : CMakeFiles/a.out.dir/clean
+CMakeFiles/simpleInfer.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleInfer.dir/build.make CMakeFiles/simpleInfer.dir/clean
+.PHONY : CMakeFiles/simpleInfer.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/simpleInferMultiple.dir
+
+# All Build rule for target.
+CMakeFiles/simpleInferMultiple.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleInferMultiple.dir/build.make CMakeFiles/simpleInferMultiple.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleInferMultiple.dir/build.make CMakeFiles/simpleInferMultiple.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/clmatte/Desktop/HMM/HMM_Code/cpp/examples/build/CMakeFiles --progress-num=3,4 "Built target simpleInferMultiple"
+.PHONY : CMakeFiles/simpleInferMultiple.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/simpleInferMultiple.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/clmatte/Desktop/HMM/HMM_Code/cpp/examples/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/simpleInferMultiple.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/clmatte/Desktop/HMM/HMM_Code/cpp/examples/build/CMakeFiles 0
+.PHONY : CMakeFiles/simpleInferMultiple.dir/rule
+
+# Convenience name for target.
+simpleInferMultiple: CMakeFiles/simpleInferMultiple.dir/rule
+.PHONY : simpleInferMultiple
+
+# clean rule for target.
+CMakeFiles/simpleInferMultiple.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleInferMultiple.dir/build.make CMakeFiles/simpleInferMultiple.dir/clean
+.PHONY : CMakeFiles/simpleInferMultiple.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/simpleLearn.dir
+
+# All Build rule for target.
+CMakeFiles/simpleLearn.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleLearn.dir/build.make CMakeFiles/simpleLearn.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleLearn.dir/build.make CMakeFiles/simpleLearn.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/clmatte/Desktop/HMM/HMM_Code/cpp/examples/build/CMakeFiles --progress-num=5,6 "Built target simpleLearn"
+.PHONY : CMakeFiles/simpleLearn.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/simpleLearn.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/clmatte/Desktop/HMM/HMM_Code/cpp/examples/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/simpleLearn.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/clmatte/Desktop/HMM/HMM_Code/cpp/examples/build/CMakeFiles 0
+.PHONY : CMakeFiles/simpleLearn.dir/rule
+
+# Convenience name for target.
+simpleLearn: CMakeFiles/simpleLearn.dir/rule
+.PHONY : simpleLearn
+
+# clean rule for target.
+CMakeFiles/simpleLearn.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simpleLearn.dir/build.make CMakeFiles/simpleLearn.dir/clean
+.PHONY : CMakeFiles/simpleLearn.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/tourInfer.dir
+
+# All Build rule for target.
+CMakeFiles/tourInfer.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tourInfer.dir/build.make CMakeFiles/tourInfer.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tourInfer.dir/build.make CMakeFiles/tourInfer.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/clmatte/Desktop/HMM/HMM_Code/cpp/examples/build/CMakeFiles --progress-num=7,8 "Built target tourInfer"
+.PHONY : CMakeFiles/tourInfer.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/tourInfer.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/clmatte/Desktop/HMM/HMM_Code/cpp/examples/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/tourInfer.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/clmatte/Desktop/HMM/HMM_Code/cpp/examples/build/CMakeFiles 0
+.PHONY : CMakeFiles/tourInfer.dir/rule
+
+# Convenience name for target.
+tourInfer: CMakeFiles/tourInfer.dir/rule
+.PHONY : tourInfer
+
+# clean rule for target.
+CMakeFiles/tourInfer.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tourInfer.dir/build.make CMakeFiles/tourInfer.dir/clean
+.PHONY : CMakeFiles/tourInfer.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/tourInferMultiple.dir
+
+# All Build rule for target.
+CMakeFiles/tourInferMultiple.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tourInferMultiple.dir/build.make CMakeFiles/tourInferMultiple.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tourInferMultiple.dir/build.make CMakeFiles/tourInferMultiple.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/clmatte/Desktop/HMM/HMM_Code/cpp/examples/build/CMakeFiles --progress-num=9,10 "Built target tourInferMultiple"
+.PHONY : CMakeFiles/tourInferMultiple.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/tourInferMultiple.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/clmatte/Desktop/HMM/HMM_Code/cpp/examples/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/tourInferMultiple.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/clmatte/Desktop/HMM/HMM_Code/cpp/examples/build/CMakeFiles 0
+.PHONY : CMakeFiles/tourInferMultiple.dir/rule
+
+# Convenience name for target.
+tourInferMultiple: CMakeFiles/tourInferMultiple.dir/rule
+.PHONY : tourInferMultiple
+
+# clean rule for target.
+CMakeFiles/tourInferMultiple.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tourInferMultiple.dir/build.make CMakeFiles/tourInferMultiple.dir/clean
+.PHONY : CMakeFiles/tourInferMultiple.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

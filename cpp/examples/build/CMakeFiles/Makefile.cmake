@@ -47,5 +47,9 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/a.out.dir/DependInfo.cmake"
+  "CMakeFiles/simpleInfer.dir/DependInfo.cmake"
+  "CMakeFiles/simpleInferMultiple.dir/DependInfo.cmake"
+  "CMakeFiles/simpleLearn.dir/DependInfo.cmake"
+  "CMakeFiles/tourInfer.dir/DependInfo.cmake"
+  "CMakeFiles/tourInferMultiple.dir/DependInfo.cmake"
   )
