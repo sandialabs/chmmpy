@@ -1,3 +1,5 @@
+//main.cpp
+
 #include "HMM.h"
 #include <vector>
 
@@ -46,14 +48,8 @@ int main() {
     std::cout << "RUN 2" << "\n";
     toLearn2.learnMC(obs[0], [numZerosTemp](std::vector<int> myHid) -> bool { return (numZerosTemp == count(myHid.begin(), myHid.end(), 0));});
 
-    std::cout << "\n" << toLearn1.getA()[0][0] << " " << toLearn1.getA()[0][1] << "\n" << toLearn1.getA()[1][0] << " "  << toLearn1.getA()[1][1] << "\n\n";
-    std::cout << toLearn1.getS()[0] << " " << toLearn1.getS()[1] << "\n\n";
-    std::cout << toLearn1.getE()[0][0] << " " << toLearn1.getE()[0][1] << "\n" << toLearn1.getE()[1][0] << " "  << toLearn1.getE()[1][1] << "\n\n\n";
-
-    std::cout << toLearn2.getA()[0][0] << " " << toLearn2.getA()[0][1] << "\n" << toLearn2.getA()[1][0] << " "  << toLearn2.getA()[1][1] << "\n\n";
-    std::cout << toLearn2.getS()[0] << " " << toLearn2.getS()[1] << "\n\n";
-    std::cout << toLearn2.getE()[0][0] << " " << toLearn2.getE()[0][1] << "\n" << toLearn2.getE()[1][0] << " "  << toLearn2.getE()[1][1] << "\n\n\n";
-
+    toLearn1.print();
+    toLearn2.print();
 
 
         /*trueHMM.aStar(obs[i],logProb1,numZeros[i]);
