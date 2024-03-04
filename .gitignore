@@ -3,3 +3,4 @@ __pycache__
 cpp/build/
 .vscode
 .DS_Store
+cpp/examples/build/
