@@ -93,7 +93,8 @@ class HMM {
         void learn(const std::vector< std::vector<int> > &obs, const std::vector<int> &numZeros, const double eps = 10E-6);
         void learn(const std::vector<int> &obs, const double eps = 10E-6);
         void learn(const std::vector< std::vector<int> > &obs, const double eps = 10E-6);
-        void learnMC(const std::vector<int> &obs, const std::function<bool(std::vector<int>)> &constraintOracle, const double eps = 10E-6, const int C = 10E4);
+        void learnMC(const std::vector< std::vector<int> > &obs, const std::vector< std::function<bool(std::vector<int>)> > &constraintOracle, const double eps = 10E-6, const int C = 10E4);
+        void learnMC_OLD(const std::vector<int> &obs, const std::function<bool(std::vector<int>)> &constraintOracle, const double eps = 10E-6, const int C = 10E4);
 
 };
 

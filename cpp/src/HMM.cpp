@@ -1639,7 +1639,181 @@ void HMM::learn(const std::vector< std::vector<int> > &obs, const double eps) {
 //This algorithm is TERRIBLE, I can't even get it to converge in a simple case with T = 10.
 //This is currently the only learning algorithm we have for having a constraint oracle rather than ``simple'' constraints
 //This also fails to work if we are converging towards values in the transition matrix with 0's (which is NOT uncommon)
-void HMM::learnMC(const std::vector<int> &obs, const std::function<bool(std::vector<int>)> &constraintOracle, const double eps, const int C) {
+void HMM::learnMC(const std::vector< std::vector<int> > &obs, const std::vector< std::function<bool(std::vector<int>)> > &constraintOracle, const double eps, const int C) {
+    int R = obs.size();
+    if(constraintOracle.size() != R) {
+        std::cout << "In learnMC, obs and constraintOracle vectors sizes do not match." << std::endl;
+        throw std::exception();
+    }
+    int totTime = 0.;
+    for(int r = 0; r < R; ++r) {
+        totTime += obs[r].size();
+    }
+
+    std::vector<double> SStar;
+    std::vector< std::vector<double> > AStar;
+    std::vector< std::vector<double> > EStar;
+
+    std::vector<int> SStarCounter;
+    std::vector< std::vector<int> > AStarCounter;
+    std::vector< std::vector<int> > EStarCounter;
+
+    SStar.resize(H);
+    AStar.resize(H);
+    EStar.resize(H);
+    SStarCounter.resize(H);
+    AStarCounter.resize(H);
+    EStarCounter.resize(H);
+
+    for(int h = 0; h < H; ++h) {
+        AStar[h].resize(H);
+        AStarCounter[h].resize(H);
+        EStar[h].resize(O);
+        EStarCounter[h].resize(O);
+    }
+
+    int totNumIt = 0;
+    std::vector< std::vector< std::vector<int> > > allHidden;
+    allHidden.resize(R);
+
+    while(true) {
+        if((totNumIt & (totNumIt - 1)) == 0) { //Who knows what is best here... this runs if totNumIt is a power of two so that it becomes more rare as time goes on
+            allHidden.clear();
+            std::cout << "Generating hidden feasible hidden states randomly.\n";
+            int tempCounter = 0;
+            for(int r = 0; r < R; ++r) {
+                int numIt = 0;
+                std::vector<int> observed;
+                std::vector<int> hidden;
+                int T = obs[r].size();
+
+                while(numIt < C*H*std::max(H,O)/(R*totTime)) { //This is so that we have enough counts for A[h][h'] and E[h][o]
+                    run(T,observed,hidden);
+                    if(constraintOracle[r](hidden)) {
+                        allHidden[r].push_back(hidden);
+                        ++numIt;
+                        ++tempCounter;
+                        if((tempCounter % 1000) == 0) {  //This seems like a good pace for printing
+                            std::cout << tempCounter << "\n";
+                        }
+                    }
+                }
+            }
+        }
+
+        ++totNumIt;
+        
+        fill(SStar.begin(), SStar.end(), 0.);
+        fill(SStarCounter.begin(), SStarCounter.end(), 0);
+        for(int h = 0; h < H; ++h) {
+            fill(AStar[h].begin(), AStar[h].end(), 0.);
+            fill(AStarCounter[h].begin(), AStarCounter[h].end(), 0);
+            fill(EStar[h].begin(), EStar[h].end(), 0.);
+            fill(EStarCounter[h].begin(), EStarCounter[h].end(), 0);
+        }
+
+        for(int r = 0; r < R; ++r) {
+            int T = obs[r].size();
+            for(int i = 0; i < allHidden[r].size(); ++i) {
+                double p = std::exp(logProb(obs[r], allHidden[r][i]));
+                SStar[allHidden[r][i][0]] += p;
+                ++SStarCounter[allHidden[r][i][0]];
+                for(int t = 0; t < T-1; ++t) {
+                    AStar[allHidden[r][i][t]][allHidden[r][i][t+1]] += p;
+                    ++AStarCounter[allHidden[r][i][t]][allHidden[r][i][t+1]];
+                    EStar[allHidden[r][i][t]][obs[r][t]] += p;
+                    ++EStarCounter[allHidden[r][i][t]][obs[r][t]];
+                }
+                EStar[allHidden[r][i][T-1]][obs[r][T-1]] += p;
+                ++EStarCounter[allHidden[r][i][T-1]][obs[r][T-1]];
+            }
+        }
+
+        //Normalize
+        for(int h = 0; h < H; ++h) {
+            if(SStarCounter[h] == 0) {
+                SStar[h] = 0;
+            }
+            else {
+                SStar[h] /= SStarCounter[h];
+            }
+        }
+        double SSum = std::accumulate(SStar.begin(),SStar.end(), 0.);
+        for(int h = 0; h < H; ++h) {
+            S[h] = SStar[h]/SSum;
+        }
+
+        std::vector< std::vector<double> > newAStar;
+        newAStar.resize(H);
+        for(int h1 = 0; h1 < H; ++h1) {
+            newAStar[h1].resize(H);
+            for(int h2 = 0; h2 < H; ++h2) {
+                if(AStarCounter[h1][h2] == 0) {
+                    newAStar[h1][h2] = 0;
+                }
+                else {
+                    newAStar[h1][h2] = AStar[h1][h2]/AStarCounter[h1][h2];
+                }
+            }
+        }
+        double tol = 0.;
+        for(int h1 = 0; h1 < H; ++h1) {
+            double ASum = std::accumulate(newAStar[h1].begin(), newAStar[h1].end(), 0.);
+            for(int h2 = 0; h2 < H; ++h2) {
+                if(ASum == 0) {
+                    newAStar[h1][h2] = 1./H;   
+                }
+                else  { 
+                    newAStar[h1][h2] = newAStar[h1][h2]/ASum;
+                }
+                tol = std::max(std::abs(A[h1][h2]-newAStar[h1][h2]), tol);
+                A[h1][h2] = newAStar[h1][h2];
+            }
+        }
+
+        for(int h = 0; h < H; ++h) {
+            for(int o = 0; o < O; ++o) {
+                if(EStarCounter[h][o] == 0) {
+                    EStar[h][o] = 0;
+                }
+                else {  
+                    EStar[h][o] /= EStarCounter[h][o];
+                }
+            }
+        }
+        for(int h = 0; h < H; ++h) {
+            double ESum = std::accumulate(EStar[h].begin(), EStar[h].end(), 0.);
+            for(int o = 0; o < O; ++o) {
+                if(ESum == 0) {
+                    E[h][o] = 1./O;
+                }
+                else {
+                    E[h][o] = EStar[h][o]/ESum;
+                }
+            }
+        }
+
+        std::cout << "Tolerance: " << tol << "\n";
+        print();
+        //tol = -1;
+        if(tol < eps) {
+            break;
+        }
+
+    }
+}
+
+
+
+//------------------------------
+//-----Monte Carlo Learning-----
+//------------------------------
+
+//Will work best/fastest if the sets of hidden states which satisfy the constraints 
+//This algorithm is TERRIBLE, I can't even get it to converge in a simple case with T = 10.
+//This is currently the only learning algorithm we have for having a constraint oracle rather than ``simple'' constraints
+//This also fails to work if we are converging towards values in the transition matrix with 0's (which is NOT uncommon)
+void HMM::learnMC_OLD(const std::vector<int> &obs, const std::function<bool(std::vector<int>)> &constraintOracle, const double eps, const int C) {
     int T = obs.size();
 
     while(true) {
