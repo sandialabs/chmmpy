@@ -363,7 +363,7 @@ class HMMBase(object):
         log_likelihood = pe.value(M.o)
 
         if debug:
-            print("sequence:        ", observation_index)
+            print("sequence:        ", observations_index)
             print("logprob", log_likelihood)
         if log_likelihood < -(10**6):
             log_likelihood = -np.inf
