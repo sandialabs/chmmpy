@@ -1,5 +1,5 @@
 """
-Script to generate the installer for cihmm.
+Script to generate the installer for chmmpy.
 """
 
 import sys
@@ -28,12 +28,12 @@ def _find_packages(path):
 
 
 requires = ["Pyomo", "munch", "hmmlearn", "numpy"]
-packages = _find_packages("cihmm")
+packages = _find_packages("chmmpy")
 
 setup(
-    name="cihmm",
+    name="chmmpy",
     version="1.0",
-    url="https://cee-gitlab.sandia.gov/or-fusion/cihmm",
+    url="https://cee-gitlab.sandia.gov/or-fusion/chmmpy",
     platforms=["any"],
     description="A python library for constrained inference with Hidden Markov Models",
     classifiers=[

@@ -4,8 +4,8 @@ import random
 from munch import Munch
 import pyomo.environ as pe
 
-from cihmm import HMMBase
-from cihmm.util import state_similarity, print_differences, run_all
+from chmmpy import HMMBase
+from chmmpy.util import state_similarity, print_differences, run_all
 
 
 class TravelHMM_Default(HMMBase):
