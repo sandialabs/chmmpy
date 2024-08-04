@@ -32,6 +32,7 @@ def run_all(
     lp=True,
     ip=True,
     solver="glpk",
+    start_tolerance=0.0,
 ):
     if training:
         if seed is None:
@@ -39,7 +40,7 @@ def run_all(
         print("Running with seed:", seed)
 
         model.run_training_simulations(n=n, debug=debug, seed=seed)
-        model.train_HMM(debug=debug)
+        model.train_HMM(debug=debug, start_tolerance=start_tolerance)
 
         obs, ground_truth = model.generate_observations_and_states(
             seed=seed, debug=debug

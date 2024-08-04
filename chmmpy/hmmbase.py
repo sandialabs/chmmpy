@@ -139,13 +139,13 @@ class HMMBase(object):
         )[0]
         return self._tuplize_observations(results["observations"]), results["states"]
 
-    def train_HMM(self, debug=False):
+    def train_HMM(self, debug=False, start_tolerance=0.0):
         assert len(self.O) > 0, "Expecting simulations in the self.O object"
         if type(self.O[0]["observations"]) is dict:
             Tmax = len(self.O[0]["observations"][0])
         else:
             Tmax = len(self.O[0]["observations"])
-        self._estimate_start_probs(debug=debug)
+        self._estimate_start_probs(debug=debug, start_tolerance=start_tolerance)
         self._estimate_transition_matrix(Tmax=Tmax, debug=debug)
         self._estimate_emissions_matrix(Tmax=Tmax, debug=debug)
         smap = {}
@@ -153,11 +153,11 @@ class HMMBase(object):
             smap[s] = i
         self.smap = smap
 
-    def _estimate_start_probs(self, debug=False):
+    def _estimate_start_probs(self, debug=False, start_tolerance=0.0):
         #
         # Estimate initial hidden state probabilities from data
         #
-        start_probs = [0] * self.data.N
+        start_probs = [start_tolerance] * self.data.N
         for sim in self.O:
             start_probs[sim["states"][0]] += 1
         total = sum(start_probs)
@@ -290,6 +290,9 @@ class HMMBase(object):
             print("")
         _observations, omap, emission_probs = self._presolve(observations)
         if False and debug:
+            print(omap)
+            print(self.smap)
+            print("startprob_   ", self.data.start_probs)
             print("observations:", _observations)
             print("emission_probs:")
             for i in range(len(emission_probs)):
@@ -299,7 +302,7 @@ class HMMBase(object):
         #
         # Setup HMM
         #
-        self.model = hmmlearn.hmm.MultinomialHMM(n_components=self.data.N, n_trials=1)
+        self.model = hmmlearn.hmm.MultinomialHMM(n_components=self.data.N, n_trials=1, verbose=debug)
         self.model.n_features = len(omap)
         self.model.startprob_ = self.data.start_probs
         self.model.emissionprob_ = np.array(emission_probs)
@@ -310,6 +313,8 @@ class HMMBase(object):
         if debug:
             print("sequence:        ", encoded_observations)
         logprob, received = self.model.decode(np.array(encoded_observations))
+        # print("HEREx",logprob,received)
+        # print("HEREy",self.model._compute_log_likelihood(np.array(encoded_observations)))
 
         self.results = Munch(
             M=self.model,

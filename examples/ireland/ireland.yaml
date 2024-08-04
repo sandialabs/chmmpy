@@ -1,0 +1,211 @@
+##
+## TRAVEL INFORMATION
+##
+
+name: ireland
+
+# Number of places
+N: 16
+
+# Maximum of the average driving done each day
+max_hours: 3
+
+# Min days
+min_days: 7
+
+#
+# Place Names
+#
+# Best Places to Visit In Ireland (May, 2023)
+#   https://travel.usnews.com/rankings/best-places-to-visit-in-ireland/
+#   Minus the Aran Islands
+#
+PlaceNames:
+    0:
+        name: Donegal
+        abbrv: DON
+    1: 
+        name: Dublin
+        abbrv: DUB
+    2:
+        name: Dingle Peninsula
+        abbrv: DIN
+    3:
+        name: Killarney
+        abbrv: KIL
+    4:
+        name: Cliffs of Moher
+        abbrv: MOH
+    5:
+        name: Iveragh Peninsula
+        abbrv: IVE
+    6:
+        name:  Sligo
+        abbrv: SLI
+    7:
+        name:  Cork
+        abbrv: COR
+    8:
+        name:  Kinsale
+        abbrv: KIN
+    9:
+        name:  Galway
+        abbrv: GAL
+    10:
+        name:  Glenveagh National Park
+        abbrv: GLE
+    11:
+        name:  Inishowen Peninsula
+        abbrv: INI
+    12:
+        name:  Connemara National Park
+        abbrv: CON
+    13:
+        name:  Kilkenny
+        abbrv: KKY
+    14:
+        name:  Waterford
+        abbrv: WAT
+    15:
+        name:  Cobh
+        abbrv: COB
+
+# Travel time between places (rounded up to the nearest quarter hour)
+TravelTime:
+    - [0,   1,     3.00]
+    - [0,   2,     5.25]
+    - [0,   3,     4.50]
+    - [0,   4,     3.50]
+    - [0,   5,     5.50]
+    - [0,   6,     1.00]
+    - [0,   7,     4.50]
+    - [0,   8,     5.00]
+    - [0,   9,     2.50]
+    - [0,   10,    1.00]
+    - [0,   11,    1.50]
+    - [0,   12,    3.00]
+    - [0,   13,    3.75]
+    - [0,   14,    4.25]
+    - [0,   15,    4.75]
+    - [1,   2,     4.00]
+    - [1,   3,     3.50]
+    - [1,   4,     3.00]
+    - [1,   5,     4.25]
+    - [1,   6,     2.50]
+    - [1,   7,     3.00]
+    - [1,   8,     3.25]
+    - [1,   9,     2.25]
+    - [1,   10,    3.25]
+    - [1,   11,    3.50]
+    - [1,   12,    3.50]
+    - [1,   13,    1.50]
+    - [1,   14,    2.00]
+    - [1,   15,    3.00]
+    - [2,   3,     1.00]
+    - [2,   4,     3.00]
+    - [2,   5,     1.50]
+    - [2,   6,     4.50]
+    - [2,   7,     2.00]
+    - [2,   8,     2.25]
+    - [2,   9,     3.00]
+    - [2,   10,    6.25]
+    - [2,   11,    6.50]
+    - [2,   12,    4.25]
+    - [2,   13,    3.50]
+    - [2,   14,    3.75]
+    - [2,   15,    2.25]
+    - [3,   4,     2.50]
+    - [3,   5,     1.00]
+    - [3,   6,     4.00]
+    - [3,   7,     1.00]
+    - [3,   8,     1.25]
+    - [3,   9,     2.75]
+    - [3,   10,    5.75]
+    - [3,   11,    6.00]
+    - [3,   12,    4.00]
+    - [3,   13,    2.75]
+    - [3,   14,    2.75]
+    - [3,   15,    1.50]
+    - [4,   5,     3.50]
+    - [4,   6,     3.00]
+    - [4,   7,     2.50]
+    - [4,   8,     3.00]
+    - [4,   9,     1.50]
+    - [4,   10,    4.50]
+    - [4,   11,    5.00]
+    - [4,   12,    2.75]
+    - [4,   13,    2.75]
+    - [4,   14,    3.25]
+    - [4,   15,    3.00]
+    - [5,   6,     4.50]
+    - [5,   7,     2.25]
+    - [5,   8,     2.50]
+    - [5,   9,     3.25]
+    - [5,   10,    6.50]
+    - [5,   11,    6.75]
+    - [5,   12,    4.50]
+    - [5,   13,    3.75]
+    - [5,   14,    3.75]
+    - [5,   15,    2.50]
+    - [6,   7,     3.75]
+    - [6,   8,     4.25]
+    - [6,   9,     2.00]
+    - [6,   10,    2.00]
+    - [6,   11,    2.50]
+    - [6,   12,    2.50]
+    - [6,   13,    3.25]
+    - [6,   14,    3.75]
+    - [6,   15,    4.00]
+    - [7,   8,     0.50]
+    - [7,   9,     2.50]
+    - [7,   10,    5.50]
+    - [7,   11,    6.00]
+    - [7,   12,    4.00]
+    - [7,   13,    2.00]
+    - [7,   14,    1.75]
+    - [7,   15,    0.50]
+    - [8,   9,     3.00]
+    - [8,   10,    6.00]
+    - [8,   11,    6.50]
+    - [8,   12,    4.25]
+    - [8,   13,    2.25]
+    - [8,   14,    2.25]
+    - [8,   15,    0.75]
+    - [9,   10,    3.75]
+    - [9,   11,    4.25]
+    - [9,   12,    1.25]
+    - [9,   13,    2.50]
+    - [9,   14,    3.25]
+    - [9,   15,    3.00]
+    - [10,   11,    1.25]
+    - [10,   12,    4.00]
+    - [10,   13,    4.50]
+    - [10,   14,    5.00]
+    - [10,   15,    6.00]
+    - [11,   12,    4.50]
+    - [11,   13,    4.50]
+    - [11,   14,    5.00]
+    - [11,   15,    6.00]
+    - [12,   13,    3.75]
+    - [12,   14,    4.50]
+    - [12,   15,    4.00]
+    - [13,   14,    0.75]
+    - [13,   15,    2.00]
+    - [14,   15,    1.75]
+
+
+# Used to parameterize simulations
+sim:
+    # Random number seed
+    seed: 1238709723
+    # Number of simulations to run
+    nruns: 100
+    # Number of time steps in the simulation
+    Tmax: 10
+    # Probability that a city is recognized when observed
+    #p: 0.5
+    p: 0.95
+    # Probability that a picture is sent from a city
+    #q: 0.05
+    q: 1.0
+
